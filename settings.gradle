@@ -1,0 +1,5 @@
+rootProject.name = 'poolaeem'
+
+include(
+        "poolaeem-api"
+)
