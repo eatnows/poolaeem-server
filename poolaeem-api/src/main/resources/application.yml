@@ -3,3 +3,10 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+
+jwt:
+  rsa:
+    private: ${JWT_PRIVATE_KEY}
+    public: ${JWT_PUBLIC_KEY}
+
