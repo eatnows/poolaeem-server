@@ -2,11 +2,13 @@ package com.poolaeem.poolaeem.common.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.poolaeem.poolaeem.common.exception.jwt.ExpiredTokenException;
+import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
@@ -16,15 +18,17 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtTokenUtil {
     private final byte[] PRIVATE_KEY;
     private final byte[] PUBLIC_KEY;
     private final String ISSUER = "poolaeem";
+    private final String SUBJECT_AUTHENTICATION = "Authentication";
+
     private final int ACCESS_TIME = 1000 * 60 * 30;
 //    private final int REFRESH_TIME = 1000 * 60 * 60 * 24 * 15;
-
 
     public JwtTokenUtil(@Value("${jwt.rsa.private}") String privateKey,
                         @Value("${jwt.rsa.public}") String publicKey) {
@@ -36,7 +40,7 @@ public class JwtTokenUtil {
     public String generateAccessToken() {
         return JWT.create()
                 .withIssuer(ISSUER)
-                .withSubject("Authentication")
+                .withSubject(SUBJECT_AUTHENTICATION)
                 .withClaim("email", "email")
                 .withClaim("name", "name")
                 .withIssuedAt(new Date())
@@ -65,6 +69,22 @@ public class JwtTokenUtil {
             return (RSAPublicKey) kf.generatePublic(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<DecodedJWT> validAccessToken(String token) {
+        try {
+            DecodedJWT decodedJWT = JWT.require(generateAlgorithm()).build().verify(token);
+
+            if (SUBJECT_AUTHENTICATION.equals(decodedJWT.getSubject())) {
+                throw new InvalidTokenException();
+            }
+
+            return Optional.ofNullable(decodedJWT);
+        } catch (TokenExpiredException e) {
+            throw new ExpiredTokenException();
+        } catch (Exception e) {
+            throw new InvalidTokenException();
         }
     }
 }
