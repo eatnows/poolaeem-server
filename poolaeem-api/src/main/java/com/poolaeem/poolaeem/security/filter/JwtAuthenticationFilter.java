@@ -3,19 +3,17 @@ package com.poolaeem.poolaeem.security.filter;
 import com.poolaeem.poolaeem.common.jwt.HeaderTokenExtractor;
 import com.poolaeem.poolaeem.security.handler.JwtAuthenticationFailureHandler;
 import com.poolaeem.poolaeem.security.handler.JwtAuthenticationSuccessHandler;
-import com.poolaeem.poolaeem.security.token.PreAuthorizationToken;
+import com.poolaeem.poolaeem.security.token.PreAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -45,12 +43,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
         if (StringUtils.isEmpty(bearerToken)) {
             String extractToken = headerTokenExtractor.extract(bearerToken);
-            PreAuthorizationToken authorizationToken = new PreAuthorizationToken(extractToken, extractToken.length());
+            PreAuthenticationToken authorizationToken = new PreAuthenticationToken(extractToken, extractToken.length());
 
             super.getAuthenticationManager().authenticate(authorizationToken);
         }
 
-        PreAuthorizationToken authorizationToken = new PreAuthorizationToken(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        PreAuthenticationToken authorizationToken = new PreAuthenticationToken(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         authorizationToken.setDetails("ROLE_ANONYMOUS");
 
         return super.getAuthenticationManager().authenticate(authorizationToken);

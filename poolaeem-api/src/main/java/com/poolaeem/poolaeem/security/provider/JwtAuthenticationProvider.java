@@ -2,6 +2,9 @@ package com.poolaeem.poolaeem.security.provider;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.security.token.CustomUserDetail;
+import com.poolaeem.poolaeem.security.token.PostAuthenticationToken;
+import com.poolaeem.poolaeem.security.token.PreAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -19,21 +22,26 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        if ("ROLE_ANONYMOUS".equals(authentication.getDetails())) {
+            // TODO 비 로그인일 경우 가짜 유저 객체를 생성
+        }
         String token = (String) authentication.getPrincipal();
+        DecodedJWT decodedJWT = validToken(token);
 
-        return null;
+        // TODO 유저를 찾는다.
+        // TODO CustomUserDetail 을 만듦
+        CustomUserDetail customUserDetail = new CustomUserDetail(token);
+        return new PostAuthenticationToken(customUserDetail);
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+        return PreAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     private DecodedJWT validToken(String token) {
         Optional<DecodedJWT> decodedJWT = jwtTokenUtil.validAccessToken(token);
 
-        // TODO 유저를 찾는다.
-        // TODO CustomUserDetail 을 만듦
         return decodedJWT.get();
     }
 }
