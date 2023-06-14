@@ -1,6 +1,8 @@
 package com.poolaeem.poolaeem.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poolaeem.poolaeem.common.response.ApiResponseCode;
+import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,26 +30,21 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
 
-        // TODO API response template 생성하여 수정
         try (OutputStream os = response.getOutputStream()){
-            objectMapper.writeValue(os, new String());
+            ApiResponseCode responseCode = createApiStatusCode(exception);
+            objectMapper.writeValue(os, new ApiResponseDto<>(responseCode));
             os.flush();
         }
     }
 
-//    private ApiResponseCode createApiStatusCode(AuthenticationException exception) {
-//        String exceptionClassName = exception.getClass().getName();
-//        String exceptionName = exceptionClassName.substring(exceptionClassName.lastIndexOf(".") + 1);
-//
-//        if ("ExpiredTokenException".equalsIgnoreCase(exceptionName)) {
-//            return ApiResponseCode.ERROR_EXPIRED_JWT_TOKEN;
-//        }
-//
-//        if ("JwtIssuerException".equalsIgnoreCase(exceptionName)) {
-//            return ApiResponseCode.ERROR_ISSUER_JWT_TOKEN;
-//        }
-//
-//
-//        return ApiResponseCode.ERROR_INVALID_JWT_TOKEN;
-//    }
+    private ApiResponseCode createApiStatusCode(AuthenticationException exception) {
+        String exceptionClassName = exception.getClass().getName();
+        String exceptionName = exceptionClassName.substring(exceptionClassName.lastIndexOf(".") + 1);
+
+        if ("ExpiredTokenException".equalsIgnoreCase(exceptionName)) {
+            return ApiResponseCode.EXPIRED_TOKEN;
+        }
+
+        return ApiResponseCode.INVALID_TOKEN;
+    }
 }

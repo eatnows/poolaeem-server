@@ -1,6 +1,8 @@
 package com.poolaeem.poolaeem.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poolaeem.poolaeem.common.response.ApiResponseCode;
+import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +30,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         try (OutputStream os = response.getOutputStream()) {
-            // TODO API response template 추가해서 반환
+            ApiResponseCode responseCode = ApiResponseCode.UNAUTHORIZED;
+            objectMapper.writeValue(os, new ApiResponseDto<>(responseCode));
             os.flush();
         }
     }
