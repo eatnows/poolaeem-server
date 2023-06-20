@@ -1,10 +1,10 @@
-package com.poolaeem.poolaeem.security.provider;
+package com.poolaeem.poolaeem.security.jwt.provider;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
-import com.poolaeem.poolaeem.security.token.CustomUserDetail;
-import com.poolaeem.poolaeem.security.token.PostAuthenticationToken;
-import com.poolaeem.poolaeem.security.token.PreAuthenticationToken;
+import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
+import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
+import com.poolaeem.poolaeem.security.jwt.token.PreAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

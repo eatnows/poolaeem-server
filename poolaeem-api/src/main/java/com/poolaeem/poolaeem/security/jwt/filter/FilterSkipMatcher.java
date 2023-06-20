@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.security.filter;
+package com.poolaeem.poolaeem.security.jwt.filter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;

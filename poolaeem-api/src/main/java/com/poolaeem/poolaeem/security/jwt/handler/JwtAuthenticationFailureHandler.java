@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.security.handler;
+package com.poolaeem.poolaeem.security.jwt.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;

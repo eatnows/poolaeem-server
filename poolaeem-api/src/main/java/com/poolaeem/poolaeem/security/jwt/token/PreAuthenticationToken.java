@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.security.token;
+package com.poolaeem.poolaeem.security.jwt.token;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 

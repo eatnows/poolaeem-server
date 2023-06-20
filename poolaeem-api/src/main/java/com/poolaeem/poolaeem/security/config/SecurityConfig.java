@@ -10,6 +10,7 @@ import com.poolaeem.poolaeem.security.jwt.handler.JwtAuthenticationSuccessHandle
 import com.poolaeem.poolaeem.security.jwt.provider.JwtAuthenticationProvider;
 import com.poolaeem.poolaeem.security.oauth2.handler.LoginFailureHandler;
 import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessHandler;
+import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.poolaeem.poolaeem.security.oauth2.service.CustomOAuth2UserService;
 import com.poolaeem.poolaeem.security.oauth2.service.CustomOidcUserService;
 import jakarta.servlet.Filter;
@@ -27,8 +28,8 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,14 +49,13 @@ public class SecurityConfig {
     private final HeaderTokenExtractor headerTokenExtractor;
 
 
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//    private final CustomOidcUserService customOidcUserService;
-//    private final LoginSuccessHandler loginSuccessHandler;
-//    private final LoginFailureHandler loginFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOidcUserService customOidcUserService;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final JdbcTemplate jdbcTemplate;
-
-
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     private AuthenticationManager authenticationManager;
 
@@ -71,32 +71,36 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable);
         http
-//                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(config -> config.configurationSource(corsConfigurationSource()));
         http
                 .oauth2Login(oauth2 -> oauth2
-//                        .userInfoEndpoint(endpoint -> endpoint
-//                                .userService(customOAuth2UserService)
-//                                .oidcUserService(customOidcUserService)
-//                        )
+                                .userInfoEndpoint(endpoint -> endpoint
+                                        .userService(customOAuth2UserService)
+                                        .oidcUserService(customOidcUserService)
+                                )
                                 .authorizedClientService(authorizedClientService())
-//                        .successHandler(loginSuccessHandler)
-//                        .failureHandler(loginFailureHandler)
+                                .authorizationEndpoint(endpoint -> endpoint
+                                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                                                .baseUri("/api/signin/oauth2")
+//                                                .authorizationRedirectStrategy(new CustomRedirectStrategy())
+                                )
+                                .successHandler(loginSuccessHandler)
+                                .failureHandler(loginFailureHandler)
                 )
                 .authorizeHttpRequests(registry -> registry
 //                        .requestMatchers("/api/user").hasAnyRole("SCOPE_profile", "SCOPE_email")
 //                        .requestMatchers("/api/oidc").hasAnyRole("SCOPE_openid")
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().permitAll()
+                                .requestMatchers("/").permitAll()
+                                .anyRequest().permitAll()
                 )
                 .exceptionHandling(config -> {
                     config.accessDeniedHandler(jwtAccessDeniedHandler);
                     config.authenticationEntryPoint(jwtAuthenticationEntryPoint);
                 });
 
-//        http
-//                .addFilterBefore(oAuth2Filter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -106,15 +110,6 @@ public class SecurityConfig {
         return new JdbcOAuth2AuthorizedClientService(jdbcTemplate, clientRegistrationRepository);
     }
 
-    private Filter oAuth2Filter() {
-//        CustomOAuth2AuthenticationFilter auth2AuthenticationFilter =
-//                new CustomOAuth2AuthenticationFilter(auth2AuthorizedClientManager, authorizedClientRepository);
-
-        ;
-//        return auth2AuthenticationFilter;
-        return null;
-    }
-
     @Bean
     public GrantedAuthoritiesMapper customAuthorityMapper() {
         return new CustomAuthorityMapper();
@@ -122,13 +117,8 @@ public class SecurityConfig {
 
     private Filter jwtFilter() {
         FilterSkipMatcher matcher = new FilterSkipMatcher(List.of(
-                "/api/login",
-                "/api/signup",
-                "/api/oauth-login",
-                "/api/redirect",
-                "/api/user",
-                "/api/oidc",
-                "/"
+                "/api/signin/oauth2",
+                "/api/signup/terms"
         ), "/api/**");
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(matcher, jwtAuthenticationSuccessHandler, jwtAuthenticationFailureHandler, headerTokenExtractor);
         filter.setAuthenticationManager(authenticationManager);

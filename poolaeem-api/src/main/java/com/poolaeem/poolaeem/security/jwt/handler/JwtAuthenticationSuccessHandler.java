@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.security.handler;
+package com.poolaeem.poolaeem.security.jwt.handler;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,9 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
