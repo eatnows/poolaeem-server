@@ -9,12 +9,15 @@ import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2Authoriz
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
+import com.poolaeem.poolaeem.user.presentation.dto.SignResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -58,11 +61,14 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         if (isUserNotSignedUp(userOptional)) {
             try (OutputStream os = response.getOutputStream()){
-                objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.USER_NOT_SIGNED_UP));
+                objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.USER_NOT_SIGNED_UP, new SignResponse.RequiredTermsDto(provider, oauthId)));
                 os.flush();
             }
             return;
         }
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpStatus.OK.value());
 
         User user = userOptional.get();
         loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null));
@@ -92,15 +98,4 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
-
-//    private void requiredTermsAndConditions(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
-//        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-//    }
-
-//    private String getRequiredTermsUrl(String oauthId, String oauthProvider) {
-//        return UriComponentsBuilder.fromUriString(REQUIRED_TERMS_URL)
-//                .queryParam("oauth-provider", oauthProvider)
-//                .queryParam("oauth-id", oauthId)
-//                .build().toUriString();
-//    }
 }

@@ -28,28 +28,5 @@ public class LoginSuccessToken {
         response.addHeader("ac", accessToken);
         response.addHeader("rf", refreshToken);
 
-        ApiResponseCode responseCode = ApiResponseCode.SUCCESS;
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpStatus.CREATED.value());
-
-//        String url = getSuccessUrl(request, response, accessToken, refreshToken, targetUrl);
-        DefaultRedirectStrategy defaultRedirectStrategy = new DefaultRedirectStrategy();
-//        defaultRedirectStrategy.sendRedirect(request, response, url);
     }
-//
-//    private String getSuccessUrl(HttpServletRequest request, HttpServletResponse response, String accessToken, String refreshToken, String url) {
-//        int cookieMaxAge = (int) (1000 * 60 * 60 * 24 * 15) / 60;
-//
-//        CookieUtils.deleteCookie(request, response, refreshToken);
-//        CookieUtils.addCookie(response, "refresh_token", refreshToken, cookieMaxAge);
-//
-//        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-//                .map(Cookie::getValue);
-//        String targetUrl = redirectUri.orElse(url);
-//
-//        return UriComponentsBuilder.fromUriString(targetUrl)
-//                .queryParam("access-token", accessToken)
-//                .queryParam("refresh-token", refreshToken)
-//                .build().toUriString();
-//    }
 }

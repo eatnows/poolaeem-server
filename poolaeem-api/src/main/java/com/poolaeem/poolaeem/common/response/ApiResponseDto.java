@@ -1,7 +1,9 @@
 package com.poolaeem.poolaeem.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 
+@Getter
 public class ApiResponseDto<T> {
     private int code;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -21,7 +23,7 @@ public class ApiResponseDto<T> {
         this.code = code;
     }
 
-    private ApiResponseDto(ApiResponseCode code, T data) {
+    public ApiResponseDto(ApiResponseCode code, T data) {
         this.code = code.getCode();
         this.data = data;
     }
@@ -32,17 +34,5 @@ public class ApiResponseDto<T> {
 
     public static <T> ApiResponseDto OK(T data) {
         return new ApiResponseDto(ApiResponseCode.SUCCESS, data);
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public T getData() {
-        return data;
     }
 }
