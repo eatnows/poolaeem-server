@@ -9,7 +9,7 @@ public class ApiResponseDto<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
-    public ApiResponseDto() {
+    private ApiResponseDto() {
         this(ApiResponseCode.SUCCESS);
     }
 
@@ -21,8 +21,28 @@ public class ApiResponseDto<T> {
         this.code = code;
     }
 
-    public ApiResponseDto(int code, T data) {
-        this.code = code;
+    private ApiResponseDto(ApiResponseCode code, T data) {
+        this.code = code.getCode();
         this.data = data;
+    }
+
+    public static ApiResponseDto OK() {
+        return new ApiResponseDto(ApiResponseCode.SUCCESS);
+    }
+
+    public static <T> ApiResponseDto OK(T data) {
+        return new ApiResponseDto(ApiResponseCode.SUCCESS, data);
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public T getData() {
+        return data;
     }
 }
