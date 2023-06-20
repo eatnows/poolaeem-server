@@ -1,7 +1,6 @@
 package com.poolaeem.poolaeem.user.presentation;
 
-import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessHandler;
-import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessRedirect;
+import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessToken;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.User;
@@ -19,22 +18,21 @@ public class SignController {
 
     private final SignService signService;
 
-    private final LoginSuccessRedirect loginSuccessRedirect;
+    private final LoginSuccessToken loginSuccessToken;
 
-    public SignController(SignService signService, LoginSuccessRedirect loginSuccessRedirect) {
+    public SignController(SignService signService, LoginSuccessToken loginSuccessToken) {
         this.signService = signService;
-        this.loginSuccessRedirect = loginSuccessRedirect;
+        this.loginSuccessToken = loginSuccessToken;
     }
 
     @PostMapping("/signup/terms")
-    public void signUp(HttpServletRequest request,
-                       HttpServletResponse response,
+    public void signUp(HttpServletResponse response,
                        @Valid @RequestBody SignRequest.SignUpTermsDto dto) throws IOException {
 
         User user = signService.signUpOAuth2User(dto.getOauthProvider(), dto.getOauthId());
-        loginSuccessRedirect.redirectSignedIn(request,
+        loginSuccessToken.addTokenInResponse(
                 response,
-                new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null),
-                LoginSuccessHandler.DEFAULT_REDIRECT_URL);
+                new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null)
+        );
     }
 }

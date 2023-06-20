@@ -24,7 +24,7 @@ spring:
             client-id: ${OAUTH_GOOGLE_ID}
             client-secret: ${OAUTH_GOOGLE_SECRET}
 #            redirect-uri: https://poolaeem.com/login/oauth2/code/google
-#            redirect-uri: http://localhost:3000/redirectHandler
+            redirect-uri: http://localhost:3000/redirectHandler
 #            redirect-uri: http://localhost:8080/oauth2/authorization/google
             scope:
             - profile

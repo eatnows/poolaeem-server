@@ -1,11 +1,15 @@
 package com.poolaeem.poolaeem.security.oauth2.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.common.response.ApiResponseCode;
+import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,25 +24,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Optional;
 
 @Slf4j
 @Component
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    public static final String DEFAULT_REDIRECT_URL = "https://poolaeem.com";
-    public static final String SIGN_IN_SUCCESS_URL = DEFAULT_REDIRECT_URL + "";
-    public static final String REQUIRED_TERMS_URL = DEFAULT_REDIRECT_URL + "";
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-    private final LoginSuccessRedirect loginSuccessRedirect;
+    private final LoginSuccessToken loginSuccessToken;
+    private final ObjectMapper objectMapper;
 
-    public LoginSuccessHandler(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessRedirect loginSuccessRedirect) {
+    public LoginSuccessHandler(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
-        this.loginSuccessRedirect = loginSuccessRedirect;
+        this.loginSuccessToken = loginSuccessToken;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -53,11 +57,25 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Optional<User> userOptional = userRepository.findByEmailAndOauthProviderAndOauthIdAndIsDeletedFalse(email, oauthProvider, oauthId);
 
         if (isUserNotSignedUp(userOptional)) {
-            requiredTermsAndConditions(request, response, getRequiredTermsUrl(oauthId, provider));
+            try (OutputStream os = response.getOutputStream()){
+                objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.USER_NOT_SIGNED_UP));
+                os.flush();
+            }
             return;
         }
+
         User user = userOptional.get();
-        loginSuccessRedirect.redirectSignedIn(request, response, new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null), SIGN_IN_SUCCESS_URL);
+        loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null));
+
+        try (OutputStream os = response.getOutputStream()){
+            objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.SUCCESS));
+            os.flush();
+        }
+    }
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+        super.onAuthenticationSuccess(request, response, chain, authentication);
     }
 
     private boolean isUserNotSignedUp(Optional<User> userOptional) {
@@ -75,14 +93,14 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    private void requiredTermsAndConditions(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
-        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-    }
+//    private void requiredTermsAndConditions(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
+//        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+//    }
 
-    private String getRequiredTermsUrl(String oauthId, String oauthProvider) {
-        return UriComponentsBuilder.fromUriString(REQUIRED_TERMS_URL)
-                .queryParam("oauth-provider", oauthProvider)
-                .queryParam("oauth-id", oauthId)
-                .build().toUriString();
-    }
+//    private String getRequiredTermsUrl(String oauthId, String oauthProvider) {
+//        return UriComponentsBuilder.fromUriString(REQUIRED_TERMS_URL)
+//                .queryParam("oauth-provider", oauthProvider)
+//                .queryParam("oauth-id", oauthId)
+//                .build().toUriString();
+//    }
 }
