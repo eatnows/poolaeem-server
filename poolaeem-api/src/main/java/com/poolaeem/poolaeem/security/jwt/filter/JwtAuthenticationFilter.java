@@ -22,19 +22,16 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     private JwtAuthenticationSuccessHandler successHandler;
     private JwtAuthenticationFailureHandler failureHandler;
-    private HeaderTokenExtractor headerTokenExtractor;
 
     private final String AUTHORIZATION = "Authorization";
 
     public JwtAuthenticationFilter(RequestMatcher matcher,
                                    JwtAuthenticationSuccessHandler successHandler,
-                                   JwtAuthenticationFailureHandler failureHandler,
-                                   HeaderTokenExtractor headerTokenExtractor) {
+                                   JwtAuthenticationFailureHandler failureHandler) {
         super(matcher);
 
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
-        this.headerTokenExtractor = headerTokenExtractor;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         String bearerToken = request.getHeader(AUTHORIZATION);
 
         if (StringUtils.isEmpty(bearerToken)) {
-            String extractToken = headerTokenExtractor.extract(bearerToken);
+            String extractToken = HeaderTokenExtractor.extract(bearerToken);
             PreAuthenticationToken authorizationToken = new PreAuthenticationToken(extractToken, extractToken.length());
 
             super.getAuthenticationManager().authenticate(authorizationToken);

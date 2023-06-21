@@ -46,8 +46,6 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
     private final JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
-    private final HeaderTokenExtractor headerTokenExtractor;
-
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
@@ -120,7 +118,7 @@ public class SecurityConfig {
                 "/api/signin/oauth2",
                 "/api/signup/terms"
         ), "/api/**");
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(matcher, jwtAuthenticationSuccessHandler, jwtAuthenticationFailureHandler, headerTokenExtractor);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(matcher, jwtAuthenticationSuccessHandler, jwtAuthenticationFailureHandler);
         filter.setAuthenticationManager(authenticationManager);
 
         return filter;
