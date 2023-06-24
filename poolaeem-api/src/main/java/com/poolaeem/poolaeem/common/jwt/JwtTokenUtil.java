@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.exception.jwt.ExpiredTokenException;
 import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
+import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +27,10 @@ public class JwtTokenUtil {
     private final byte[] PUBLIC_KEY;
     private final String ISSUER = "poolaeem";
     private final String SUBJECT_AUTHENTICATION = "Authentication";
+    private final String SUBJECT_REFRESH = "Refresh";
 
     private final int ACCESS_TIME = 1000 * 60 * 30;
-//    private final int REFRESH_TIME = 1000 * 60 * 60 * 24 * 15;
+    private final int REFRESH_TIME = 1000 * 60 * 60 * 24 * 15;
 
     public JwtTokenUtil(@Value("${jwt.rsa.private}") String privateKey,
                         @Value("${jwt.rsa.public}") String publicKey) {
@@ -37,14 +39,27 @@ public class JwtTokenUtil {
         this.PUBLIC_KEY = base64Encoder.decode(publicKey.replace("\\n", "").replaceAll("-{5}[ a-zA-Z]*-{5}", ""));
     }
 
-    public String generateAccessToken() {
+    public String generateAccessToken(GenerateTokenUser generateTokenUser) {
         return JWT.create()
                 .withIssuer(ISSUER)
                 .withSubject(SUBJECT_AUTHENTICATION)
-                .withClaim("email", "email")
-                .withClaim("name", "name")
+                .withClaim("code", generateTokenUser.getId())
+                .withClaim("email", generateTokenUser.getEmail())
+                .withClaim("name", generateTokenUser.getName())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TIME))
+                .sign(generateAlgorithm());
+    }
+
+    public String generateRefreshToken(GenerateTokenUser generateTokenUser) {
+        return JWT.create()
+                .withIssuer(ISSUER)
+                .withSubject(SUBJECT_AUTHENTICATION)
+                .withClaim("code", generateTokenUser.getId())
+                .withClaim("email", generateTokenUser.getEmail())
+                .withClaim("name", generateTokenUser.getName())
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TIME))
                 .sign(generateAlgorithm());
     }
 

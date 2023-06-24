@@ -3,6 +3,31 @@ spring:
     url: jdbc:mysql://localhost:3306/poolaeem?characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: password
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_GOOGLE_ID}
+            client-secret: ${OAUTH_GOOGLE_SECRET}
+            scope:
+              - profile
+              - email
+        provider:
+          google:
+            authorization-uri: http://0.0.0.0:8090/oauth/authorize
+            token-uri: http://0.0.0.0:8090/oauth/token
+            user-info-uri: http://0.0.0.0:8090/userinfo
+
+
+
+  flyway:
+          enabled: false
+          baseline-on-migrate: false
+          url: ${DB_URL}
+          user: ${DB_USERNAME}
+          password: ${DB_PASSWORD}
+          clean-disabled: true
 
 jwt:
   rsa:

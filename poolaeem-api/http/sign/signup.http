@@ -1,0 +1,9 @@
+// OAuth2 회원가입 이용약관 동의
+POST http://localhost:8080/api/signup/terms
+Content-Type: application/json
+
+{
+  "isAgreeTerms" : true,
+  "oauthProvider": "google",
+  "oauthId": "123"
+}

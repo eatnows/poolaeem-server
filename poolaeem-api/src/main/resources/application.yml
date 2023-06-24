@@ -4,6 +4,37 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        query:
+          in_clause_parameter_padding: true
+    #          plan_cache_max_size: 1024
+    #          plan_parameter_metadata_max_size: 64
+    hibernate:
+      ddl-auto: none
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_GOOGLE_ID}
+            client-secret: ${OAUTH_GOOGLE_SECRET}
+            redirect-uri: http://localhost:3000/google
+            scope:
+            - profile
+            - email
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    clean-disabled: true
 
 jwt:
   rsa:

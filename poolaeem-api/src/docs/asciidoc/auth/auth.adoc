@@ -1,0 +1,35 @@
+ifndef::snippets[]
+:snippets: ../../../../build/generated-snippets
+endif::[]
+= 인증 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 1
+:sectlinks:
+:docinfo: shared-head
+:linkattrs:
+
+== 공통 코드
+[cols=2*]
+|===
+|코드
+|설명
+
+|code
+|내부 코드 - 0 : SUCCESS
+|message
+|성공 및 에러 메시지
+|data
+|반환 데이터 값
+|===
+
+= --
+
+== 구글 OAuth2 로그인 요청
+=== -- Request
+include::{snippets}/sign/google-o-auth2-sign-in/path-parameters.adoc[]
+include::{snippets}/sign/google-o-auth2-sign-in/http-request.adoc[]
+=== -- Response
+include::{snippets}/sign/google-o-auth2-sign-in/http-response.adoc[]
