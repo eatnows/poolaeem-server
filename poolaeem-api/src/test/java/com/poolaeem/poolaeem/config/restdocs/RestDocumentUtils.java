@@ -7,7 +7,7 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 
-public class RestDocumentUtils {
+public interface RestDocumentUtils {
     static OperationRequestPreprocessor getDocumentRequest() {
         return preprocessRequest(
                 Preprocessors.prettyPrint(),

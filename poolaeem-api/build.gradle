@@ -27,6 +27,21 @@ tasks.named('asciidoctor') {
     dependsOn test
 }
 
+asciidoctor.doFirst {
+    println("======delete present asciidoctor.")
+    delete file('src/main/resources/static/poolaeem-api/**')
+}
+
+task copyHTML(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/poolaeem-api/docs")
+}
+
+build {
+    dependsOn copyHTML
+}
+
 bootJar {
     enabled = true
 }
