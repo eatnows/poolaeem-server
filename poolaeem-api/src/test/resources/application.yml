@@ -1,8 +1,11 @@
 spring:
+  test:
+    mockmvc:
+      print: default
   datasource:
-    url: jdbc:mysql://localhost:3306/poolaeem?characterEncoding=UTF-8&serverTimezone=UTC
-    username: root
-    password: password
+    url: jdbc:tc:mysql:8.0.22://localhost:3306/poolaeem
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
   security:
     oauth2:
       client:
