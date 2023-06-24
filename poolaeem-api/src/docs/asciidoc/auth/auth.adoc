@@ -29,7 +29,17 @@ endif::[]
 
 == 구글 OAuth2 로그인 요청
 === -- Request
-include::{snippets}/sign/google-o-auth2-sign-in/path-parameters.adoc[]
-include::{snippets}/sign/google-o-auth2-sign-in/http-request.adoc[]
+include::{snippets}/auth/request-google-o-auth2-sign-in/path-parameters.adoc[]
+include::{snippets}/auth/request-google-o-auth2-sign-in/http-request.adoc[]
 === -- Response
-include::{snippets}/sign/google-o-auth2-sign-in/http-response.adoc[]
+include::{snippets}/auth/request-google-o-auth2-sign-in/http-response.adoc[]
+
+
+== 회원가입 이용약관 동의
+=== -- Request
+include::{snippets}/auth/agree-sign-up-terms/path-parameters.adoc[]
+include::{snippets}/auth/agree-sign-up-terms/request-fields.adoc[]
+include::{snippets}/auth/agree-sign-up-terms/http-request.adoc[]
+=== -- Response
+include::{snippets}/auth/agree-sign-up-terms/response-headers.adoc[]
+include::{snippets}/auth/agree-sign-up-terms/http-response.adoc[]

@@ -45,7 +45,7 @@ public abstract class ApiDocumentationTest {
     @MockBean
     protected JdbcTemplate jdbcTemplate;
 
-    @MockBean
+    @SpyBean
     protected LoginSuccessToken loginSuccessToken;
     @SpyBean
     protected LoginSuccessHandler loginSuccessHandler;

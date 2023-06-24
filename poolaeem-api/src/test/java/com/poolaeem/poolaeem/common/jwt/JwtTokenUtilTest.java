@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.unit.common.jwt;
+package com.poolaeem.poolaeem.common.jwt;
 
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
@@ -58,7 +58,7 @@ class JwtTokenUtilTest {
         String token = jwtTokenUtil.generateAccessToken(generateTokenUser);
 
         String[] split = token.split("\\.");
-        assertThat(split.length).isEqualTo(3);
+        assertThat(split).hasSize(3);
     }
 
     @Test
@@ -68,6 +68,6 @@ class JwtTokenUtilTest {
         String token = jwtTokenUtil.generateRefreshToken(generateTokenUser);
 
         String[] split = token.split("\\.");
-        assertThat(split.length).isEqualTo(3);
+        assertThat(split).hasSize(3);
     }
 }

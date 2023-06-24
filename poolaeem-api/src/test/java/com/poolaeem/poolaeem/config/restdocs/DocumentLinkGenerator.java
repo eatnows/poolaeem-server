@@ -6,6 +6,7 @@ public interface DocumentLinkGenerator {
     }
 
     enum DocUrl {
+        OAUTH_PROVIDER("oauth_provider", "OAuth2 Provider")
         ;
 
         private final String pageId;
