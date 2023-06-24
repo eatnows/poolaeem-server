@@ -13,6 +13,12 @@ spring:
             scope:
               - profile
               - email
+        provider:
+          google:
+            authorization-uri: http://0.0.0.0:8090/oauth/authorize
+            token-uri: http://0.0.0.0:8090/oauth/token
+            user-info-uri: http://0.0.0.0:8090/userinfo
+
 
 
   flyway:

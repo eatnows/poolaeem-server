@@ -1,7 +1,6 @@
 package com.poolaeem.poolaeem.config.restdocs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poolaeem.poolaeem.common.jwt.HeaderTokenExtractor;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.security.config.SecurityConfig;
 import com.poolaeem.poolaeem.security.jwt.handler.JwtAccessDeniedHandler;
@@ -47,34 +46,32 @@ public abstract class ApiDocumentationTest {
     protected JdbcTemplate jdbcTemplate;
 
     @MockBean
-    private LoginSuccessToken loginSuccessToken;
+    protected LoginSuccessToken loginSuccessToken;
     @SpyBean
-    private LoginSuccessHandler loginSuccessHandler;
+    protected LoginSuccessHandler loginSuccessHandler;
     @SpyBean
-    private LoginFailureHandler loginFailureHandler;
+    protected LoginFailureHandler loginFailureHandler;
     @SpyBean
-    private JwtAuthenticationProvider jwtAuthenticationProvider;
+    protected JwtAuthenticationProvider jwtAuthenticationProvider;
     @SpyBean
-    private JwtTokenUtil jwtTokenUtil;
+    protected JwtTokenUtil jwtTokenUtil;
     @SpyBean
-    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    protected JwtAccessDeniedHandler jwtAccessDeniedHandler;
     @SpyBean
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    protected JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @SpyBean
-    private JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
+    protected JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
     @SpyBean
-    private JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
+    protected JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
     @SpyBean
-    private CustomOAuth2UserService customOAuth2UserService;
+    protected CustomOAuth2UserService customOAuth2UserService;
     @SpyBean
-    private CustomOidcUserService customOidcUserService;
+    protected CustomOidcUserService customOidcUserService;
     @MockBean
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
     @SpyBean
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
-
+    protected HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @MockBean
-    private SignService signService;
+    protected SignService signService;
 }
