@@ -5,7 +5,6 @@ import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.presentation.dto.SignRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import java.io.IOException;
 public class SignController {
 
     private final SignService signService;
-
     private final LoginSuccessToken loginSuccessToken;
 
     public SignController(SignService signService, LoginSuccessToken loginSuccessToken) {

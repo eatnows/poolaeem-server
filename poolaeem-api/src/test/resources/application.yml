@@ -6,6 +6,18 @@ spring:
     url: jdbc:tc:mysql:8.0.22://localhost:3306/poolaeem
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+#  sql:
+#    init:
+#      schema-locations: classpath:sql/common/oauth2.sql
+#      mode: always
+
   security:
     oauth2:
       client:

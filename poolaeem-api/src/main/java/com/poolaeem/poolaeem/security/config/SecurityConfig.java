@@ -1,6 +1,5 @@
 package com.poolaeem.poolaeem.security.config;
 
-import com.poolaeem.poolaeem.common.jwt.HeaderTokenExtractor;
 import com.poolaeem.poolaeem.security.jwt.filter.FilterSkipMatcher;
 import com.poolaeem.poolaeem.security.jwt.filter.JwtAuthenticationFilter;
 import com.poolaeem.poolaeem.security.jwt.handler.JwtAccessDeniedHandler;
@@ -87,10 +86,10 @@ public class SecurityConfig {
                                 .failureHandler(loginFailureHandler)
                 )
                 .authorizeHttpRequests(registry -> registry
-//                        .requestMatchers("/api/user").hasAnyRole("SCOPE_profile", "SCOPE_email")
-//                        .requestMatchers("/api/oidc").hasAnyRole("SCOPE_openid")
-                                .requestMatchers("/").permitAll()
-                                .anyRequest().permitAll()
+                        .requestMatchers("/api/user").hasAnyRole("SCOPE_profile", "SCOPE_email")
+                        .requestMatchers("/api/oidc").hasAnyRole("SCOPE_openid")
+                        .requestMatchers("/api/signup/terms", "/poolaeem-api/docs/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(config -> {
                     config.accessDeniedHandler(jwtAccessDeniedHandler);

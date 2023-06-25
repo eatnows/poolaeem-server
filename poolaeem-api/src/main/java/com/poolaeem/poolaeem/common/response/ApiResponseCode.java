@@ -12,6 +12,7 @@ public enum ApiResponseCode {
     EXPIRED_TOKEN(10050, "토큰 유효시간이 만료 되었습니다.", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(10052, "유효한 토큰이 아닙니다.", HttpStatus.BAD_REQUEST),
     USER_NOT_SIGNED_UP(10023, "회원가입 하지 않은 유저입니다.", HttpStatus.UNAUTHORIZED),
+    DUPLICATE_SIGNED_UP(10024, "이미 회원가입한 유저입니다.", HttpStatus.BAD_REQUEST),
     INVALID_BAD_REQUEST(10000, "회원가입 하지 않은 유저입니다.", HttpStatus.BAD_REQUEST),
 
 
