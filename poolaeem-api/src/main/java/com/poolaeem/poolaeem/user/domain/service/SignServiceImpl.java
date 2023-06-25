@@ -1,5 +1,7 @@
 package com.poolaeem.poolaeem.user.domain.service;
 
+import com.poolaeem.poolaeem.common.exception.sign.DuplicateSignUpException;
+import com.poolaeem.poolaeem.common.exception.sign.UserNotSignedUpException;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
 import com.poolaeem.poolaeem.user.application.SignService;
@@ -10,13 +12,14 @@ import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,26 +27,43 @@ public class SignServiceImpl implements SignService {
 
     private final UserRepository userRepository;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+    private final SignUpOAuth2UserService signUpOAuth2UserService;
 
-    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService) {
+    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService) {
         this.userRepository = userRepository;
         this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
+        this.signUpOAuth2UserService = signUpOAuth2UserService;
     }
 
     @Transactional
     @Override
-    public User signUpOAuth2User(String oauthProvider, String oauthId) {
-        OAuth2AuthorizedClient client = oAuth2AuthorizedClientService.loadAuthorizedClient(oauthProvider, oauthId);
+    public User signUpOAuth2User(OauthProvider oauthProvider, String oauthId) {
+        OAuth2AuthorizedClient client = oAuth2AuthorizedClientService.loadAuthorizedClient(oauthProvider.getId(), oauthId);
         OAuth2AccessToken accessToken = client.getAccessToken();
-        DefaultOAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = oAuth2UserService.loadUser(new OAuth2UserRequest(client.getClientRegistration(), accessToken));
+
+        if (isExpired(Objects.requireNonNull(accessToken.getExpiresAt()))) {
+            throw new UserNotSignedUpException();
+        }
+
+        OAuth2User oAuth2User = signUpOAuth2UserService.loadUser(new OAuth2UserRequest(client.getClientRegistration(), accessToken));
 
         ProviderUser providerUser = getProviderUser(oAuth2User, client.getClientRegistration());
 
         return saveUser(providerUser);
     }
+    
+    private boolean isExpired(Instant tokenExpiredAt) {
+        return tokenExpiredAt.isBefore(Instant.now());
+    }
 
     private User saveUser(ProviderUser providerUser) {
+        Optional<User> optional = userRepository.findByEmailAndOauthProviderAndOauthIdAndIsDeletedFalse(providerUser.getEmail(),
+                OauthProvider.valueOf(providerUser.getProvider().toUpperCase()),
+                providerUser.getId());
+        if (optional.isPresent()) {
+            throw new DuplicateSignUpException();
+        }
+
         return userRepository.save(new User(providerUser.getEmail(),
                 providerUser.getUsername(),
                 OauthProvider.valueOf(providerUser.getProvider().toUpperCase()),
