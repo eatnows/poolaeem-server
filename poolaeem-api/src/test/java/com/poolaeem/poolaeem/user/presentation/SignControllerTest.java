@@ -52,7 +52,7 @@ class SignControllerTest extends ApiDocumentationTest {
     @Test
     @DisplayName("회원가입 이용약관 동의")
     void agreeSignUpTerms() throws Exception {
-        given(signService.signUpOAuth2User("google", "oauthId"))
+        given(signService.signUpOAuth2User(OauthProvider.GOOGLE, "oauthId"))
                 .willReturn(new User(
                         "test@poolaeem.com",
                         "풀내임",
@@ -67,7 +67,7 @@ class SignControllerTest extends ApiDocumentationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new SignRequest.SignUpTermsDto(
                                 true,
-                                "google",
+                                OauthProvider.GOOGLE,
                                 "oauthId"
                         )))
                         .accept(MediaType.APPLICATION_JSON)
