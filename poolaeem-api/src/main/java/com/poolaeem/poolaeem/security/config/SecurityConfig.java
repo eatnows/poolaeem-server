@@ -88,7 +88,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/api/user").hasAnyRole("SCOPE_profile", "SCOPE_email")
                         .requestMatchers("/api/oidc").hasAnyRole("SCOPE_openid")
-                        .requestMatchers("/api/signup/terms").permitAll()
+                        .requestMatchers("/api/signup/terms", "/poolaeem-api/docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(config -> {
