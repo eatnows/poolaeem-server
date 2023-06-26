@@ -44,6 +44,10 @@ spring:
           password: ${DB_PASSWORD}
           clean-disabled: true
 
+poolaeem:
+  encrypt:
+    secretKey: ST0IxeU6g1Tbzrqw7k380saqOMaxmUEP
+
 jwt:
   rsa:
     private: -----BEGIN PRIVATE KEY-----
