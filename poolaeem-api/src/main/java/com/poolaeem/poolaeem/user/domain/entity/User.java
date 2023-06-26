@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.user.domain.entity;
 
 import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
+import com.poolaeem.poolaeem.common.encrypto.TextEncryptConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,6 +23,7 @@ public class User {
     @Column(name = "id", nullable = false, length = 32)
     private String id;
 
+    @Convert(converter = TextEncryptConverter.class)
     @Column(name = "email", nullable = false, length = 200)
     private String email;
 

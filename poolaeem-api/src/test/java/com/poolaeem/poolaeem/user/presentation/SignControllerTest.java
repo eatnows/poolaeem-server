@@ -52,9 +52,11 @@ class SignControllerTest extends ApiDocumentationTest {
     @Test
     @DisplayName("회원가입 이용약관 동의")
     void agreeSignUpTerms() throws Exception {
-        given(signService.signUpOAuth2User(OauthProvider.GOOGLE, "oauthId"))
+        String email = "test@poolaeem.com";
+
+        given(signService.signUpOAuth2User(OauthProvider.GOOGLE, "oauthId", email))
                 .willReturn(new User(
-                        "test@poolaeem.com",
+                        email,
                         "풀내임",
                         OauthProvider.GOOGLE,
                         "oauthId",
@@ -68,7 +70,8 @@ class SignControllerTest extends ApiDocumentationTest {
                         .content(objectMapper.writeValueAsString(new SignRequest.SignUpTermsDto(
                                 true,
                                 OauthProvider.GOOGLE,
-                                "oauthId"
+                                "oauthId",
+                                email
                         )))
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -81,7 +84,8 @@ class SignControllerTest extends ApiDocumentationTest {
                         requestFields(
                                 fieldWithPath("isAgreeTerms").type(JsonFieldType.BOOLEAN).description("true 만 허용"),
                                 fieldWithPath("oauthProvider").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.OAUTH_PROVIDER)),
-                                fieldWithPath("oauthId").type(JsonFieldType.STRING).description("OAuth2 식별자")
+                                fieldWithPath("oauthId").type(JsonFieldType.STRING).description("OAuth2 식별자"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일 주소")
                         ),
                         responseHeaders(
                                 headerWithName("access-token").description("access token"),

@@ -4,6 +4,7 @@ Content-Type: application/json
 
 {
   "isAgreeTerms" : true,
-  "oauthProvider": "google",
-  "oauthId": "123"
+  "oauthProvider": "GOOGLE",
+  "oauthId": "1234",
+  "email": "test@poolaee.com"
 }

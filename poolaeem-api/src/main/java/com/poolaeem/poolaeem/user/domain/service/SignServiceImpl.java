@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.user.domain.service;
 
+import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.sign.DuplicateSignUpException;
 import com.poolaeem.poolaeem.common.exception.sign.UserNotSignedUpException;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
@@ -37,7 +38,7 @@ public class SignServiceImpl implements SignService {
 
     @Transactional
     @Override
-    public User signUpOAuth2User(OauthProvider oauthProvider, String oauthId) {
+    public User signUpOAuth2User(OauthProvider oauthProvider, String oauthId, String email) {
         OAuth2AuthorizedClient client = oAuth2AuthorizedClientService.loadAuthorizedClient(oauthProvider.getId(), oauthId);
         OAuth2AccessToken accessToken = client.getAccessToken();
 
@@ -46,10 +47,16 @@ public class SignServiceImpl implements SignService {
         }
 
         OAuth2User oAuth2User = signUpOAuth2UserService.loadUser(new OAuth2UserRequest(client.getClientRegistration(), accessToken));
-
         ProviderUser providerUser = getProviderUser(oAuth2User, client.getClientRegistration());
+        matchRequestEmailAndUserEmail(email, providerUser.getEmail());
 
         return saveUser(providerUser);
+    }
+
+    private void matchRequestEmailAndUserEmail(String requestEmail, String userEmail) {
+        if (!requestEmail.equals(userEmail)) {
+            throw new BadRequestDataException();
+        }
     }
     
     private boolean isExpired(Instant tokenExpiredAt) {
@@ -57,7 +64,7 @@ public class SignServiceImpl implements SignService {
     }
 
     private User saveUser(ProviderUser providerUser) {
-        Optional<User> optional = userRepository.findByEmailAndOauthProviderAndOauthIdAndIsDeletedFalse(providerUser.getEmail(),
+        Optional<User> optional = userRepository.findByOauthProviderAndOauthIdAndIsDeletedFalse(
                 OauthProvider.valueOf(providerUser.getProvider().toUpperCase()),
                 providerUser.getId());
         if (optional.isPresent()) {
