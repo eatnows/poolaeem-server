@@ -16,7 +16,9 @@ public enum ApiResponseCode {
     INVALID_BAD_REQUEST(10000, "회원가입 하지 않은 유저입니다.", HttpStatus.BAD_REQUEST),
 
 
-    INVALID_SERVER_ERROR(20000, "알 수 없는 오류로 요청을 완료할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR)
+    INVALID_SERVER_ERROR(20000, "알 수 없는 오류로 요청을 완료할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    ENCRYPT_ERROR(20012, "암호화 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    DECRYPT_ERROR(20012, "복호화 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
 
     private int code;

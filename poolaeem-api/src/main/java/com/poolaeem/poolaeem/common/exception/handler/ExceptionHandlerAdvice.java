@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.common.exception.handler;
 
+import com.poolaeem.poolaeem.common.exception.base.ServiceErrorException;
 import com.poolaeem.poolaeem.common.exception.base.ServiceException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
@@ -11,14 +12,32 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
-
     @ExceptionHandler(ServiceException.class)
-    private ResponseEntity<ApiResponseDto> handleServiceException(ServiceException e) {
+    private ResponseEntity<ApiResponseDto<String>> handleServiceException(ServiceException e) {
         try {
             ApiResponseCode responseCode = e.getApiResponseCode();
             ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, e.getMessage());
 
             log.info("> service exception: ", e);
+
+            return new ResponseEntity<>(responseDto, responseCode.getHttpStatus());
+        } catch (Exception ex) {
+            log.error("> service exception handler error: ", ex);
+
+            ApiResponseCode responseCode = ApiResponseCode.INVALID_SERVER_ERROR;
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, responseCode.getMessage());
+
+            return new ResponseEntity<>(responseDto, responseCode.getHttpStatus());
+        }
+    }
+
+    @ExceptionHandler(ServiceErrorException.class)
+    private ResponseEntity<ApiResponseDto<String>> handleServiceErrorException(ServiceErrorException e) {
+        try {
+            ApiResponseCode responseCode = e.getApiResponseCode();
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, e.getMessage());
+
+            log.info("> service error exception: ", e);
 
             return new ResponseEntity<>(responseDto, responseCode.getHttpStatus());
         } catch (Exception ex) {
