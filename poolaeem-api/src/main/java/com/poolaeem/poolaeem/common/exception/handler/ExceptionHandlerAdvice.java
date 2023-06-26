@@ -5,18 +5,20 @@ import com.poolaeem.poolaeem.common.exception.base.ServiceException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
+@Order(3)
 public class ExceptionHandlerAdvice {
     @ExceptionHandler(ServiceException.class)
     private ResponseEntity<ApiResponseDto<String>> handleServiceException(ServiceException e) {
         try {
             ApiResponseCode responseCode = e.getApiResponseCode();
-            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, e.getMessage());
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, responseCode.getMessage());
 
             log.info("> service exception: ", e);
 
@@ -35,7 +37,7 @@ public class ExceptionHandlerAdvice {
     private ResponseEntity<ApiResponseDto<String>> handleServiceErrorException(ServiceErrorException e) {
         try {
             ApiResponseCode responseCode = e.getApiResponseCode();
-            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, e.getMessage());
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, responseCode.getMessage());
 
             log.info("> service error exception: ", e);
 
