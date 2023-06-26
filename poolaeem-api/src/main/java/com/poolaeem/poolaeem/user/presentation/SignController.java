@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api")
 public class SignController {
@@ -25,9 +23,9 @@ public class SignController {
 
     @PostMapping("/signup/terms")
     public void signUp(HttpServletResponse response,
-                       @Valid @RequestBody SignRequest.SignUpTermsDto dto) throws IOException {
+                       @Valid @RequestBody SignRequest.SignUpTermsDto dto) {
 
-        User user = signService.signUpOAuth2User(dto.getOauthProvider(), dto.getOauthId());
+        User user = signService.signUpOAuth2User(dto.getOauthProvider(), dto.getOauthId(), dto.getEmail());
         loginSuccessToken.addTokenInResponse(
                 response,
                 new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null)

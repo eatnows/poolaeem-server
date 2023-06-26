@@ -23,6 +23,11 @@ public class ApiResponseDto<T> {
         this.code = code;
     }
 
+    public ApiResponseDto(ApiResponseCode code, String message) {
+        this.code = code.getCode();
+        this.message = message;
+    }
+
     public ApiResponseDto(ApiResponseCode code, T data) {
         this.code = code.getCode();
         this.data = data;

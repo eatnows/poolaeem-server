@@ -1,7 +1,7 @@
 package com.poolaeem.poolaeem.security.oauth2.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.common.exception.sign.UserNotSignedUpException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
@@ -24,7 +24,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,14 +33,12 @@ import java.util.Optional;
 @Component
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final LoginSuccessToken loginSuccessToken;
     private final ObjectMapper objectMapper;
 
-    public LoginSuccessHandler(JwtTokenUtil jwtTokenUtil, UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper) {
-        this.jwtTokenUtil = jwtTokenUtil;
+    public LoginSuccessHandler(UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.loginSuccessToken = loginSuccessToken;
@@ -57,13 +54,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
         OauthProvider oauthProvider = OauthProvider.valueOf(provider.toUpperCase());
 
-        Optional<User> userOptional = userRepository.findByEmailAndOauthProviderAndOauthIdAndIsDeletedFalse(email, oauthProvider, oauthId);
+        Optional<User> userOptional = userRepository.findByOauthProviderAndOauthIdAndIsDeletedFalse(oauthProvider, oauthId);
 
-        if (isUserNotSignedUp(userOptional)) {
-            try (OutputStream os = response.getOutputStream()){
-                objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.USER_NOT_SIGNED_UP, new SignResponse.RequiredTermsDto(provider, oauthId)));
-                os.flush();
-            }
+        if (isUserNotSignedUp(userOptional, email)) {
+            requestAgreementForSignUpTerms(response, oauthId, email, provider);
             return;
         }
 
@@ -79,13 +73,27 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         }
     }
 
+    private void requestAgreementForSignUpTerms(HttpServletResponse response, String oauthId, String email, String provider) throws IOException {
+        try (OutputStream os = response.getOutputStream()){
+            objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.USER_NOT_SIGNED_UP, new SignResponse.RequiredTermsDto(OauthProvider.valueOf(provider.toUpperCase()), oauthId, email)));
+            os.flush();
+        }
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         super.onAuthenticationSuccess(request, response, chain, authentication);
     }
 
-    private boolean isUserNotSignedUp(Optional<User> userOptional) {
-        return userOptional.isEmpty();
+    private boolean isUserNotSignedUp(Optional<User> userOptional, String email) {
+        if (userOptional.isEmpty()) {
+            return true;
+        }
+        if (!userOptional.get().getEmail().equals(email)) {
+            throw new UserNotSignedUpException();
+        }
+
+        return false;
     }
 
 

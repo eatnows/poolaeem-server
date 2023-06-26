@@ -41,3 +41,7 @@ jwt:
     private: ${JWT_PRIVATE_KEY}
     public: ${JWT_PUBLIC_KEY}
 
+poolaeem:
+  encrypt:
+   secretKey: ${AES_ENCRYPT_SECRET_KEY}
+
