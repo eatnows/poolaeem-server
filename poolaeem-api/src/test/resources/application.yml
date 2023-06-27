@@ -34,8 +34,6 @@ spring:
             token-uri: http://0.0.0.0:8090/oauth/token
             user-info-uri: http://0.0.0.0:8090/userinfo
 
-
-
   flyway:
           enabled: false
           baseline-on-migrate: false
@@ -43,8 +41,17 @@ spring:
           user: ${DB_USERNAME}
           password: ${DB_PASSWORD}
           clean-disabled: true
+  cloud:
+    aws:
+      s3:
+        region: ap-northeast-2
 
 poolaeem:
+  aws:
+    s3:
+      bucket-name: ${S3_BUCKET_NAME}
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
   encrypt:
     secretKey: ST0IxeU6g1Tbzrqw7k380saqOMaxmUEP
 
