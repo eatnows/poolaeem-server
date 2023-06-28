@@ -1,4 +1,4 @@
-CREATE TABLE `oauth2_authorized_client` (
+CREATE TABLE IF NOT EXISTS `oauth2_authorized_client` (
     `client_registration_id` varchar(100) NOT NULL,
     `principal_name` varchar(200) NOT NULL,
     `access_token_type` varchar(100) NOT NULL,

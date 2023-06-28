@@ -41,17 +41,15 @@ spring:
           user: ${DB_USERNAME}
           password: ${DB_PASSWORD}
           clean-disabled: true
-  cloud:
-    aws:
-      s3:
-        region: ap-northeast-2
 
 poolaeem:
   aws:
+    region: ${AWS_REGION}
     s3:
-      bucket-name: ${S3_BUCKET_NAME}
-      access-key: ${S3_ACCESS_KEY}
-      secret-key: ${S3_SECRET_KEY}
+      bucket-name: test-bucket
+      access-key: test_access_key
+      secret-key: test_secret_key
+
   encrypt:
     secretKey: ST0IxeU6g1Tbzrqw7k380saqOMaxmUEP
 
