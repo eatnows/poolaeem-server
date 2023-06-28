@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.file.domain.service;
 
 import com.poolaeem.poolaeem.common.exception.file.FIleUploadException;
+import com.poolaeem.poolaeem.common.exception.file.FileNotFoundException;
 import com.poolaeem.poolaeem.file.application.FileUploader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ public class FileUploaderImpl implements FileUploader {
 
             s3Client.putObject(request, requestBody);
         } catch (IOException e) {
+            throw new FileNotFoundException();
+        } catch (Exception e) {
             throw new FIleUploadException();
         }
     }
