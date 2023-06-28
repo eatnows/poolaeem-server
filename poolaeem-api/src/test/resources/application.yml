@@ -34,8 +34,6 @@ spring:
             token-uri: http://0.0.0.0:8090/oauth/token
             user-info-uri: http://0.0.0.0:8090/userinfo
 
-
-
   flyway:
           enabled: false
           baseline-on-migrate: false
@@ -45,6 +43,13 @@ spring:
           clean-disabled: true
 
 poolaeem:
+  aws:
+    region: ${AWS_REGION}
+    s3:
+      bucket-name: test-bucket
+      access-key: test_access_key
+      secret-key: test_secret_key
+
   encrypt:
     secretKey: ST0IxeU6g1Tbzrqw7k380saqOMaxmUEP
 

@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.integration.sign;
+package com.poolaeem.poolaeem.integration.auth;
 
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
