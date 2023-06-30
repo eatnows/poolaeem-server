@@ -30,6 +30,10 @@ public class User {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @Column(name = "oauth_provider", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OauthProvider oauthProvider;
@@ -69,6 +73,7 @@ public class User {
         this.oauthId = oauthId;
         this.profileImage = profileImage;
         this.termsVersion = termsVersion;
+        this.role = UserRole.ROLE_USER;
     }
 
     @PrePersist
