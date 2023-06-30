@@ -1,0 +1,37 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+= 내 정보 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 1
+:sectlinks:
+:docinfo: shared-head
+:linkattrs:
+
+== 공통 코드
+[cols=2*]
+|===
+|코드
+|설명
+
+|code
+|내부 코드 - 0 : SUCCESS
+|message
+|성공 및 에러 메시지
+|data
+|반환 데이터 값
+|===
+
+= --
+
+== 내 정보 조회
+=== -- Request
+include::{snippets}/user/profile/read-profile-info/path-parameters.adoc[]
+include::{snippets}/user/profile/read-profile-info/request-headers.adoc[]
+include::{snippets}/user/profile/read-profile-info/http-request.adoc[]
+=== -- Response
+include::{snippets}/user/profile/read-profile-info/response-fields-beneath-data.adoc[]
+include::{snippets}/user/profile/read-profile-info/http-response.adoc[]

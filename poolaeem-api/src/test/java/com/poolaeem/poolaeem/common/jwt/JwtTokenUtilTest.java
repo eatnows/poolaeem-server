@@ -1,6 +1,5 @@
 package com.poolaeem.poolaeem.common.jwt;
 
-import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

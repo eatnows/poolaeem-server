@@ -12,11 +12,11 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: create
-#  sql:
-#    init:
-#      schema-locations: classpath:sql/common/oauth2.sql
-#      mode: always
+      ddl-auto: update
+  sql:
+    init:
+##      schema-locations: classpath:sql/common/oauth2.sql
+      mode: always
 
   security:
     oauth2:
@@ -41,6 +41,10 @@ spring:
           user: ${DB_USERNAME}
           password: ${DB_PASSWORD}
           clean-disabled: true
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
 
 poolaeem:
   aws:

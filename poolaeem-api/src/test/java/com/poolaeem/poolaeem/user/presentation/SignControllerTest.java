@@ -5,7 +5,7 @@ import com.poolaeem.poolaeem.config.restdocs.DocumentLinkGenerator;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.TermsVersion;
 import com.poolaeem.poolaeem.user.domain.entity.User;
-import com.poolaeem.poolaeem.user.presentation.dto.SignRequest;
+import com.poolaeem.poolaeem.user.presentation.dto.auth.SignRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
