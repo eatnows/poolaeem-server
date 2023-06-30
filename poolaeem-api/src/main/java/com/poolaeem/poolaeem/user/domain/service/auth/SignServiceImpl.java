@@ -1,8 +1,8 @@
-package com.poolaeem.poolaeem.user.domain.service;
+package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
-import com.poolaeem.poolaeem.common.exception.sign.DuplicateSignUpException;
-import com.poolaeem.poolaeem.common.exception.sign.UserNotSignedUpException;
+import com.poolaeem.poolaeem.common.exception.auth.DuplicateSignUpException;
+import com.poolaeem.poolaeem.common.exception.auth.UserNotSignedUpException;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
 import com.poolaeem.poolaeem.user.application.SignService;

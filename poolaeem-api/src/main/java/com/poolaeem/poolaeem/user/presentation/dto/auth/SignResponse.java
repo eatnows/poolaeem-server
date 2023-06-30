@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.user.presentation.dto;
+package com.poolaeem.poolaeem.user.presentation.dto.auth;
 
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import lombok.Getter;
