@@ -38,11 +38,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         String bearerToken = request.getHeader(AUTHORIZATION);
 
-        if (StringUtils.isEmpty(bearerToken)) {
+        if (!StringUtils.isEmpty(bearerToken)) {
             String extractToken = HeaderTokenExtractor.extract(bearerToken);
             PreAuthenticationToken authorizationToken = new PreAuthenticationToken(extractToken, extractToken.length());
 
-            super.getAuthenticationManager().authenticate(authorizationToken);
+            return super.getAuthenticationManager().authenticate(authorizationToken);
         }
 
         PreAuthenticationToken authorizationToken = new PreAuthenticationToken(UUID.randomUUID().toString(), UUID.randomUUID().toString());
@@ -53,12 +53,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        this.successHandler.onAuthenticationSuccess(request, response, authResult);
+        this.successHandler.onAuthenticationSuccess(request, response, chain, authResult);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
-        this.unsuccessfulAuthentication(request, response, failed);
+        this.failureHandler.onAuthenticationFailure(request, response, failed);
     }
 }

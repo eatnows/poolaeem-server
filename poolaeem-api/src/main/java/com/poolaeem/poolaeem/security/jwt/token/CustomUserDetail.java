@@ -1,5 +1,7 @@
 package com.poolaeem.poolaeem.security.jwt.token;
 
+import com.poolaeem.poolaeem.user.domain.entity.UserRole;
+import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,17 +11,15 @@ import java.util.List;
 
 public class CustomUserDetail implements UserDetails {
 
-    // TODO User 관련 데이터를 가지고 있을 수 있게 추가
+    private final UserVo user;
 
-    private String bearerTokenValue;
-
-    public CustomUserDetail(String bearerTokenValue) {
-        this.bearerTokenValue = bearerTokenValue;
+    public CustomUserDetail(UserVo userVo) {
+        this.user = userVo;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(UserRole.ROLE_USER.name()));
     }
 
     @Override
@@ -29,30 +29,30 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return !user.getIsDeleted();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return !user.getIsDeleted();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return !user.getIsDeleted();
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return !user.getIsDeleted();
     }
 
-    public String getBearerTokenValue() {
-        return bearerTokenValue;
+    public UserVo getUser() {
+        return user;
     }
 }

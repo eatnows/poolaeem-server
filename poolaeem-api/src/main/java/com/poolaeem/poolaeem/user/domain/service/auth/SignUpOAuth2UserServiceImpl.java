@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.user.domain.service;
+package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
