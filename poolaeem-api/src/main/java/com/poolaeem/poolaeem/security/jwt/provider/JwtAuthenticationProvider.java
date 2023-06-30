@@ -4,6 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.security.jwt.service.CustomUserDetailsService;
 import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
+import com.poolaeem.poolaeem.security.jwt.token.NonLoggedInUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
 import com.poolaeem.poolaeem.security.jwt.token.PreAuthenticationToken;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
@@ -28,19 +29,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if ("ROLE_ANONYMOUS".equals(authentication.getDetails())) {
-            // TODO 비 로그인일 경우 가짜 유저 객체를 생성
-            String anonymousUser = "anonymousUser";
-            CustomUserDetail customUserDetail = new CustomUserDetail(new UserVo(
-                    anonymousUser,
-                    anonymousUser,
-                    anonymousUser,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            ));
-            return new PostAuthenticationToken(customUserDetail);
+            NonLoggedInUserDetail nonLoggedInUserDetail = new NonLoggedInUserDetail();
+            return new PostAuthenticationToken(nonLoggedInUserDetail);
         }
         String token = (String) authentication.getPrincipal();
         DecodedJWT decodedJWT = validToken(token);
