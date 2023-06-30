@@ -4,7 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.poolaeem.poolaeem.common.exception.encrypto.EncryptException;
 import com.poolaeem.poolaeem.common.exception.jwt.ExpiredTokenException;
+import com.poolaeem.poolaeem.common.exception.jwt.GenerateTokenException;
 import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +56,7 @@ public class JwtTokenUtil {
     public String generateRefreshToken(GenerateTokenUser generateTokenUser) {
         return JWT.create()
                 .withIssuer(ISSUER)
-                .withSubject(SUBJECT_AUTHENTICATION)
+                .withSubject(SUBJECT_REFRESH)
                 .withClaim("code", generateTokenUser.getId())
                 .withClaim("email", generateTokenUser.getEmail())
                 .withClaim("name", generateTokenUser.getName())
@@ -73,7 +75,7 @@ public class JwtTokenUtil {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(PRIVATE_KEY);
             return (RSAPrivateKey) kf.generatePrivate(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
+            throw new GenerateTokenException();
         }
     }
 
@@ -83,7 +85,7 @@ public class JwtTokenUtil {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(PUBLIC_KEY);
             return (RSAPublicKey) kf.generatePublic(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
+            throw new GenerateTokenException();
         }
     }
 
@@ -91,7 +93,7 @@ public class JwtTokenUtil {
         try {
             DecodedJWT decodedJWT = JWT.require(generateAlgorithm()).build().verify(token);
 
-            if (SUBJECT_AUTHENTICATION.equals(decodedJWT.getSubject())) {
+            if (!SUBJECT_AUTHENTICATION.equals(decodedJWT.getSubject())) {
                 throw new InvalidTokenException();
             }
 
