@@ -18,7 +18,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Optional<UserVo> findByUserIdAndIsDeletedFalse(String userId) {
+    public Optional<UserVo> findDtoByUserIdAndIsDeletedFalse(String userId) {
         return Optional.ofNullable(
                 queryFactory
                         .select(new QUserVo(

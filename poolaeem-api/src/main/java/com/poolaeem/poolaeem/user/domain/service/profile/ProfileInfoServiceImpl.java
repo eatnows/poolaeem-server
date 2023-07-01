@@ -3,10 +3,12 @@ package com.poolaeem.poolaeem.user.domain.service.profile;
 import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
+import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProfileInfoServiceImpl implements ProfileInfoService {
@@ -26,8 +28,20 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
         return new ProfileDto.ProfileInfo(user.getId(), user.getEmail(), user.getName(), profileImageUrl);
     }
 
+    @Transactional
+    @Override
+    public void updateUserName(String userId, String reqUserName) {
+        User user = getUserEntity(userId);
+        user.updateName(reqUserName);
+    }
+
+    private User getUserEntity(String userId) {
+        return userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
     private UserVo getUserVo(String userId) {
-        return userRepository.findByUserIdAndIsDeletedFalse(userId)
+        return userRepository.findDtoByUserIdAndIsDeletedFalse(userId)
                 .orElseThrow(UserNotFoundException::new);
     }
 

@@ -25,7 +25,6 @@ import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import com.poolaeem.poolaeem.user.presentation.ProfileInfoController;
 import com.poolaeem.poolaeem.user.presentation.SignController;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -58,7 +57,7 @@ public abstract class ApiDocumentationTest {
 
     @BeforeEach
     protected void beforeEach() {
-        given(userRepository.findByUserIdAndIsDeletedFalse(anyString()))
+        given(userRepository.findDtoByUserIdAndIsDeletedFalse(anyString()))
                 .willReturn(Optional.of(new UserVo(
                         "user-1",
                         "test@poolaee.com",

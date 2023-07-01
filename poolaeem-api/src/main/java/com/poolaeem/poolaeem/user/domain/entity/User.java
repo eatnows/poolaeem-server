@@ -85,4 +85,8 @@ public class User {
         updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
         termsVersion = termsVersion == null ? TermsVersion.V1 : termsVersion;
     }
+
+    public void updateName(String newUserName) {
+        this.name = newUserName;
+    }
 }
