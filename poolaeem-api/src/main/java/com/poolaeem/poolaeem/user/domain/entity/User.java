@@ -66,6 +66,17 @@ public class User {
     public User() {
     }
 
+    public User(String id, String email, String name, UserRole role, OauthProvider oauthProvider, String oauthId, String profileImage, TermsVersion termsVersion) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.role = role;
+        this.oauthProvider = oauthProvider;
+        this.oauthId = oauthId;
+        this.profileImage = profileImage;
+        this.termsVersion = termsVersion;
+    }
+
     public User(String email, String name, OauthProvider oauthProvider, String oauthId, String profileImage, TermsVersion termsVersion) {
         this.email = email;
         this.name = name;

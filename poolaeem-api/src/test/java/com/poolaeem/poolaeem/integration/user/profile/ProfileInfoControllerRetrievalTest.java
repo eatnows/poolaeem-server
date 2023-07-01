@@ -18,14 +18,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("통합: 유저 프로필 정보 테스트")
+@DisplayName("통합: 유저 프로필 정보 조회 테스트")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProfileInfoControllerRetrievalTest extends BaseIntegrationTest {
 
     private final String READ_PROFILE_INFO = "/api/profile/info";
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private DataSource dataSource;
