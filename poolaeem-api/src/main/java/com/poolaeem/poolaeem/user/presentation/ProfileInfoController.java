@@ -31,7 +31,7 @@ public class ProfileInfoController {
 
     @PatchMapping("/api/profile/name")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> updateUserName(@LoggedInUser UserVo user,
-                                            @Valid @RequestBody ProfileInfoRequest.UserNameUpdateDto dto) {
+                                                                             @Valid @RequestBody ProfileInfoRequest.UserNameUpdateDto dto) {
         profileInfoService.updateUserName(user.getId(), dto.getUserName());
         ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
 

@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.user.presentation.dto.profile;
 
+import com.poolaeem.poolaeem.user.domain.validation.UserValidation;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class ProfileInfoRequest {
     @NoArgsConstructor
     public static class UserNameUpdateDto {
         @NotBlank
-        @Length(min = 1, max = 30)
+        @Length(min = UserValidation.USER_NAME_MIN_LENGTH, max = UserValidation.USER_NAME_MAX_LENGTH)
         private String userName;
 
         public UserNameUpdateDto(String userName) {

@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
+import com.poolaeem.poolaeem.user.domain.validation.UserValidation;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProfileDto.ProfileInfo readProfileInfo(String userId) {
         UserVo user = getUserVo(userId);
@@ -31,8 +33,15 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
     @Transactional
     @Override
     public void updateUserName(String userId, String reqUserName) {
+        validationUserName(reqUserName);
+
         User user = getUserEntity(userId);
         user.updateName(reqUserName);
+    }
+
+    private void validationUserName(String reqUserName) {
+        assert reqUserName.length() <= UserValidation.USER_NAME_MAX_LENGTH: "유저 이름 최대 길이보다 짧아야 합니다..";
+        assert reqUserName.length() >= UserValidation.USER_NAME_MIN_LENGTH : "유저 이름 최소 길이보다 길어야 합니다.";
     }
 
     private User getUserEntity(String userId) {
