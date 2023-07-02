@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.file.domain;
+package com.poolaeem.poolaeem.common.file;
 
 import lombok.Getter;
 

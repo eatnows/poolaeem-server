@@ -1,6 +1,6 @@
 package com.poolaeem.poolaeem.common.event.obj;
 
-import com.poolaeem.poolaeem.file.domain.FilePath;
+import com.poolaeem.poolaeem.common.file.FilePath;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

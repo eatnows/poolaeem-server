@@ -4,7 +4,7 @@ import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
 import com.poolaeem.poolaeem.common.event.FileEventsPublisher;
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
 import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
-import com.poolaeem.poolaeem.file.domain.FilePath;
+import com.poolaeem.poolaeem.common.file.FilePath;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
 import com.poolaeem.poolaeem.user.domain.entity.User;

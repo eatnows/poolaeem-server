@@ -1,6 +1,6 @@
 package com.poolaeem.poolaeem.file.application;
 
-import com.poolaeem.poolaeem.file.domain.File;
+import com.poolaeem.poolaeem.file.domain.entity.File;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileUpload {

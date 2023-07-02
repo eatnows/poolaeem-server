@@ -3,7 +3,7 @@ package com.poolaeem.poolaeem.file.domain.service;
 import com.poolaeem.poolaeem.common.exception.file.FIleUploadException;
 import com.poolaeem.poolaeem.common.exception.file.FileNotFoundException;
 import com.poolaeem.poolaeem.file.application.FileUpload;
-import com.poolaeem.poolaeem.file.domain.File;
+import com.poolaeem.poolaeem.file.domain.entity.File;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

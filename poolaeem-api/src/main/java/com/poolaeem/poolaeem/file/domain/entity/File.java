@@ -1,7 +1,8 @@
-package com.poolaeem.poolaeem.file.domain;
+package com.poolaeem.poolaeem.file.domain.entity;
 
 import com.poolaeem.poolaeem.common.entity.BaseEntity;
 import com.poolaeem.poolaeem.common.exception.file.FileNotFoundException;
+import com.poolaeem.poolaeem.common.file.FilePath;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

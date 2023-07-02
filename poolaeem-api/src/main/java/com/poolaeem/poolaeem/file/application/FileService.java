@@ -1,6 +1,6 @@
 package com.poolaeem.poolaeem.file.application;
 
-import com.poolaeem.poolaeem.file.domain.FilePath;
+import com.poolaeem.poolaeem.common.file.FilePath;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
