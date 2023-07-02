@@ -56,11 +56,9 @@ public class User {
     private String updatedBy;
 
     @Column(name = "created_at", nullable = false)
-    @CreatedDate
     private ZonedDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    @LastModifiedDate
     private ZonedDateTime updatedAt;
 
     public User() {
@@ -97,7 +95,24 @@ public class User {
         termsVersion = termsVersion == null ? TermsVersion.V1 : termsVersion;
     }
 
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
+    }
+
     public void updateName(String newUserName) {
         this.name = newUserName;
+    }
+
+    public boolean isExistProfileImage() {
+        return this.profileImage != null;
+    }
+
+    public void changeProfileImage(String newFileId) {
+        this.profileImage = newFileId;
+    }
+
+    public void deleteProfileImage() {
+        this.profileImage = null;
     }
 }

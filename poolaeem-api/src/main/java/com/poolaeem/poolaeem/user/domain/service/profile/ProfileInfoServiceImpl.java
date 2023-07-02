@@ -1,6 +1,10 @@
 package com.poolaeem.poolaeem.user.domain.service.profile;
 
+import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
+import com.poolaeem.poolaeem.common.event.FileEventsPublisher;
+import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
 import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
+import com.poolaeem.poolaeem.file.domain.FilePath;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
 import com.poolaeem.poolaeem.user.domain.entity.User;
@@ -10,14 +14,17 @@ import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProfileInfoServiceImpl implements ProfileInfoService {
 
     private final UserRepository userRepository;
+    private final FileEventsPublisher fileEventsPublisher;
 
-    public ProfileInfoServiceImpl(UserRepository userRepository) {
+    public ProfileInfoServiceImpl(UserRepository userRepository, FileEventsPublisher fileEventsPublisher) {
         this.userRepository = userRepository;
+        this.fileEventsPublisher = fileEventsPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -37,6 +44,37 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
 
         User user = getUserEntity(userId);
         user.updateName(reqUserName);
+    }
+
+    @Transactional
+    @Override
+    public void updateProfileImage(String userId, MultipartFile fileObject) {
+        User user = getUserEntity(userId);
+
+        if (user.isExistProfileImage()) {
+            fileEventsPublisher.publish(generateFileDeleteEvent(user.getProfileImage()));
+            user.deleteProfileImage();
+        }
+        if (fileObject != null) {
+            String newFileId = UUIDGenerator.generate();
+            user.changeProfileImage(newFileId);
+            fileEventsPublisher.publish(generateFileUploadEvent(newFileId, fileObject));
+        }
+    }
+
+    private EventsPublisherFileEvent.FileDeleteEvent generateFileDeleteEvent(String fileId) {
+        return new EventsPublisherFileEvent.FileDeleteEvent(
+                fileId,
+                FilePath.PROFILE_IMAGE
+        );
+    }
+
+    private EventsPublisherFileEvent.FileUploadEvent generateFileUploadEvent(String newFileId, MultipartFile fileObject) {
+        return new EventsPublisherFileEvent.FileUploadEvent(
+                newFileId,
+                FilePath.PROFILE_IMAGE,
+                fileObject
+        );
     }
 
     private void validationUserName(String reqUserName) {

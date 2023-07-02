@@ -8,10 +8,7 @@ import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.user.presentation.dto.profile.ProfileInfoRequest;
 import com.poolaeem.poolaeem.user.presentation.dto.profile.ProfileInfoResponse;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProfileInfoController {
@@ -36,5 +33,13 @@ public class ProfileInfoController {
         ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
 
         return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
+    }
+
+    @PostMapping("/api/profile/image")
+    public ApiResponseDto<?> updateProfileImage(@LoggedInUser UserVo user,
+                                                @Valid ProfileInfoRequest.ProfileImageUpdateDto dto) {
+
+        profileInfoService.updateProfileImage(user.getId(), dto.getFile());
+        return ApiResponseDto.OK();
     }
 }

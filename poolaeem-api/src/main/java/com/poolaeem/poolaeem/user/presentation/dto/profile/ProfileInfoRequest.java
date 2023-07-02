@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileInfoRequest {
@@ -19,6 +20,15 @@ public class ProfileInfoRequest {
 
         public UserNameUpdateDto(String userName) {
             this.userName = userName;
+        }
+    }
+
+    @Getter
+    public static class ProfileImageUpdateDto {
+        private MultipartFile file;
+
+        public void setFile(MultipartFile file) {
+            this.file = file;
         }
     }
 }
