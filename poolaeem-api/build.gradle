@@ -1,3 +1,7 @@
+plugins {
+    id 'jacoco'
+}
+
 ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
@@ -22,8 +26,23 @@ dependencies {
     implementation 'commons-io:commons-io:2.13.0'
 }
 
+
+jacocoTestReport {
+    dependsOn test // 리포트 생성을 위해서는 test가 먼저 완료되어야 함
+    reports {
+        html.enabled true
+    }
+}
+
 test {
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco.exec")
+    }
+
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport
+
 }
 
 tasks.named('test') {
