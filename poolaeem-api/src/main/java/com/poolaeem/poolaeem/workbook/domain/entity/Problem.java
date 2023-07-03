@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.workbook.domain;
+package com.poolaeem.poolaeem.workbook.domain.entity;
 
 import com.poolaeem.poolaeem.common.entity.BaseEntity;
 import jakarta.persistence.*;

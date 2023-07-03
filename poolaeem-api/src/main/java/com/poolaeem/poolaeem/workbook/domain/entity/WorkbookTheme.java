@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.workbook.domain;
+package com.poolaeem.poolaeem.workbook.domain.entity;
 
 import lombok.Getter;
 

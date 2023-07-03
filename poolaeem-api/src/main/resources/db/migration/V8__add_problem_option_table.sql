@@ -1,4 +1,4 @@
-CREATE TABLE option (
+CREATE TABLE problem_option (
     `id` varchar(32) not null,
     `problem_id` varchar(32) not null,
     `value` varchar(300) not null,
@@ -12,4 +12,4 @@ CREATE TABLE option (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-create index idx_problem_id on `option` (`problem_id`);
+create index idx_problem_id on `problem_option` (`problem_id`);

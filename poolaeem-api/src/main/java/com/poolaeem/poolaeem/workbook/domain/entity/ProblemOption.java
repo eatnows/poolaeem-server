@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.workbook.domain;
+package com.poolaeem.poolaeem.workbook.domain.entity;
 
 import com.poolaeem.poolaeem.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "option")
-public class Option extends BaseEntity {
+@Table(name = "problem_option")
+public class ProblemOption extends BaseEntity {
     @Id
     @Column(name = "id")
     private String id;
