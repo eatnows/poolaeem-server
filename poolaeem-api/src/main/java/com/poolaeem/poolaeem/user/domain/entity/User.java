@@ -30,6 +30,10 @@ public class User {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @Column(name = "oauth_provider", nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private OauthProvider oauthProvider;
@@ -52,14 +56,23 @@ public class User {
     private String updatedBy;
 
     @Column(name = "created_at", nullable = false)
-    @CreatedDate
     private ZonedDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    @LastModifiedDate
     private ZonedDateTime updatedAt;
 
     public User() {
+    }
+
+    public User(String id, String email, String name, UserRole role, OauthProvider oauthProvider, String oauthId, String profileImage, TermsVersion termsVersion) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.role = role;
+        this.oauthProvider = oauthProvider;
+        this.oauthId = oauthId;
+        this.profileImage = profileImage;
+        this.termsVersion = termsVersion;
     }
 
     public User(String email, String name, OauthProvider oauthProvider, String oauthId, String profileImage, TermsVersion termsVersion) {
@@ -69,6 +82,7 @@ public class User {
         this.oauthId = oauthId;
         this.profileImage = profileImage;
         this.termsVersion = termsVersion;
+        this.role = UserRole.ROLE_USER;
     }
 
     @PrePersist
@@ -79,5 +93,26 @@ public class User {
         createdAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
         updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
         termsVersion = termsVersion == null ? TermsVersion.V1 : termsVersion;
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
+    }
+
+    public void updateName(String newUserName) {
+        this.name = newUserName;
+    }
+
+    public boolean isExistProfileImage() {
+        return this.profileImage != null;
+    }
+
+    public void changeProfileImage(String newFileId) {
+        this.profileImage = newFileId;
+    }
+
+    public void deleteProfileImage() {
+        this.profileImage = null;
     }
 }

@@ -51,4 +51,14 @@ public class ExceptionHandlerAdvice {
             return new ResponseEntity<>(responseDto, responseCode.getHttpStatus());
         }
     }
+
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<ApiResponseDto<String>> handleException(Exception e) {
+        log.error("> error exception: ", e);
+
+        ApiResponseCode responseCode = ApiResponseCode.INVALID_SERVER_ERROR;
+        ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, responseCode.getMessage());
+
+        return new ResponseEntity<>(responseDto, responseCode.getHttpStatus());
+    }
 }

@@ -2,12 +2,16 @@ package com.poolaeem.poolaeem.security.jwt.provider;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.security.jwt.service.CustomUserDetailsService;
 import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
+import com.poolaeem.poolaeem.security.jwt.token.NonLoggedInUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
 import com.poolaeem.poolaeem.security.jwt.token.PreAuthenticationToken;
+import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,23 +19,25 @@ import java.util.Optional;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtAuthenticationProvider(JwtTokenUtil jwtTokenUtil) {
+    public JwtAuthenticationProvider(JwtTokenUtil jwtTokenUtil, CustomUserDetailsService userDetailsService) {
         this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if ("ROLE_ANONYMOUS".equals(authentication.getDetails())) {
-            // TODO 비 로그인일 경우 가짜 유저 객체를 생성
+            NonLoggedInUserDetail nonLoggedInUserDetail = new NonLoggedInUserDetail();
+            return new PostAuthenticationToken(nonLoggedInUserDetail);
         }
         String token = (String) authentication.getPrincipal();
         DecodedJWT decodedJWT = validToken(token);
 
-        // TODO 유저를 찾는다.
-        // TODO CustomUserDetail 을 만듦
-        CustomUserDetail customUserDetail = new CustomUserDetail(token);
-        return new PostAuthenticationToken(customUserDetail);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getClaim("code").asString());
+
+        return new PostAuthenticationToken(userDetails);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.poolaeem.poolaeem.security.oauth2.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poolaeem.poolaeem.common.exception.sign.UserNotSignedUpException;
+import com.poolaeem.poolaeem.common.exception.auth.UserNotSignedUpException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
@@ -9,7 +9,7 @@ import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2Authoriz
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
-import com.poolaeem.poolaeem.user.presentation.dto.SignResponse;
+import com.poolaeem.poolaeem.user.presentation.dto.auth.SignResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
