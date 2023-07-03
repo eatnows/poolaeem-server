@@ -1,5 +1,98 @@
 spring:
+  test:
+    mockmvc:
+      print: default
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:tc:mysql:8.0.22://localhost:3306/poolaeem
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+##      schema-locations: classpath:sql/common/oauth2.sql
+      mode: always
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_GOOGLE_ID}
+            client-secret: ${OAUTH_GOOGLE_SECRET}
+            scope:
+              - profile
+              - email
+        provider:
+          google:
+            authorization-uri: http://0.0.0.0:8090/oauth/authorize
+            token-uri: http://0.0.0.0:8090/oauth/token
+            user-info-uri: http://0.0.0.0:8090/userinfo
+
+  flyway:
+          enabled: false
+          baseline-on-migrate: false
+          url: ${DB_URL}
+          user: ${DB_USERNAME}
+          password: ${DB_PASSWORD}
+          clean-disabled: true
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+
+poolaeem:
+  aws:
+    region: ${AWS_REGION}
+    s3:
+      bucket-name: test-bucket
+      access-key: test_access_key
+      secret-key: test_secret_key
+
+  encrypt:
+    secretKey: ST0IxeU6g1Tbzrqw7k380saqOMaxmUEP
+
+jwt:
+  rsa:
+    private: -----BEGIN PRIVATE KEY-----
+            MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD0aWcA0DCMJBAX
+            HHEgBrCXMZYjF09DuEtszMj/QAX389fxBp7j5tgcJkcI+/9h6HbapcLP3iiNVVZB
+            goHa6XonyNhfo7oe6Ncftc4h3RTwZu7caPbT7oOsnMbyQN1bfFASzRhJdxmLD0Yq
+            NIfUORFIeNxEEpIIJ78NJ2JwEAKGGvwcMI4jQRhIIonB42Id7elwxlssqL00erlB
+            5rFYWxtpTSUfDJRl2Sow83ScYdH0p3zOTfyARlPEScNXfSmtwVYuQrrIlBfZXETP
+            r8xOgwPMOB96OXCCnzDZ9RNRqJRQUtSEsKLCXcoH4UWM5XzfTd53+lyiF2aDkYL/
+            AN0hVo49AgMBAAECggEAOwkynhmrgE49rLdsA8ZZ5UtO7o700HC1l0Qn0K/QQUIf
+            CNMGkhnyXWpJgjwMRcP24X1kfv00Yl8YhJ5Xa1816GI1EXTkwg6P19L8RWW3ZxIV
+            5Btec3aLS6haza0pSq3OUZxEn4orG1HHKu6hWHuoVw8KdU7fAyVGmpDG0DatxWJK
+            Z2New2rNFNlOTEASU2fwVNEffhhonh/ZhYtas/H0O0d+P/BbXRYkqqyJqlUbN/FO
+            ZPS7+RrPggzIF3tsrKTdy95rqfsWhBGe+VXVUbDOZt/56BBwFboKf4MLvfWk3Rfh
+            TI2LarOgc6Q2f6igZnMMQGqgI9wx0Lrq8hSygE9GwQKBgQD7xgR0tceAUPXIw7Jq
+            BrdrX1aNvsL30ff3QtHcJFTBYuApTPfIVS5Fg823e/nbH6dyuBw9/hDk2d66pNk6
+            4aKroM3bIOcKBOz1sHzP+nQaMSchF7w0WvWl1DPBQzLQmtWVLWB/Em8t8XAV7qO7
+            APyz2b8nEFQ/qSmCPB7NogSPKQKBgQD4g7+E7Nnv8ifBISYXolnZKv891guy1+DZ
+            6H3IspMsTbcwCE/NoGkkgm8vi1qlV2a5nIgWMeMDANwjLtkJ3izLFBE6/Km276Iz
+            fCRKgrplphbmYpSmPUxTNF6m8Ts1i/KuTh0iSt+l9t0t36t83K0sPnKSlPV71ln4
+            mDH457qs9QKBgG1O0j5tcVkHTT5FoF8h3V4zfRt7F6CKO1LRYtVlvJpdOB8WOHl0
+            aetqRtUDcT2uJ3/J6RENDf6djHKSAXHr5jkHTnh1d3lFHC+q2PVesitw7aETcfV1
+            DDNbxsCAUT56CoKCueNReI2ExfnvqowU6KGYxsHJ+BnPcqMFQQZb8gjJAoGARrOM
+            yC9uLWKSRtK8eJravvsJlLkRqPbb5ILNTkznrAIMLOEgexq47wcgxMD7r/B2rDXJ
+            Ta8xq4gSGPxaCQGpcrkp0cNSMVZpqgYWeRBKIWMoPrErI0RrM3zBtPMKakh/aXGV
+            vkzY5emesU9iBWru5Zh6lhNE589q11vNU8fxhwUCgYEAjIrnF6d9vAPpMaTREvIH
+            LKULTZ6WS/t5aw5KPFBVlTrvlp9natKcIh1ocgKsuFuqQVQYfWcFPsSHouNJE+ur
+            49zEB/5Pbanly2oVPoGJ4G0LDdBEYmON2z14yKphUljw8WQHGFtRVhemWCRdmidR
+            XFEWLVm6KQNNl+KeQPB0Ofg=
+            -----END PRIVATE KEY-----
+    public: -----BEGIN PUBLIC KEY----- 
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9GlnANAwjCQQFxxxIAaw
+            lzGWIxdPQ7hLbMzI/0AF9/PX8Qae4+bYHCZHCPv/Yeh22qXCz94ojVVWQYKB2ul6
+            J8jYX6O6HujXH7XOId0U8Gbu3Gj20+6DrJzG8kDdW3xQEs0YSXcZiw9GKjSH1DkR
+            SHjcRBKSCCe/DSdicBAChhr8HDCOI0EYSCKJweNiHe3pcMZbLKi9NHq5QeaxWFsb
+            aU0lHwyUZdkqMPN0nGHR9Kd8zk38gEZTxEnDV30prcFWLkK6yJQX2VxEz6/MToMD
+            zDgfejlwgp8w2fUTUaiUUFLUhLCiwl3KB+FFjOV8303ed/pcohdmg5GC/wDdIVaO
+            PQIDAQAB
+            -----END PUBLIC KEY-----
