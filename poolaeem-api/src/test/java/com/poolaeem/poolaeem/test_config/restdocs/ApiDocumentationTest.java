@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.config.restdocs;
+package com.poolaeem.poolaeem.test_config.restdocs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;

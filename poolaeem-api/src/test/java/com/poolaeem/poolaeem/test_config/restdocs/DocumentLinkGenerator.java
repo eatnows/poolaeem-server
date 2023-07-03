@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.config.restdocs;
+package com.poolaeem.poolaeem.test_config.restdocs;
 
 public interface DocumentLinkGenerator {
     static String generateLinkCode(DocUrl docUrl) {
