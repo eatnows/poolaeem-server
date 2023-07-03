@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.common.event.FileEventsPublisher;
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
 import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
 import com.poolaeem.poolaeem.common.file.FilePath;
+import com.poolaeem.poolaeem.file.application.FileService;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
 import com.poolaeem.poolaeem.user.domain.entity.User;
@@ -21,10 +22,12 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
 
     private final UserRepository userRepository;
     private final FileEventsPublisher fileEventsPublisher;
+    private final FileService fileService;
 
-    public ProfileInfoServiceImpl(UserRepository userRepository, FileEventsPublisher fileEventsPublisher) {
+    public ProfileInfoServiceImpl(UserRepository userRepository, FileEventsPublisher fileEventsPublisher, FileService fileService) {
         this.userRepository = userRepository;
         this.fileEventsPublisher = fileEventsPublisher;
+        this.fileService = fileService;
     }
 
     @Transactional(readOnly = true)
@@ -96,7 +99,7 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
         String profileImageUrl = null;
         if (existProfileImage(user.getProfileImage())) {
             // TODO 유저 프로필 이미지 조회 주소 생성
-
+            profileImageUrl = fileService.getImageUrl(user.getProfileImage());
         }
 
         return profileImageUrl;

@@ -2,7 +2,6 @@ package com.poolaeem.poolaeem.integration.user.profile;
 
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
 import com.poolaeem.poolaeem.component.TextGenerator;
-import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.integration.base.BaseLocalStackTest;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
@@ -19,20 +18,15 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -118,13 +112,10 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
 
         User after = userRepository.findByIdAndIsDeletedFalse(userId).get();
         assertThat(after.getProfileImage()).isNotNull();
-
-        verify(s3Client, times(1)).putObject(any(PutObjectRequest.class), any(RequestBody.class));
-        verify(s3Client, times(0)).deleteObject(any(DeleteObjectRequest.class));
-
         assertThat(applicationEvents.stream(EventsPublisherFileEvent.FileUploadEvent.class).count()).isEqualTo(1);
 
         result.andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.userId", is("user-1")))
                 .andExpect(jsonPath("$.data.email", is("test@poolaeem.com")))

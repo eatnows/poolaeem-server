@@ -7,4 +7,6 @@ public interface FileService {
     void uploadNewFile(String fileId, FilePath path, MultipartFile fileObject);
 
     void deleteUploadedFile(String fileId, FilePath path);
+
+    String getImageUrl(String fileId);
 }
