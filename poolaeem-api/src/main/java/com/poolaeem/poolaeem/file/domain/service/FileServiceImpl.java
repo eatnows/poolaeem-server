@@ -25,20 +25,15 @@ public class FileServiceImpl implements FileService {
     @Transactional
     @Override
     public void uploadNewFile(String fileId, FilePath path, MultipartFile fileObject) {
-        File entity = new File(
-                fileId,
-                path,
-                fileObject
-        );
-
+        File entity = new File(fileId, path, fileObject);
         fileRepository.save(entity);
-
         fileUpload.upload(fileObject, entity);
     }
 
     @Transactional
     @Override
     public void deleteUploadedFile(String fileId, FilePath path) {
+        // TODO 추후에 소프트 삭제 후 배치를 돌려 실제 삭제할 수 있도록 개선
         fileDelete.deleteUploadedFile(path.getPath() + fileId);
         fileRepository.deleteById(fileId);
     }

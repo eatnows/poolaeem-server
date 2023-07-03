@@ -36,10 +36,10 @@ public class ProfileInfoController {
     }
 
     @PostMapping("/api/profile/image")
-    public ApiResponseDto<?> updateProfileImage(@LoggedInUser UserVo user,
-                                                @Valid ProfileInfoRequest.ProfileImageUpdateDto dto) {
-
+    public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> updateProfileImage(@LoggedInUser UserVo user,
+                                                                                 @Valid ProfileInfoRequest.ProfileImageUpdateDto dto) {
         profileInfoService.updateProfileImage(user.getId(), dto.getFile());
-        return ApiResponseDto.OK();
+        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
+        return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
     }
 }

@@ -14,12 +14,12 @@ public class FileEventsHandler {
     }
 
     @EventListener(classes = EventsPublisherFileEvent.FileUploadEvent.class)
-    private void uploadNewFile(EventsPublisherFileEvent.FileUploadEvent event) {
+    public void uploadNewFile(EventsPublisherFileEvent.FileUploadEvent event) {
         fileService.uploadNewFile(event.getFileId(), event.getPath(), event.getFileObject());
     }
 
     @EventListener(classes = EventsPublisherFileEvent.FileDeleteEvent.class)
-    private void deleteUploadedFile(EventsPublisherFileEvent.FileDeleteEvent event) {
+    public void deleteUploadedFile(EventsPublisherFileEvent.FileDeleteEvent event) {
         fileService.deleteUploadedFile(event.getFileId(), event.getPath());
     }
 }

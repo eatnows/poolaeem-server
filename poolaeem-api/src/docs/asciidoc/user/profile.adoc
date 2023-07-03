@@ -35,3 +35,26 @@ include::{snippets}/user/profile/read-profile-info/http-request.adoc[]
 === -- Response
 include::{snippets}/user/profile/read-profile-info/response-fields-beneath-data.adoc[]
 include::{snippets}/user/profile/read-profile-info/http-response.adoc[]
+
+
+
+== 이름 변경
+=== -- Request
+include::{snippets}/user/profile/update-user-name/path-parameters.adoc[]
+include::{snippets}/user/profile/update-user-name/request-headers.adoc[]
+include::{snippets}/user/profile/update-user-name/request-fields.adoc[]
+include::{snippets}/user/profile/update-user-name/http-request.adoc[]
+=== -- Response
+include::{snippets}/user/profile/update-user-name/response-fields-beneath-data.adoc[]
+include::{snippets}/user/profile/update-user-name/http-response.adoc[]
+
+
+== 프로필 이미지 변경
+=== -- Request
+include::{snippets}/user/profile/update-profile-image/path-parameters.adoc[]
+include::{snippets}/user/profile/update-profile-image/request-headers.adoc[]
+include::{snippets}/user/profile/update-profile-image/request-parts.adoc[]
+include::{snippets}/user/profile/update-profile-image/http-request.adoc[]
+=== -- Response
+include::{snippets}/user/profile/update-profile-image/response-fields-beneath-data.adoc[]
+include::{snippets}/user/profile/update-profile-image/http-response.adoc[]

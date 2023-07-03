@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(scripts = "classpath:/sql/user/user.sql")
 class ProfileInfoControllerUpdateTest extends BaseIntegrationTest {
     private final String UPDATE_USER_NAME = "/api/profile/name";
+    private final String UPDATE_PROFILE_IMAGE = "/api/profile/image";
 
     @Autowired
     private UserRepository userRepository;
@@ -75,5 +76,11 @@ class ProfileInfoControllerUpdateTest extends BaseIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(exception -> assertThat(exception.getResolvedException())
                         .isInstanceOf(MethodArgumentNotValidException.class));
+    }
+
+    @Test
+    @DisplayName("유저의 프로필 이미지를 변경할 수 있다.")
+    void testUserProfileImageUpdate() {
+
     }
 }
