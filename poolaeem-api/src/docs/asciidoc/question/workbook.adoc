@@ -37,3 +37,13 @@ include::{snippets}/question/workbook/test-create-workbook/request-fields.adoc[]
 include::{snippets}/question/workbook/test-create-workbook/http-request.adoc[]
 === -- Response
 include::{snippets}/question/workbook/test-create-workbook/http-response.adoc[]
+
+
+== 문제집 정보 수정
+=== -- Request
+include::{snippets}/question/workbook/test-update-workbook-info/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-update-workbook-info/request-headers.adoc[]
+include::{snippets}/question/workbook/test-update-workbook-info/request-fields.adoc[]
+include::{snippets}/question/workbook/test-update-workbook-info/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-update-workbook-info/http-response.adoc[]

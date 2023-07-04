@@ -18,6 +18,7 @@ public enum ApiResponseCode {
     EXPIRED_TOKEN(10050, "토큰 유효시간이 만료 되었습니다.", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(10052, "유효한 토큰이 아닙니다.", HttpStatus.BAD_REQUEST),
     FILE_NOT_FOUND(10064, "파일이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    WORKBOOK_NOT_FOUND(10104, "문제집이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
 
     INVALID_SERVER_ERROR(20000, "알 수 없는 오류로 요청을 완료할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR),

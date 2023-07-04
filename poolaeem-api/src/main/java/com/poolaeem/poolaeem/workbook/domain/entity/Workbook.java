@@ -58,4 +58,9 @@ public class Workbook extends BaseEntity {
         this.order = order == 0 ? 1 : order;
         this.isDeleted = false;
     }
+
+    public void updateInfo(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

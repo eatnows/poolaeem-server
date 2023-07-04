@@ -7,25 +7,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
 public class ResponseLog {
     private int status;
-    private Map<String, String> headers;
+    private Map<String, String[]> headers;
     private String responseBody;
 
     public ResponseLog(CustomCachingResponseWrapper responseWrapper) throws IOException {
         this.status = responseWrapper.getStatus();
 
-        this.headers = responseWrapper.getHeaderNames()
-                .stream()
-                .collect(Collectors.toMap(
-                        name -> name,
-                        responseWrapper::getHeader,
-                        (s1, s2) -> s1
-                ));
+        this.headers = new HashMap<>();
+        for (String headerName : responseWrapper.getHeaderNames()) {
+                headers.put(headerName, responseWrapper.getHeaders(headerName).toArray(String[]::new));
+        }
+//        this.headers = responseWrapper.getHeaderNames()
+//                .stream()
+//                .collect(Collectors.toMap(
+//                        name -> name,
+//                        name -> responseWrapper.getHeaders(name).toArray(String[]::new)
+//                ));
 
         this.responseBody = toString(responseWrapper.getContentInputStream());
     }
