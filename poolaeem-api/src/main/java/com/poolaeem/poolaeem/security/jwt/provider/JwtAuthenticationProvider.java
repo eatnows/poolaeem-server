@@ -7,6 +7,7 @@ import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.NonLoggedInUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
 import com.poolaeem.poolaeem.security.jwt.token.PreAuthenticationToken;
+import com.poolaeem.poolaeem.user.domain.entity.UserRole;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -35,7 +36,23 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String token = (String) authentication.getPrincipal();
         DecodedJWT decodedJWT = validToken(token);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getClaim("code").asString());
+        String userId = decodedJWT.getClaim("code").asString();
+        String email = decodedJWT.getClaim("email").asString();
+        String name = decodedJWT.getClaim("name").asString();
+        String role = decodedJWT.getClaim("role").asString();
+
+        CustomUserDetail userDetails = new CustomUserDetail(new UserVo(
+                userId,
+                email,
+                name,
+                role == null ? UserRole.ROLE_USER : UserRole.ROLE_ADMIN,
+                null,
+                null,
+                null,
+                null
+        ));
+
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getClaim("code").asString());
 
         return new PostAuthenticationToken(userDetails);
     }
