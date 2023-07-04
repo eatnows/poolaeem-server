@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RecordApplicationEvents
 @DisplayName("통합: 유저 정보 수정 테스트")
-@Sql(scripts = "classpath:/sql/user/user.sql")
+//@Sql(scripts = "classpath:/sql/user/user.sql")
 class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
     private final String UPDATE_USER_NAME = "/api/profile/name";
     private final String UPDATE_PROFILE_IMAGE = "/api/profile/image";

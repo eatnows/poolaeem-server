@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.config.restdocs;
+package com.poolaeem.poolaeem.test_config.restdocs;
 
 import org.springframework.restdocs.snippet.Attributes;
 

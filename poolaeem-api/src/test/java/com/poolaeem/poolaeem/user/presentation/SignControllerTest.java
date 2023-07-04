@@ -1,7 +1,7 @@
 package com.poolaeem.poolaeem.user.presentation;
 
-import com.poolaeem.poolaeem.config.restdocs.ApiDocumentationTest;
-import com.poolaeem.poolaeem.config.restdocs.DocumentLinkGenerator;
+import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
+import com.poolaeem.poolaeem.test_config.restdocs.DocumentLinkGenerator;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.TermsVersion;
 import com.poolaeem.poolaeem.user.domain.entity.User;
@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.poolaeem.poolaeem.config.restdocs.RestDocumentUtils.getDocumentRequest;
-import static com.poolaeem.poolaeem.config.restdocs.RestDocumentUtils.getDocumentResponse;
+import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
+import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;

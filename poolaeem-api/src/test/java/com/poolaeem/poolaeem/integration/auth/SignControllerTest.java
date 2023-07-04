@@ -35,9 +35,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("통합: 계정인증 테스트")
-@Sql(scripts = {
-        "classpath:/sql/user/user.sql"
-})
+//@Sql(scripts = {
+//        "classpath:/sql/user/user.sql"
+//})
 class SignControllerTest extends BaseIntegrationTest {
 
     private final String AGREE_SIGN_UP_TERMS = "/api/signup/terms";

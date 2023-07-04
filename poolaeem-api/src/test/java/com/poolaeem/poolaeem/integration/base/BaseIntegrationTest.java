@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -18,8 +19,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Testcontainers
-@Sql(scripts = {
-        "classpath:/sql/user/oauth2.sql"
+@SqlGroup(value = {
+        @Sql(scripts = {
+                "classpath:/sql/user/oauth2.sql",
+        }),
+        @Sql(scripts = "classpath:/sql/user/user.sql")
 })
 public class BaseIntegrationTest {
 
