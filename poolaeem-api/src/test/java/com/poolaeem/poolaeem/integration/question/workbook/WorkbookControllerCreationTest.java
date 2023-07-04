@@ -15,8 +15,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("통합: 문제집 관리 테스트")
 @Sql(scripts = "classpath:/sql/question/workbook.sql")
-class WorkbookControllerTest extends BaseIntegrationTest {
+class WorkbookControllerCreationTest extends BaseIntegrationTest {
     private final String CREATE_WORKBOOK = "/api/workbook";
 
     @Autowired
