@@ -45,7 +45,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                 userId,
                 email,
                 name,
-                role == null ? UserRole.ROLE_USER : UserRole.ROLE_ADMIN,
+                role == null ? UserRole.ROLE_USER : UserRole.valueOf(role),
                 null,
                 null,
                 null,
