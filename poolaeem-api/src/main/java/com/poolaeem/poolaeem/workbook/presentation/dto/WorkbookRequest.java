@@ -14,7 +14,7 @@ public class WorkbookRequest {
     @Getter
     public static class WorkbookCreateDto {
         @NotBlank
-        @Length(min = WorkbookValidation.NAME_MIN_LENGTH, max = WorkbookValidation.DESCRIPTION_MAX_LENGTH)
+        @Length(min = WorkbookValidation.NAME_MIN_LENGTH, max = WorkbookValidation.NAME_MAX_LENGTH)
         private String name;
         @NotNull
 

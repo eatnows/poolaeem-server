@@ -24,6 +24,8 @@ import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import com.poolaeem.poolaeem.user.presentation.ProfileInfoController;
 import com.poolaeem.poolaeem.user.presentation.SignController;
+import com.poolaeem.poolaeem.workbook.application.WorkbookService;
+import com.poolaeem.poolaeem.workbook.presentation.WorkbookController;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -43,7 +45,8 @@ import static org.mockito.BDDMockito.given;
 @WebMvcTest(
     controllers = {
             SignController.class,
-            ProfileInfoController.class
+            ProfileInfoController.class,
+            WorkbookController.class
     },
     properties = "spring.config.location=classpath:/application.yml"
 )
@@ -110,4 +113,6 @@ public abstract class ApiDocumentationTest {
     protected SignService signService;
     @MockBean
     protected ProfileInfoService profileInfoService;
+    @MockBean
+    protected WorkbookService workbookService;
 }

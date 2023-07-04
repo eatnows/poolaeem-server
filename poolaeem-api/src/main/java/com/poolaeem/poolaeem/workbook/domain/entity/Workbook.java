@@ -16,7 +16,7 @@ public class Workbook extends BaseEntity {
     @Column(name = "id")
     private String id;
 
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private String userId;
 
     @Column(name = "name")
