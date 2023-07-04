@@ -1,7 +1,10 @@
 package com.poolaeem.poolaeem.workbook.domain.service;
 
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
+import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
+import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
 import com.poolaeem.poolaeem.workbook.application.WorkbookService;
+import com.poolaeem.poolaeem.workbook.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.workbook.domain.entity.Workbook;
 import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.workbook.domain.validation.WorkbookValidation;
@@ -20,7 +23,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional
     @Override
     public void createWorkbook(String userId, String name, String description) {
-        validWorkbookCreation(name, description);
+        validWorkbookLengthValidation(name, description);
 
         int order = 1 + getLastOrderOfWorkbook(userId);
         Workbook workbook = new Workbook(
@@ -32,7 +35,26 @@ public class WorkbookServiceImpl implements WorkbookService {
         workbookRepository.save(workbook);
     }
 
-    private void validWorkbookCreation(String name, String description) {
+    @Transactional
+    @Override
+    public void updateWorkbook(WorkbookDto.WorkbookUpdateParam param) {
+        validWorkbookLengthValidation(param.getName(), param.getDescription());
+
+        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(param.getWorkbookId())
+                .orElseThrow(WorkbookNotFoundException::new);
+
+        validOwner(workbook.getUserId(), param.getUserId());
+
+        workbook.updateInfo(param.getName(), param.getDescription());
+    }
+
+    private void validOwner(String ownerUserId, String reqUserId) {
+        if (!ownerUserId.equals(reqUserId)) {
+            throw new ForbiddenRequestException();
+        }
+    }
+
+    private void validWorkbookLengthValidation(String name, String description) {
         if (name == null || description == null) {
             throw new BadRequestDataException();
         }
