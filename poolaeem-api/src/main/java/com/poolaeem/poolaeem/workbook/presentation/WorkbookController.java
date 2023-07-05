@@ -21,10 +21,14 @@ public class WorkbookController {
     }
 
     @PostMapping("/api/workbook")
-    public ApiResponseDto<?> createWorkbook(@LoggedInUser UserVo user,
+    public ApiResponseDto<WorkbookResponse.WorkbookCreate> createWorkbook(@LoggedInUser UserVo user,
                                             @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
-        workbookService.createWorkbook(user.getId(), dto.getName(), dto.getDescription());
-        return ApiResponseDto.OK();
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(user.getId(), dto.getName(), dto.getDescription(), dto.getTheme());
+        String workbookId = workbookService.createWorkbook(param);
+
+        WorkbookResponse.WorkbookCreate response = new WorkbookResponse.WorkbookCreate(workbookId);
+        return ApiResponseDto.OK(response);
     }
 
     @PutMapping("/api/workbooks/{workbookId}")

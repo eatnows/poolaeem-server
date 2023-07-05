@@ -6,7 +6,6 @@ import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException
 import com.poolaeem.poolaeem.workbook.application.WorkbookService;
 import com.poolaeem.poolaeem.workbook.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.workbook.domain.entity.Workbook;
-import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.workbook.domain.validation.WorkbookValidation;
 import com.poolaeem.poolaeem.workbook.infra.repository.WorkbookRepository;
@@ -23,17 +22,18 @@ public class WorkbookServiceImpl implements WorkbookService {
 
     @Transactional
     @Override
-    public void createWorkbook(String userId, String name, String description) {
-        validWorkbookLengthValidation(name, description);
+    public String createWorkbook(WorkbookDto.WorkbookCreateParam param) {
+        validWorkbookLengthValidation(param.getName(), param.getDescription());
 
-        int order = 1 + getLastOrderOfWorkbook(userId);
+        int order = 1 + getLastOrderOfWorkbook(param.getUserId());
         Workbook workbook = new Workbook(
-                userId,
-                name,
-                description,
-                WorkbookTheme.PINK,
+                param.getUserId(),
+                param.getName(),
+                param.getDescription(),
+                param.getTheme(),
                 order);
-        workbookRepository.save(workbook);
+        Workbook saved = workbookRepository.save(workbook);
+        return saved.getId();
     }
 
     @Transactional

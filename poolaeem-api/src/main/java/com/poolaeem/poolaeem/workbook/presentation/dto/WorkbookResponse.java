@@ -9,6 +9,15 @@ import lombok.NoArgsConstructor;
 public class WorkbookResponse {
 
     @Getter
+    public static class WorkbookCreate {
+        private String workbookId;
+
+        public WorkbookCreate(String workbookId) {
+            this.workbookId = workbookId;
+        }
+    }
+
+    @Getter
     public static class WorkbookInfoRead {
         private String name;
         private String description;

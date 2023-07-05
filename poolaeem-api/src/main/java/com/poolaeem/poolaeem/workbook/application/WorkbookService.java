@@ -4,7 +4,7 @@ import com.poolaeem.poolaeem.workbook.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 
 public interface WorkbookService {
-    void createWorkbook(String userId, String name, String description);
+    String createWorkbook(WorkbookDto.WorkbookCreateParam param);
 
     void updateWorkbook(WorkbookDto.WorkbookUpdateParam param);
 

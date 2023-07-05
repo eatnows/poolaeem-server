@@ -41,8 +41,12 @@ class WorkbookServiceImplTest {
         String userId = "user-1";
         String name = TextGenerator.generate(30);
         String description = "";
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(userId, name, description, WorkbookTheme.PINK);
 
-        workbookService.createWorkbook(userId, name, description);
+        given(workbookRepository.save(any())).willReturn(new Workbook());
+
+        workbookService.createWorkbook(param);
 
         verify(workbookRepository, times(1)).save(any());
     }
@@ -54,8 +58,10 @@ class WorkbookServiceImplTest {
         String userId = "user-1";
         String name = TextGenerator.generate(length);
         String description = "";
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(userId, name, description, WorkbookTheme.PINK);
 
-        assertThatThrownBy(() -> workbookService.createWorkbook(userId, name, description))
+        assertThatThrownBy(() -> workbookService.createWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class);
 
         verify(workbookRepository, times(0)).save(any());
@@ -68,8 +74,10 @@ class WorkbookServiceImplTest {
         String userId = "user-1";
         String name = "문제집";
         String description = TextGenerator.generate(length);
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(userId, name, description, WorkbookTheme.PINK);
 
-        assertThatThrownBy(() -> workbookService.createWorkbook(userId, name, description))
+        assertThatThrownBy(() -> workbookService.createWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class);
 
         verify(workbookRepository, times(0)).save(any());

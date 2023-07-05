@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.workbook.presentation;
 
 import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
+import com.poolaeem.poolaeem.test_config.restdocs.DocumentLinkGenerator;
 import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.workbook.presentation.dto.WorkbookRequest;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -34,6 +36,10 @@ class WorkbookControllerTest extends ApiDocumentationTest {
     void testCreateWorkbook() throws Exception {
         String name = "문제집1";
         String description = "이 문제는 영어단어 모음입니다.";
+        WorkbookTheme theme = WorkbookTheme.PINK;
+
+        given(workbookService.createWorkbook(any()))
+                .willReturn("workbook-id");
 
         ResultActions result = this.mockMvc.perform(
                 post(CREATE_WORKBOOK)
@@ -41,7 +47,8 @@ class WorkbookControllerTest extends ApiDocumentationTest {
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookCreateDto(
                                 name,
-                                description
+                                description,
+                                WorkbookTheme.PINK
                         )))
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -56,7 +63,12 @@ class WorkbookControllerTest extends ApiDocumentationTest {
                         ),
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("문제집 이름"),
-                                fieldWithPath("description").type(JsonFieldType.STRING).description("문제집 설명")
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("문제집 설명"),
+                                fieldWithPath("theme").type(JsonFieldType.STRING).optional().description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.WORKBOOK_THEME))
+                        ),
+                        responseFields(
+                                beneathPath("data"),
+                                fieldWithPath("workbookId").type(JsonFieldType.STRING).description("문제집 id")
                         )
                 ));
     }

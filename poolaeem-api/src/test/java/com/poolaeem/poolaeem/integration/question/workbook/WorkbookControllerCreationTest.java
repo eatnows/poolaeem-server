@@ -3,6 +3,7 @@ package com.poolaeem.poolaeem.integration.question.workbook;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.workbook.domain.entity.Workbook;
+import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.workbook.infra.repository.WorkbookRepository;
 import com.poolaeem.poolaeem.workbook.presentation.dto.WorkbookRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
     void testCreateWorkbook() throws Exception {
         String name = "새로만든_문제집_기존에는_없음";
         String description = "문제집 설명글";
+        WorkbookTheme theme = WorkbookTheme.PINK;
 
         assertThat(workbookRepository.findAll().stream().filter(workbook -> workbook.getName().equals(name)).count()).isZero();
 
@@ -43,7 +45,8 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookCreateDto(
                                 name,
-                                description
+                                description,
+                                WorkbookTheme.PINK
                         )))
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -60,6 +63,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
     void testCreateWorkbookForNameLengthValidation(int length) throws Exception {
         String name = TextGenerator.generate(length);
         String description = "문제집 설명글";
+        WorkbookTheme theme = WorkbookTheme.PINK;
 
         ResultActions result = this.mockMvc.perform(
                 post(CREATE_WORKBOOK)
@@ -67,7 +71,8 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookCreateDto(
                                 name,
-                                description
+                                description,
+                                theme
                         )))
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -82,6 +87,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
     void testCreateWorkbookForDescriptionLengthValidation(int length) throws Exception {
         String name = "문제집1";
         String description = TextGenerator.generate(length);
+        WorkbookTheme theme = WorkbookTheme.PINK;
 
         ResultActions result = this.mockMvc.perform(
                 post(CREATE_WORKBOOK)
@@ -89,7 +95,8 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookCreateDto(
                                 name,
-                                description
+                                description,
+                                theme
                         )))
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -103,6 +110,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
     void testCreateWorkbookForOrder() throws Exception {
         String name = "마지막 순서 다음 순서로 생성된다.";
         String description = "description";
+        WorkbookTheme theme = WorkbookTheme.PINK;
 
         Integer lastOrder = workbookRepository.findAll().stream()
                 .filter(workbook -> workbook.getUserId().equals("user-1"))
@@ -116,7 +124,8 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
                                 .header("Authorization", BEARER_ACCESS_TOKEN)
                                 .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookCreateDto(
                                         name,
-                                        description
+                                        description,
+                                        theme
                                 )))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
@@ -128,5 +137,32 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
                 .mapToInt(Integer::intValue)
                 .max().orElse(0);
         assertThat(currentOrder).isEqualTo(lastOrder + 1);
+    }
+
+    @Test
+    @DisplayName("문제집 테마가 null일 경우 기본값인 PINK로 새로 생성된다.")
+    void testCreateWorkbookForNullTheme() throws Exception {
+        String name = "마지막 순서 다음 순서로 생성된다.";
+        String description = "description";
+        WorkbookTheme theme = null;
+
+        this.mockMvc.perform(
+                        post(CREATE_WORKBOOK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", BEARER_ACCESS_TOKEN)
+                                .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookCreateDto(
+                                        name,
+                                        description,
+                                        theme
+                                )))
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)));
+
+        Workbook entity = workbookRepository.findAll().stream()
+                .filter(workbook -> workbook.getUserId().equals("user-1"))
+                .max((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
+                .get();
+        assertThat(entity.getTheme()).isEqualTo(WorkbookTheme.PINK);
     }
 }
