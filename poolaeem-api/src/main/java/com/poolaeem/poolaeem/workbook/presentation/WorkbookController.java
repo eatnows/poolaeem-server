@@ -5,7 +5,9 @@ import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.workbook.application.WorkbookService;
 import com.poolaeem.poolaeem.workbook.domain.dto.WorkbookDto;
+import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.workbook.presentation.dto.WorkbookRequest;
+import com.poolaeem.poolaeem.workbook.presentation.dto.WorkbookResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +34,14 @@ public class WorkbookController {
         WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription());
         workbookService.updateWorkbook(param);
         return ApiResponseDto.OK();
+    }
+
+    @GetMapping("/api/workbooks/{workbookId}")
+    public ApiResponseDto<WorkbookResponse.WorkbookInfoRead> readWorkbookInfo(@LoggedInUser UserVo user,
+                                              @PathVariable String workbookId) {
+        WorkbookVo workbook = workbookService.readWorkbookInfo(workbookId, user.getId());
+
+        WorkbookResponse.WorkbookInfoRead response = new WorkbookResponse.WorkbookInfoRead(workbook);
+        return ApiResponseDto.OK(response);
     }
 }
