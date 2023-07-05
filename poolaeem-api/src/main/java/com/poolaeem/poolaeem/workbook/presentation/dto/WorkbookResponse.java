@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.workbook.presentation.dto;
 
+import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,12 +24,14 @@ public class WorkbookResponse {
         private String description;
         private int problemCount;
         private int solvedCount;
+        private WorkbookTheme theme;
 
         public WorkbookInfoRead(WorkbookVo workbook) {
             this.name = workbook.getName();
             this.description = workbook.getDescription();
             this.problemCount = workbook.getProblemCount();
             this.solvedCount = workbook.getSolvedCount();
+            this.theme = workbook.getTheme();
         }
     }
 }

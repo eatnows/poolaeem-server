@@ -145,7 +145,8 @@ class WorkbookControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("문제집 이름"),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("문제집 설명"),
                                 fieldWithPath("problemCount").type(JsonFieldType.NUMBER).description("문항 개수"),
-                                fieldWithPath("solvedCount").type(JsonFieldType.NUMBER).description("풀이 횟수")
+                                fieldWithPath("solvedCount").type(JsonFieldType.NUMBER).description("풀이 횟수"),
+                                fieldWithPath("theme").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.WORKBOOK_THEME))
                         )
                 ));
     }
