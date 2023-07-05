@@ -29,6 +29,16 @@ endif::[]
 
 = --
 
+== 문제집 정보 조회
+=== -- Request
+include::{snippets}/question/workbook/test-read-workbook-info/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-info/request-headers.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-info/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-read-workbook-info/response-fields-beneath-data.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-info/http-response.adoc[]
+
+
 == 문제집 생성
 === -- Request
 include::{snippets}/question/workbook/test-create-workbook/path-parameters.adoc[]
