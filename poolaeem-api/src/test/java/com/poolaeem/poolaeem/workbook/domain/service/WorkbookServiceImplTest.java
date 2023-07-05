@@ -6,6 +6,7 @@ import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.workbook.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.workbook.domain.entity.Workbook;
 import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.workbook.infra.repository.WorkbookRepository;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
@@ -40,8 +41,12 @@ class WorkbookServiceImplTest {
         String userId = "user-1";
         String name = TextGenerator.generate(30);
         String description = "";
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(userId, name, description, WorkbookTheme.PINK);
 
-        workbookService.createWorkbook(userId, name, description);
+        given(workbookRepository.save(any())).willReturn(new Workbook());
+
+        workbookService.createWorkbook(param);
 
         verify(workbookRepository, times(1)).save(any());
     }
@@ -53,8 +58,10 @@ class WorkbookServiceImplTest {
         String userId = "user-1";
         String name = TextGenerator.generate(length);
         String description = "";
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(userId, name, description, WorkbookTheme.PINK);
 
-        assertThatThrownBy(() -> workbookService.createWorkbook(userId, name, description))
+        assertThatThrownBy(() -> workbookService.createWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class);
 
         verify(workbookRepository, times(0)).save(any());
@@ -67,8 +74,10 @@ class WorkbookServiceImplTest {
         String userId = "user-1";
         String name = "문제집";
         String description = TextGenerator.generate(length);
+        WorkbookDto.WorkbookCreateParam param =
+                new WorkbookDto.WorkbookCreateParam(userId, name, description, WorkbookTheme.PINK);
 
-        assertThatThrownBy(() -> workbookService.createWorkbook(userId, name, description))
+        assertThatThrownBy(() -> workbookService.createWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class);
 
         verify(workbookRepository, times(0)).save(any());
@@ -160,5 +169,49 @@ class WorkbookServiceImplTest {
                 WorkbookTheme.PINK,
                 2
         );
+    }
+
+    @Test
+    @DisplayName("문제집의 정보를 조회할 수 있다.")
+    void testReadWorkbookInfo() {
+        String workbookId = "workbook-id";
+        String reqUserId = "user-id";
+
+        given(workbookRepository.findDtoByIdAndUserIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(new WorkbookVo(
+                        "workbook-id",
+                        "user-id",
+                        "문제집1",
+                        "문제집 설명",
+                        3,
+                        2,
+                        WorkbookTheme.PINK
+                )));
+
+        WorkbookVo workbook = workbookService.readWorkbookInfo(workbookId, reqUserId);
+
+        assertThat(workbook.getId()).isEqualTo(workbookId);
+        assertThat(workbook.getUserId()).isEqualTo(reqUserId);
+    }
+
+    @Test
+    @DisplayName("문제집 관리자가 아니면 문제집 정보를 조회할 수 없다.")
+    void testReadWorkbookInfoByOtherUser() {
+        String workbookId = "workbook-id";
+        String reqUserId = "other-user";
+
+        given(workbookRepository.findDtoByIdAndUserIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(new WorkbookVo(
+                        "workbook-id",
+                        "user-id",
+                        "문제집1",
+                        "문제집 설명",
+                        3,
+                        2,
+                        WorkbookTheme.PINK
+                )));
+
+        assertThatThrownBy(() -> workbookService.readWorkbookInfo(workbookId, reqUserId))
+                .isInstanceOf(ForbiddenRequestException.class);
     }
 }

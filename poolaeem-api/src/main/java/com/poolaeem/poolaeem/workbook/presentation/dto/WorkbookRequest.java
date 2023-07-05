@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.workbook.presentation.dto;
 
+import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.workbook.domain.validation.WorkbookValidation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,10 +21,12 @@ public class WorkbookRequest {
 
         @Length(min = WorkbookValidation.DESCRIPTION_MIN_LENGTH, max = WorkbookValidation.DESCRIPTION_MAX_LENGTH)
         private String description;
+        private WorkbookTheme theme;
 
-        public WorkbookCreateDto(String name, String description) {
+        public WorkbookCreateDto(String name, String description, WorkbookTheme theme) {
             this.name = name;
             this.description = description;
+            this.theme = theme;
         }
     }
 

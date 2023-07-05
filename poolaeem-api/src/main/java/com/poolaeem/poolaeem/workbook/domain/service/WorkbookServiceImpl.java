@@ -6,7 +6,7 @@ import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException
 import com.poolaeem.poolaeem.workbook.application.WorkbookService;
 import com.poolaeem.poolaeem.workbook.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.workbook.domain.entity.Workbook;
-import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.workbook.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.workbook.domain.validation.WorkbookValidation;
 import com.poolaeem.poolaeem.workbook.infra.repository.WorkbookRepository;
 import org.springframework.stereotype.Service;
@@ -22,17 +22,18 @@ public class WorkbookServiceImpl implements WorkbookService {
 
     @Transactional
     @Override
-    public void createWorkbook(String userId, String name, String description) {
-        validWorkbookLengthValidation(name, description);
+    public String createWorkbook(WorkbookDto.WorkbookCreateParam param) {
+        validWorkbookLengthValidation(param.getName(), param.getDescription());
 
-        int order = 1 + getLastOrderOfWorkbook(userId);
+        int order = 1 + getLastOrderOfWorkbook(param.getUserId());
         Workbook workbook = new Workbook(
-                userId,
-                name,
-                description,
-                WorkbookTheme.PINK,
+                param.getUserId(),
+                param.getName(),
+                param.getDescription(),
+                param.getTheme(),
                 order);
-        workbookRepository.save(workbook);
+        Workbook saved = workbookRepository.save(workbook);
+        return saved.getId();
     }
 
     @Transactional
@@ -40,15 +41,29 @@ public class WorkbookServiceImpl implements WorkbookService {
     public void updateWorkbook(WorkbookDto.WorkbookUpdateParam param) {
         validWorkbookLengthValidation(param.getName(), param.getDescription());
 
-        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(param.getWorkbookId())
-                .orElseThrow(WorkbookNotFoundException::new);
+        Workbook workbook = getWorkbookEntity(param.getWorkbookId());
 
-        validOwner(workbook.getUserId(), param.getUserId());
+        validManage(workbook.getUserId(), param.getUserId());
 
         workbook.updateInfo(param.getName(), param.getDescription());
     }
 
-    private void validOwner(String ownerUserId, String reqUserId) {
+    @Transactional(readOnly = true)
+    @Override
+    public WorkbookVo readWorkbookInfo(String workbookId, String reqUserId) {
+        WorkbookVo workbook = workbookRepository.findDtoByIdAndUserIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+        validManage(workbook.getUserId(), reqUserId);
+
+        return workbook;
+    }
+
+    private Workbook getWorkbookEntity(String workbookdId) {
+        return workbookRepository.findByIdAndIsDeletedFalse(workbookdId)
+                .orElseThrow(WorkbookNotFoundException::new);
+    }
+
+    private void validManage(String ownerUserId, String reqUserId) {
         if (!ownerUserId.equals(reqUserId)) {
             throw new ForbiddenRequestException();
         }

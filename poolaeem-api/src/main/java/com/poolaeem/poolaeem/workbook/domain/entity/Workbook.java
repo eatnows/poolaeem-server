@@ -25,8 +25,8 @@ public class Workbook extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "question_count")
-    private int questionCount;
+    @Column(name = "problem_count")
+    private int problemCount;
 
     @Column(name = "solved_count")
     private int solvedCount;
@@ -45,7 +45,7 @@ public class Workbook extends BaseEntity {
         this.userId = userId;
         this.name = name;
         this.description = description;
-        this.questionCount = 0;
+        this.problemCount = 0;
         this.solvedCount = 0;
         this.theme = theme;
         this.order = order;
