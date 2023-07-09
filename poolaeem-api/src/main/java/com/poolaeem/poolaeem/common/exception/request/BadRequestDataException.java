@@ -11,6 +11,10 @@ public class BadRequestDataException extends ServiceException {
         super(apiResponseCode.getMessage());
     }
 
+    public BadRequestDataException(String message) {
+        super(message);
+    }
+
     @Override
     public ApiResponseCode getApiResponseCode() {
         return apiResponseCode;
