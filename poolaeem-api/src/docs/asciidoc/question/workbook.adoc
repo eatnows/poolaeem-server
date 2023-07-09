@@ -27,7 +27,7 @@ endif::[]
 |반환 데이터 값
 |===
 
-= --
+= 문제집
 
 == 문제집 정보 조회
 === -- Request
@@ -57,3 +57,14 @@ include::{snippets}/question/workbook/test-update-workbook-info/request-fields.a
 include::{snippets}/question/workbook/test-update-workbook-info/http-request.adoc[]
 === -- Response
 include::{snippets}/question/workbook/test-update-workbook-info/http-response.adoc[]
+
+
+= 문항
+== 문항 추가
+=== -- Request
+include::{snippets}/question/problem/test-create-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-create-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-create-problem/request-fields.adoc[]
+include::{snippets}/question/problem/test-create-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-create-problem/http-response.adoc[]
