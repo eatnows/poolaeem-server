@@ -4,7 +4,9 @@ import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
+import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.presentation.dto.ProblemRequest;
+import com.poolaeem.poolaeem.question.presentation.dto.ProblemResponse;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -26,5 +28,14 @@ public class ProblemController {
         problemService.createProblem(param);
 
         return ApiResponseDto.OK();
+    }
+
+    @GetMapping("/api/problems/{problemId}")
+    public ApiResponseDto<ProblemResponse.ProblemRead> readProblemInfo(@LoggedInUser UserVo user,
+                                                                       @PathVariable String problemId) {
+        ProblemVo problem = problemService.readProblem(user.getId(), problemId);
+
+        ProblemResponse.ProblemRead response = new ProblemResponse.ProblemRead(problem);
+        return ApiResponseDto.OK(response);
     }
 }

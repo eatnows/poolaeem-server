@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Table(name = "problem")
@@ -28,6 +31,9 @@ public class Problem extends BaseEntity {
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
+    private List<ProblemOption> options = new ArrayList<>();
 
     public Problem(Workbook workbook, String question, int order) {
         this.workbook = workbook;

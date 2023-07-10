@@ -2,6 +2,7 @@ package com.poolaeem.poolaeem.question.domain.service;
 
 import com.poolaeem.poolaeem.common.event.WorkbookEventsPublisher;
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherWorkbookEvent;
+import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
@@ -11,6 +12,8 @@ import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.Problem;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
+import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
+import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
@@ -45,6 +48,19 @@ public class ProblemServiceImpl implements ProblemService {
         saveOptions(problem, param.getOptions());
 
         increaseProblemCount(param);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ProblemVo readProblem(String userId, String problemId) {
+        Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(problemId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("문항이 존재하지 않습니다"));
+
+        List<ProblemOptionVo> options = problem.getOptions().stream()
+                .map(o -> new ProblemOptionVo(o.getId(), o.getValue(), o.getIsCorrect()))
+                .toList();
+
+        return new ProblemVo(problem.getId(), null, problem.getQuestion(), options);
     }
 
     private void increaseProblemCount(ProblemDto.ProblemCreateParam param) {
