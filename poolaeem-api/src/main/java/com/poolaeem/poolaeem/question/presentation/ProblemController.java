@@ -7,10 +7,7 @@ import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.presentation.dto.ProblemRequest;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProblemController {

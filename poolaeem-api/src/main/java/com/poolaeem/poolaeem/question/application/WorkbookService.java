@@ -9,4 +9,6 @@ public interface WorkbookService {
     void updateWorkbook(WorkbookDto.WorkbookUpdateParam param);
 
     WorkbookVo readWorkbookInfo(String workbookId, String userId);
+
+    void addProblemCount(String workbookId);
 }

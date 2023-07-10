@@ -1,5 +1,7 @@
 package com.poolaeem.poolaeem.question.domain.service;
 
+import com.poolaeem.poolaeem.common.event.WorkbookEventsPublisher;
+import com.poolaeem.poolaeem.common.event.obj.EventsPublisherWorkbookEvent;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
@@ -24,11 +26,13 @@ public class ProblemServiceImpl implements ProblemService {
     private final ProblemRepository problemRepository;
     private final WorkbookRepository workbookRepository;
     private final ProblemOptionRepository problemOptionRepository;
+    private final WorkbookEventsPublisher eventsPublisher;
 
-    public ProblemServiceImpl(ProblemRepository problemRepository, WorkbookRepository workbookRepository, ProblemOptionRepository problemOptionRepository) {
+    public ProblemServiceImpl(ProblemRepository problemRepository, WorkbookRepository workbookRepository, ProblemOptionRepository problemOptionRepository, WorkbookEventsPublisher eventsPublisher) {
         this.problemRepository = problemRepository;
         this.workbookRepository = workbookRepository;
         this.problemOptionRepository = problemOptionRepository;
+        this.eventsPublisher = eventsPublisher;
     }
 
     @Transactional
@@ -39,6 +43,12 @@ public class ProblemServiceImpl implements ProblemService {
 
         Problem problem = saveProblem(param);
         saveOptions(problem, param.getOptions());
+
+        increaseProblemCount(param);
+    }
+
+    private void increaseProblemCount(ProblemDto.ProblemCreateParam param) {
+        eventsPublisher.publish(new EventsPublisherWorkbookEvent.ProblemAddEvent(param.getWorkbookId()));
     }
 
     private void validProblemOption(List<ProblemOptionDto> options) {

@@ -8,4 +8,6 @@ public interface WorkbookRepositoryCustom {
     Optional<Integer> findLastOrderByUserIdAndIsDeletedFalse(String userId);
 
     Optional<WorkbookVo> findDtoByIdAndUserIdAndIsDeletedFalse(String workbookId);
+
+    void updateAddProblemCountByWorkbookId(String workbookId);
 }

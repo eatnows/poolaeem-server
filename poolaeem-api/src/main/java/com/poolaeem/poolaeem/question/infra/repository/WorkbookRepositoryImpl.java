@@ -1,12 +1,12 @@
 package com.poolaeem.poolaeem.question.infra.repository;
 
-import com.poolaeem.poolaeem.question.domain.entity.QWorkbook;
 import com.poolaeem.poolaeem.question.domain.entity.vo.QWorkbookVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.util.Optional;
 
+import static com.poolaeem.poolaeem.question.domain.entity.QWorkbook.workbook;
 import static com.querydsl.core.types.dsl.Expressions.asString;
 
 public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
@@ -19,10 +19,10 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
     @Override
     public Optional<Integer> findLastOrderByUserIdAndIsDeletedFalse(String userId) {
         return Optional.ofNullable(queryFactory
-                .select(QWorkbook.workbook.order)
-                .from(QWorkbook.workbook)
-                .where(QWorkbook.workbook.userId.eq(userId), QWorkbook.workbook.isDeleted.isFalse())
-                .orderBy(QWorkbook.workbook.order.desc())
+                .select(workbook.order)
+                .from(workbook)
+                .where(workbook.userId.eq(userId), workbook.isDeleted.isFalse())
+                .orderBy(workbook.order.desc())
                 .fetchFirst());
     }
 
@@ -32,16 +32,25 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
                 queryFactory
                         .select(new QWorkbookVo(
                                 asString(workbookId),
-                                QWorkbook.workbook.userId,
-                                QWorkbook.workbook.name,
-                                QWorkbook.workbook.description,
-                                QWorkbook.workbook.problemCount,
-                                QWorkbook.workbook.solvedCount,
-                                QWorkbook.workbook.theme
+                                workbook.userId,
+                                workbook.name,
+                                workbook.description,
+                                workbook.problemCount,
+                                workbook.solvedCount,
+                                workbook.theme
                         ))
-                        .from(QWorkbook.workbook)
-                        .where(QWorkbook.workbook.id.eq(workbookId), QWorkbook.workbook.isDeleted.isFalse())
+                        .from(workbook)
+                        .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
                         .fetchFirst());
 
+    }
+
+    @Override
+    public void updateAddProblemCountByWorkbookId(String workbookId) {
+        queryFactory
+                .update(workbook)
+                .set(workbook.problemCount, workbook.problemCount.add(1))
+                .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
+                .execute();
     }
 }

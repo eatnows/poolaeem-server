@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.question.domain.service;
 
+import com.poolaeem.poolaeem.common.event.WorkbookEventsPublisher;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.question.application.ProblemService;
@@ -44,6 +45,8 @@ class ProblemServiceImplTest {
     private ProblemOptionRepository optionRepository;
     @Mock
     private WorkbookRepository workbookRepository;
+    @Mock
+    private WorkbookEventsPublisher workbookEventsPublisher;
 
     @Test
     @DisplayName("문제집에 문항을 추가할 수 있다.")
@@ -153,6 +156,29 @@ class ProblemServiceImplTest {
 
         assertThatThrownBy(() -> problemService.createProblem(param))
                 .isInstanceOf(BadRequestDataException.class);
+    }
+
+    @Test
+    @DisplayName("문항을 추가하면 문제집 문항수를 1 증가 시키는 이벤트를 발행한다.")
+    void testAddProblemCount() throws Exception {
+        String workbookId = "";
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
+                workbookId,
+                userVo.getId(),
+                "Word",
+                List.of(new ProblemOptionDto("단어", true),
+                        new ProblemOptionDto("세계", false)
+                )
+        );
+        given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(new Workbook(userVo.getId(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
+        given(problemRepository.save(any()))
+                .willReturn(new Problem(null, "Word", 1));
+
+        problemService.createProblem(param);
+
+        verify(workbookEventsPublisher, times(1)).publish(any());
     }
 
     private List<ProblemOptionDto> getOptions(int size) {

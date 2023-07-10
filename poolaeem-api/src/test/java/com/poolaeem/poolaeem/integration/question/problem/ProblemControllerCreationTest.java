@@ -13,6 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@RecordApplicationEvents
 @DisplayName("통합: 문항 추가 테스트")
 @Sql(scripts = {"classpath:/sql/question/workbook.sql",
         "classpath:/sql/question/problem.sql",
@@ -38,6 +41,8 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
     private ProblemRepository problemRepository;
     @Autowired
     private ProblemOptionRepository optionRepository;
+    @Autowired
+    private ApplicationEvents applicationEvents;
 
     @Test
     @DisplayName("문제집에 문항을 추가할 수 있다.")
@@ -48,7 +53,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
         long before = problemRepository.findAll().stream()
                 .filter(problem -> problem.getWorkbook().getId().equals(workbookId))
                 .count();
-        assertThat(before).isEqualTo(2);
+        assertThat(before).isEqualTo(3);
 
         ResultActions result = this.mockMvc.perform(
                 post(CREATE_PROBLEM, workbookId)
@@ -100,7 +105,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
         long before = optionRepository.findAll().stream()
                 .filter(op -> op.getCreatedBy().equals("user-1"))
                 .count();
-        assertThat(before).isEqualTo(5);
+        assertThat(before).isEqualTo(8);
 
         ResultActions result = this.mockMvc.perform(
                 post(CREATE_PROBLEM, workbookId)
@@ -134,7 +139,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                 .map(Problem::getOrder)
                 .sorted(Comparator.reverseOrder())
                 .findFirst().get();
-        assertThat(before).isEqualTo(2);
+        assertThat(before).isEqualTo(3);
 
         ResultActions result = this.mockMvc.perform(
                 post(CREATE_PROBLEM, workbookId)
@@ -155,6 +160,33 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                 .sorted(Comparator.reverseOrder())
                 .findFirst().get();
         assertThat(after).isEqualTo(before + 1);
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)));
+    }
+
+    @Test
+    @DisplayName("문항을 추가하면 문제집 문항수가 1증가한다.")
+    void testIncreaseProblemCount() throws Exception {
+        String workbookId = "workbook-1";
+
+        Workbook before = workbookRepository.findByIdAndIsDeletedFalse(workbookId).get();
+        assertThat(before.getProblemCount()).isEqualTo(3);
+
+        ResultActions result = this.mockMvc.perform(
+                post(CREATE_PROBLEM, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
+                                "Word",
+                                List.of(new ProblemOptionDto("단어", true),
+                                        new ProblemOptionDto("세계", false))
+                        )))
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        Workbook after = workbookRepository.findByIdAndIsDeletedFalse(workbookId).get();
+        assertThat(after.getProblemCount()).isEqualTo(before.getProblemCount() + 1);
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)));
