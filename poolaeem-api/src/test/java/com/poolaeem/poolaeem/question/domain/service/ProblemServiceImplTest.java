@@ -7,8 +7,10 @@ import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.Problem;
+import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -47,11 +50,13 @@ class ProblemServiceImplTest {
     private WorkbookRepository workbookRepository;
     @Mock
     private WorkbookEventsPublisher workbookEventsPublisher;
+    @Mock
+    private ProblemOptionRepository problemOptionRepository;
 
     @Test
     @DisplayName("문제집에 문항을 추가할 수 있다.")
     void testCreateProblem() throws Exception {
-        String workbookId = "";
+        String workbookId = "workbook-id";
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
@@ -83,7 +88,7 @@ class ProblemServiceImplTest {
     @ValueSource(ints = {0, 101})
     @DisplayName("문항에 문제는 1자 이상 100자 이하여야 한다.")
     void testCreateProblemForQuestionLength(int length) throws Exception {
-        String workbookId = "";
+        String workbookId = "workbookd-id";
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
@@ -109,7 +114,7 @@ class ProblemServiceImplTest {
     @ValueSource(ints = {1, 11})
     @DisplayName("문항 선택지는 최소 2개, 최대 10개까지 추가할 수 있다.")
     void testCreateProblemForOptionSize(int size) throws Exception {
-        String workbookId = "";
+        String workbookId = "workbook-id";
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
@@ -126,7 +131,7 @@ class ProblemServiceImplTest {
     @ValueSource(ints = {0, 101})
     @DisplayName("문항 선택지의 값은 1자 이상 100자 이하로만 추가할 수 있다.")
     void testCreateProblemForOptionValueLength(int length) throws Exception {
-        String workbookId = "";
+        String workbookId = "workbook-id";
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
@@ -144,7 +149,7 @@ class ProblemServiceImplTest {
     @ValueSource(booleans = {false, true})
     @DisplayName("선택지는 최소 오답1개 정답1개를 가지고 있어야 한다.")
     void testCreateProblemForRequiredCorrectOption(boolean isCorrect) throws Exception {
-        String workbookId = "";
+        String workbookId = "workbook-id";
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
@@ -161,7 +166,7 @@ class ProblemServiceImplTest {
     @Test
     @DisplayName("문항을 추가하면 문제집 문항수를 1 증가 시키는 이벤트를 발행한다.")
     void testAddProblemCount() throws Exception {
-        String workbookId = "";
+        String workbookId = "workbook-id";
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
@@ -179,6 +184,29 @@ class ProblemServiceImplTest {
         problemService.createProblem(param);
 
         verify(workbookEventsPublisher, times(1)).publish(any());
+    }
+
+    @Test
+    @DisplayName("문항을 조회할 수 있다.")
+    void testReadProblem() {
+        String problemId = "problem-1";
+        String userId = "user-1";
+
+        Problem mockProblem = new Problem("problem-1", "Word",
+                List.of(
+                        new ProblemOption("option-1", "단어", true),
+                        new ProblemOption("option-2", "세계", false)
+                )
+        );
+        given(problemRepository.findByIdAndIsDeletedFalseAndUserId(problemId, userId))
+                .willReturn(Optional.of(mockProblem));
+
+        ProblemVo problem = problemService.readProblem(userId, problemId);
+
+        assertThat(problem.getId()).isEqualTo(mockProblem.getId());
+        assertThat(problem.getQuestion()).isEqualTo(mockProblem.getQuestion());
+        assertThat(problem.getOptions()).hasSize(mockProblem.getOptions().size());
+        assertThat(problem.getOptions().get(0).getOptionId()).isEqualTo(mockProblem.getOptions().get(0).getId());
     }
 
     private List<ProblemOptionDto> getOptions(int size) {

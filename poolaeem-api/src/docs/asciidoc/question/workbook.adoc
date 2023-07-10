@@ -68,3 +68,14 @@ include::{snippets}/question/problem/test-create-problem/request-fields.adoc[]
 include::{snippets}/question/problem/test-create-problem/http-request.adoc[]
 === -- Response
 include::{snippets}/question/problem/test-create-problem/http-response.adoc[]
+
+
+== 문항 조회
+=== -- Request
+include::{snippets}/question/problem/test-read-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-read-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-read-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-read-problem/response-fields-beneath-data.adoc[]
+include::{snippets}/question/problem/test-read-problem/http-response.adoc[]
+

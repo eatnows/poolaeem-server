@@ -31,6 +31,12 @@ public class ProblemOption extends BaseEntity {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    public ProblemOption(String id, String value, Boolean isCorrect) {
+        this.id = id;
+        this.value = value;
+        this.isCorrect = isCorrect;
+    }
+
     public ProblemOption(Problem problem, String value, Boolean isCorrect, int order) {
         this.problem = problem;
         this.value = value;

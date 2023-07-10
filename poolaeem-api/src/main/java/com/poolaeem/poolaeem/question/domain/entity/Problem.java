@@ -35,6 +35,12 @@ public class Problem extends BaseEntity {
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
     private List<ProblemOption> options = new ArrayList<>();
 
+    public Problem(String id, String question, List<ProblemOption> options) {
+        this.id = id;
+        this.question = question;
+        this.options = options;
+    }
+
     public Problem(Workbook workbook, String question, int order) {
         this.workbook = workbook;
         this.question = question;
