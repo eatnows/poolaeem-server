@@ -79,3 +79,12 @@ include::{snippets}/question/problem/test-read-problem/http-request.adoc[]
 include::{snippets}/question/problem/test-read-problem/response-fields-beneath-data.adoc[]
 include::{snippets}/question/problem/test-read-problem/http-response.adoc[]
 
+
+== 문항 수정
+=== -- Request
+include::{snippets}/question/problem/test-update-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-update-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-update-problem/request-fields.adoc[]
+include::{snippets}/question/problem/test-update-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-update-problem/http-response.adoc[]

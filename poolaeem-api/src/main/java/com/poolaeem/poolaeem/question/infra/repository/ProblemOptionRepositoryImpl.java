@@ -21,6 +21,7 @@ public class ProblemOptionRepositoryImpl implements ProblemOptionRepositoryCusto
                 .select(problemOption)
                 .from(problemOption)
                 .where(problemOption.problem.id.eq(problemId), problemOption.isDeleted.isFalse())
+                .orderBy(problemOption.order.asc())
                 .fetch();
     }
 }

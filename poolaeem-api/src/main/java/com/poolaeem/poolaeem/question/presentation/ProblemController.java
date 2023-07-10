@@ -39,7 +39,7 @@ public class ProblemController {
         return ApiResponseDto.OK(response);
     }
 
-    @PutMapping("/api/problmes/{problemId}")
+    @PutMapping("/api/problems/{problemId}")
     public ApiResponseDto<?> updateProblem(@LoggedInUser UserVo user,
                                            @PathVariable String problemId,
                                            @Valid @RequestBody ProblemRequest.ProblemUpdate dto) {

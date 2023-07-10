@@ -69,6 +69,9 @@ public class ProblemServiceImpl implements ProblemService {
     @Transactional
     @Override
     public void updateProblem(ProblemDto.ProblemUpdateParam param) {
+        validProblemQuestion(param.getQuestion());
+        validProblemOption(param.getOptions());
+
         Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(param.getProblemId(), param.getReqUserId())
                 .orElseThrow(() -> new EntityNotFoundException("문항이 존재하지 않습니다"));
 

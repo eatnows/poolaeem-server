@@ -3,7 +3,6 @@ package com.poolaeem.poolaeem.question.domain.service;
 import com.poolaeem.poolaeem.common.event.WorkbookEventsPublisher;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.component.TextGenerator;
-import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.Problem;
@@ -14,7 +13,6 @@ import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
-import com.poolaeem.poolaeem.question.presentation.dto.ProblemRequest;
 import com.poolaeem.poolaeem.user.domain.entity.UserRole;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.junit.jupiter.api.DisplayName;
@@ -27,15 +25,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("단위: 문항 관리 서비스 테스트")
@@ -50,8 +49,6 @@ class ProblemServiceImplTest {
     private WorkbookRepository workbookRepository;
     @Mock
     private WorkbookEventsPublisher workbookEventsPublisher;
-    @Mock
-    private ProblemOptionRepository problemOptionRepository;
 
     @Test
     @DisplayName("문제집에 문항을 추가할 수 있다.")
@@ -207,6 +204,113 @@ class ProblemServiceImplTest {
         assertThat(problem.getQuestion()).isEqualTo(mockProblem.getQuestion());
         assertThat(problem.getOptions()).hasSize(mockProblem.getOptions().size());
         assertThat(problem.getOptions().get(0).getOptionId()).isEqualTo(mockProblem.getOptions().get(0).getId());
+    }
+
+    @Test
+    @DisplayName("문항을 수정할 수 있다.")
+    void testUpdateProblem() {
+        ProblemDto.ProblemUpdateParam param =
+                new ProblemDto.ProblemUpdateParam(
+                        "problem-id",
+                        "user-id",
+                        "Modify",
+                        List.of(
+                                new ProblemOptionDto("option-1", "변경", true),
+                                new ProblemOptionDto("유지", false)
+                        )
+                );
+
+        Problem mockProblem = new Problem("problem-id", "update", null);
+        given(problemRepository.findByIdAndIsDeletedFalseAndUserId(anyString(), anyString()))
+                .willReturn(Optional.of(mockProblem));
+        given(optionRepository.findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(anyString()))
+                .willReturn(List.of(
+                        new ProblemOption("option-1", "변경", true),
+                        new ProblemOption("option-2", "패치", false)));
+
+        problemService.updateProblem(param);
+
+        verify(optionRepository, times(1)).saveAll(any());
+        verify(optionRepository, times(1)).deleteAll(any());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 101})
+    @DisplayName("문항에 문제는 1자 이상 100자로만 수정할 수 있다.")
+    void testUpdateProblemForQuestionLength(int length) throws Exception {
+        String problemId = "problem-id";
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
+                problemId,
+                userVo.getId(),
+                TextGenerator.generate(length),
+                List.of(new ProblemOptionDto("option-1", "단어", true),
+                        new ProblemOptionDto("option-2", "세계", false),
+                        new ProblemOptionDto("option-3", "나무", false),
+                        new ProblemOptionDto("우드", false),
+                        new ProblemOptionDto("월드", false),
+                        new ProblemOptionDto("워드", false),
+                        new ProblemOptionDto("로드", false),
+                        new ProblemOptionDto("위드", false),
+                        new ProblemOptionDto("왈드", false)
+                )
+        );
+
+        assertThatThrownBy(() -> problemService.updateProblem(param))
+                .isInstanceOf(BadRequestDataException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 11})
+    @DisplayName("문항 선택지는 최소 2개, 최대 10개까지 수정할 수 있다.")
+    void testUpdateProblemForOptionSize(int size) throws Exception {
+        String problemId = "problem-id";
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
+                problemId,
+                userVo.getId(),
+                "Word",
+                getOptions(size)
+        );
+
+        assertThatThrownBy(() -> problemService.updateProblem(param))
+                .isInstanceOf(BadRequestDataException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 101})
+    @DisplayName("문항 선택지의 값은 1자 이상 100자 이하로만 수정할 수 있다")
+    void testUpdateProblemForOptionValueLength(int length) throws Exception {
+        String problemId = "problem-id";
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
+                problemId,
+                userVo.getId(),
+                "Word",
+                List.of(new ProblemOptionDto("option-1", "단어", true),
+                        new ProblemOptionDto(TextGenerator.generate(length), false))
+        );
+
+        assertThatThrownBy(() -> problemService.updateProblem(param))
+                .isInstanceOf(BadRequestDataException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    @DisplayName("선택지는 최소 오답1개 정답1개를 가지고 있어야 수정할 수 있다.")
+    void testUpdateProblemForRequiredCorrectOption(boolean isCorrect) throws Exception {
+        String problemId = "problem-id";
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
+                problemId,
+                userVo.getId(),
+                "Word",
+                List.of(new ProblemOptionDto("option-1", "단어", isCorrect),
+                        new ProblemOptionDto("단어2", isCorrect))
+        );
+
+        assertThatThrownBy(() -> problemService.updateProblem(param))
+                .isInstanceOf(BadRequestDataException.class);
     }
 
     private List<ProblemOptionDto> getOptions(int size) {

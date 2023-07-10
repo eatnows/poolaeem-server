@@ -21,8 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -32,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProblemControllerTest extends ApiDocumentationTest {
     private final String CREATE_PROBLEM = "/api/workbooks/{workbookId}/problem";
     private final String READ_PROBLEM = "/api/problems/{problemId}";
+    private final String UPDATE_PROBLEM = "/api/problems/{problemId}";
 
     @Test
     @DisplayName("문제집에 문항을 생성할 수 있다.")
@@ -108,6 +108,44 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("options[].optionId").type(JsonFieldType.STRING).description("선택지 id"),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("정답 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("문항을 수정할 수 있다.")
+    void testUpdateProblem() throws Exception {
+        String problemId = "problem-id";
+
+        ResultActions result = this.mockMvc.perform(
+                put(UPDATE_PROBLEM, problemId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemUpdate(
+                                "Computer",
+                                List.of(
+                                        new ProblemOptionDto("option-1", "컴퓨터", true),
+                                        new ProblemOptionDto("스마트폰", false)
+                                )
+                        )))
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(document("question/problem/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("problemId").description("문제 id")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer token")
+                        ),
+                        requestFields(
+                                fieldWithPath("question").type(JsonFieldType.STRING).description("문제"),
+                                fieldWithPath("options[].optionId").type(JsonFieldType.STRING).optional().description("선택지 id"),
+                                fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
+                                fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("선택지 정답 여부")
                         )
                 ));
     }
