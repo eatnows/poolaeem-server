@@ -41,6 +41,16 @@ public class Workbook extends BaseEntity {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    public Workbook(String id, String userId, String name, String description, int problemCount, int solvedCount, WorkbookTheme theme) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.problemCount = problemCount;
+        this.solvedCount = solvedCount;
+        this.theme = theme;
+    }
+
     public Workbook(String userId, String name, String description, WorkbookTheme theme, int order) {
         this.userId = userId;
         this.name = name;

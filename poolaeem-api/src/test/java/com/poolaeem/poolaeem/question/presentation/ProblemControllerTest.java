@@ -15,7 +15,6 @@ import java.util.List;
 
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -32,6 +31,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
     private final String CREATE_PROBLEM = "/api/workbooks/{workbookId}/problem";
     private final String READ_PROBLEM = "/api/problems/{problemId}";
     private final String UPDATE_PROBLEM = "/api/problems/{problemId}";
+    private final String DELETE_PROBLEM = "/api/problems/{problemId}";
 
     @Test
     @DisplayName("문제집에 문항을 생성할 수 있다.")
@@ -146,6 +146,31 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("options[].optionId").type(JsonFieldType.STRING).optional().description("선택지 id"),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("선택지 정답 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("문항을 삭제할 수 있다.")
+    void testDeleteProblem() throws Exception {
+        String problemId = "problem-id";
+
+        ResultActions result = this.mockMvc.perform(
+                delete(DELETE_PROBLEM, problemId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(document("question/problem/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("problemId").description("삭제할 문항 id")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer token")
                         )
                 ));
     }

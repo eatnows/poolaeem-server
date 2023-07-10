@@ -66,7 +66,7 @@ class ProblemControllerUpdateTest extends BaseIntegrationTest {
         Problem afterProblem = problemRepository.findByIdAndIsDeletedFalse(problemId).get();
         List<ProblemOption> afterOptions = optionRepository.findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(problemId);
         assertThat(afterProblem.getQuestion()).isEqualTo(param.getQuestion());
-        assertThat(afterOptions).hasSameSizeAs(param.getOptions().size());
+        assertThat(afterOptions).hasSameSizeAs(param.getOptions());
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)));

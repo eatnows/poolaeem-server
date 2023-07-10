@@ -47,6 +47,12 @@ public class Problem extends BaseEntity {
         this.order = order;
     }
 
+    public Problem(String id, Workbook workbook, String question) {
+        this.id = id;
+        this.workbook = workbook;
+        this.question = question;
+    }
+
     @PrePersist
     private void prePersist() {
         this.id = UUIDGenerator.generate();

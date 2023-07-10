@@ -314,6 +314,25 @@ class ProblemServiceImplTest {
                 .isInstanceOf(BadRequestDataException.class);
     }
 
+    @Test
+    @DisplayName("문항을 삭제할 수 있다. (문항을 삭제하면 문제집 문항수를 감소시키는 이벤트가 발생한다)")
+    void testDeleteProblem() throws Exception {
+        String userId = "user-id";
+        String problemId = "problem-id";
+
+        given(problemRepository.findByIdAndIsDeletedFalseAndUserId(problemId, userId))
+                .willReturn(Optional.of(new Problem("problem-id",
+                        new Workbook("workbook-id", "user-id", "문제집", "", 3, 2, WorkbookTheme.PINK),
+                        "Computer"
+                )));
+
+        problemService.deleteProblem(userId, problemId);
+
+        verify(optionRepository, times(1)).deleteAllByProblem(any());
+        verify(problemRepository, times(1)).delete(any());
+        verify(workbookEventsPublisher, times(1)).publish(any(EventsPublisherWorkbookEvent.ProblemDeleteEvent.class));
+    }
+
     private List<ProblemOptionDto> getOptions(int size) {
         List<ProblemOptionDto> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
