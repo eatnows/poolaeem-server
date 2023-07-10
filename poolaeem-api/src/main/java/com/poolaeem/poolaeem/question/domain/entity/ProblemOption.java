@@ -49,4 +49,8 @@ public class ProblemOption extends BaseEntity {
         this.id = UUIDGenerator.generate();
         this.isDeleted = false;
     }
+
+    public void updateOrder(int order) {
+        this.order = order;
+    }
 }

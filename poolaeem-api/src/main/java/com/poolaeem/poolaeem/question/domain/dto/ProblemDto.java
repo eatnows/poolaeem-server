@@ -33,4 +33,19 @@ public class ProblemDto {
             this.options = options;
         }
     }
+
+    @Getter
+    public static class ProblemUpdateParam {
+        private String problemId;
+        private String reqUserId;
+        private String question;
+        private List<ProblemOptionDto> options;
+
+        public ProblemUpdateParam(String problemId, String reqUserId, String question, List<ProblemOptionDto> options) {
+            this.problemId = problemId;
+            this.reqUserId = reqUserId;
+            this.question = question;
+            this.options = options;
+        }
+    }
 }

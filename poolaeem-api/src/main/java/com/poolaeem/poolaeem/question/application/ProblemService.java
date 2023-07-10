@@ -7,4 +7,6 @@ public interface ProblemService {
     void createProblem(ProblemDto.ProblemCreateParam param);
 
     ProblemVo readProblem(String userId, String problemId);
+
+    void updateProblem(ProblemDto.ProblemUpdateParam param);
 }

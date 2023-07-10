@@ -38,4 +38,15 @@ public class ProblemController {
         ProblemResponse.ProblemRead response = new ProblemResponse.ProblemRead(problem);
         return ApiResponseDto.OK(response);
     }
+
+    @PutMapping("/api/problmes/{problemId}")
+    public ApiResponseDto<?> updateProblem(@LoggedInUser UserVo user,
+                                           @PathVariable String problemId,
+                                           @Valid @RequestBody ProblemRequest.ProblemUpdate dto) {
+        ProblemDto.ProblemUpdateParam param =
+                new ProblemDto.ProblemUpdateParam(problemId, user.getId(), dto.getQuestion(), dto.getOptions());
+        problemService.updateProblem(param);
+
+        return ApiResponseDto.OK();
+    }
 }

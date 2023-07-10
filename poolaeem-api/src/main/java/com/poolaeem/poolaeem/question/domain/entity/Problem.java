@@ -52,4 +52,8 @@ public class Problem extends BaseEntity {
         this.id = UUIDGenerator.generate();
         this.isDeleted = false;
     }
+
+    public void updateQuestion(String question) {
+        this.question = question;
+    }
 }

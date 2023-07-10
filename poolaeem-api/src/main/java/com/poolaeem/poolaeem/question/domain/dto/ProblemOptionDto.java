@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 public class ProblemOptionDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String id;
+    private String optionId;
     @NotBlank
     @Length(min = ProblemValidation.OPTION_VALUE_MIN_LENGTH, max = ProblemValidation.OPTION_VALUE_MAX_LENGTH)
     private String value;
@@ -16,8 +16,8 @@ public class ProblemOptionDto {
     public ProblemOptionDto() {
     }
 
-    public ProblemOptionDto(String id, String value, boolean isCorrect) {
-        this.id = id;
+    public ProblemOptionDto(String optionId, String value, boolean isCorrect) {
+        this.optionId = optionId;
         this.value = value;
         this.isCorrect = isCorrect;
     }
@@ -27,8 +27,8 @@ public class ProblemOptionDto {
         this.isCorrect = isCorrect;
     }
 
-    public String getId() {
-        return id;
+    public String getOptionId() {
+        return optionId;
     }
 
     public String getValue() {

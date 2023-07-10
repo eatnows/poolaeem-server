@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ProblemServiceImpl implements ProblemService {
@@ -61,6 +64,63 @@ public class ProblemServiceImpl implements ProblemService {
                 .toList();
 
         return new ProblemVo(problem.getId(), null, problem.getQuestion(), options);
+    }
+
+    @Transactional
+    @Override
+    public void updateProblem(ProblemDto.ProblemUpdateParam param) {
+        Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(param.getProblemId(), param.getReqUserId())
+                .orElseThrow(() -> new EntityNotFoundException("문항이 존재하지 않습니다"));
+
+        problem.updateQuestion(param.getQuestion());
+        updateProblemOptions(problem, param.getOptions());
+    }
+
+    private void updateProblemOptions(Problem problem, List<ProblemOptionDto> reqOptions) {
+        List<ProblemOption> options = problemOptionRepository.findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(problem.getId());
+
+        hardDeleteOptions(options, reqOptions);
+        updateOptionsOrder(options, reqOptions);
+        addNewOptions(problem, reqOptions);
+    }
+
+    private void updateOptionsOrder(List<ProblemOption> dbOptions, List<ProblemOptionDto> reqOptions) {
+        Map<String, ProblemOption> dbOptionMap = dbOptions.stream()
+                .collect(Collectors.toMap(ProblemOption::getId, Function.identity()));
+
+        for (int i = 0; i < reqOptions.size(); i++) {
+            ProblemOptionDto option = reqOptions.get(i);
+            if (option.getOptionId() == null) continue;
+
+            ProblemOption problemOption = dbOptionMap.get(option.getOptionId());
+            problemOption.updateOrder(i + 1);
+        }
+    }
+
+    private void addNewOptions(Problem problem, List<ProblemOptionDto> reqOptions) {
+        List<ProblemOption> newList = new ArrayList<>();
+        for (int i = 0; i < reqOptions.size(); i++) {
+            ProblemOptionDto option = reqOptions.get(i);
+            if (option.getOptionId() != null) continue;
+            newList.add(new ProblemOption(problem, option.getValue(), option.getIsCorrect(), i + 1));
+        }
+
+        problemOptionRepository.saveAll(newList);
+    }
+
+    private void hardDeleteOptions(List<ProblemOption> dbOptions, List<ProblemOptionDto> reqOptions) {
+        Map<String, ProblemOptionDto> reqOptionMap = reqOptions.stream()
+                .filter(option -> option.getOptionId() != null)
+                .collect(Collectors.toMap(ProblemOptionDto::getOptionId, Function.identity()));
+
+        List<ProblemOption> deleteList = new ArrayList<>();
+        for (ProblemOption dbOption : dbOptions) {
+            if (reqOptionMap.get(dbOption.getId()) == null) {
+                deleteList.add(dbOption);
+            }
+        }
+
+        problemOptionRepository.deleteAll(deleteList);
     }
 
     private void increaseProblemCount(ProblemDto.ProblemCreateParam param) {
