@@ -14,4 +14,13 @@ public class EventsPublisherWorkbookEvent {
             this.workbookId = workbookId;
         }
     }
+
+    @Getter
+    public static class ProblemDeleteEvent {
+        private String workbookId;
+
+        public ProblemDeleteEvent(String workbookId) {
+            this.workbookId = workbookId;
+        }
+    }
 }

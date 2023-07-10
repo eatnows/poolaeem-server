@@ -9,5 +9,7 @@ public interface WorkbookRepositoryCustom {
 
     Optional<WorkbookVo> findDtoByIdAndUserIdAndIsDeletedFalse(String workbookId);
 
-    void updateAddProblemCountByWorkbookId(String workbookId);
+    void updateIncreaseProblemCountByWorkbookId(String workbookId);
+
+    void updateDecreaseProblemCountByWorkbookId(String workbookId);
 }

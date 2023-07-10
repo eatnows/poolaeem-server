@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.question.infra.repository;
 
+import com.poolaeem.poolaeem.question.domain.entity.Problem;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -23,5 +24,13 @@ public class ProblemOptionRepositoryImpl implements ProblemOptionRepositoryCusto
                 .where(problemOption.problem.id.eq(problemId), problemOption.isDeleted.isFalse())
                 .orderBy(problemOption.order.asc())
                 .fetch();
+    }
+
+    @Override
+    public void deleteAllByProblem(Problem problem) {
+        queryFactory
+                .delete(problemOption)
+                .where(problemOption.problem.eq(problem))
+                .execute();
     }
 }

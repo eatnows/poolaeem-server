@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.question.domain.service;
 
 import com.poolaeem.poolaeem.common.event.WorkbookEventsPublisher;
+import com.poolaeem.poolaeem.common.event.obj.EventsPublisherWorkbookEvent;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
@@ -180,7 +181,7 @@ class ProblemServiceImplTest {
 
         problemService.createProblem(param);
 
-        verify(workbookEventsPublisher, times(1)).publish(any());
+        verify(workbookEventsPublisher, times(1)).publish(any(EventsPublisherWorkbookEvent.ProblemAddEvent.class));
     }
 
     @Test

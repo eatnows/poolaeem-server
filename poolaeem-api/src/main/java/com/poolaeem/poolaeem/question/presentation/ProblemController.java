@@ -49,4 +49,11 @@ public class ProblemController {
 
         return ApiResponseDto.OK();
     }
+
+    @DeleteMapping("/api/problems/{problemId}")
+    public ApiResponseDto<?> deleteProblem(@LoggedInUser UserVo user,
+                                           @PathVariable String problemId) {
+        problemService.deleteProblem(user.getId(), problemId);
+        return ApiResponseDto.OK();
+    }
 }

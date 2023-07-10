@@ -60,8 +60,14 @@ public class WorkbookServiceImpl implements WorkbookService {
 
     @Transactional
     @Override
-    public void addProblemCount(String workbookId) {
-        workbookRepository.updateAddProblemCountByWorkbookId(workbookId);
+    public void increaseProblemCount(String workbookId) {
+        workbookRepository.updateIncreaseProblemCountByWorkbookId(workbookId);
+    }
+
+    @Transactional
+    @Override
+    public void decreaseProblemCount(String workbookId) {
+        workbookRepository.updateDecreaseProblemCountByWorkbookId(workbookId);
     }
 
     private Workbook getWorkbookEntity(String workbookdId) {

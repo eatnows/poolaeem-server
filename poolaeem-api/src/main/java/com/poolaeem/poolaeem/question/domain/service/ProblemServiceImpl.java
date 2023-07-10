@@ -32,13 +32,13 @@ public class ProblemServiceImpl implements ProblemService {
     private final ProblemRepository problemRepository;
     private final WorkbookRepository workbookRepository;
     private final ProblemOptionRepository problemOptionRepository;
-    private final WorkbookEventsPublisher eventsPublisher;
+    private final WorkbookEventsPublisher workbookEventsPublisher;
 
-    public ProblemServiceImpl(ProblemRepository problemRepository, WorkbookRepository workbookRepository, ProblemOptionRepository problemOptionRepository, WorkbookEventsPublisher eventsPublisher) {
+    public ProblemServiceImpl(ProblemRepository problemRepository, WorkbookRepository workbookRepository, ProblemOptionRepository problemOptionRepository, WorkbookEventsPublisher workbookEventsPublisher) {
         this.problemRepository = problemRepository;
         this.workbookRepository = workbookRepository;
         this.problemOptionRepository = problemOptionRepository;
-        this.eventsPublisher = eventsPublisher;
+        this.workbookEventsPublisher = workbookEventsPublisher;
     }
 
     @Transactional
@@ -77,6 +77,22 @@ public class ProblemServiceImpl implements ProblemService {
 
         problem.updateQuestion(param.getQuestion());
         updateProblemOptions(problem, param.getOptions());
+    }
+
+    @Transactional
+    @Override
+    public void deleteProblem(String userId, String problemId) {
+        Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(problemId, userId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        problemOptionRepository.deleteAllByProblem(problem);
+        problemRepository.delete(problem);
+
+        decreaseProblemCount(problem.getWorkbook().getId());
+    }
+
+    private void decreaseProblemCount(String workbookId) {
+        workbookEventsPublisher.publish(new EventsPublisherWorkbookEvent.ProblemDeleteEvent(workbookId));
     }
 
     private void updateProblemOptions(Problem problem, List<ProblemOptionDto> reqOptions) {
@@ -127,7 +143,7 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     private void increaseProblemCount(ProblemDto.ProblemCreateParam param) {
-        eventsPublisher.publish(new EventsPublisherWorkbookEvent.ProblemAddEvent(param.getWorkbookId()));
+        workbookEventsPublisher.publish(new EventsPublisherWorkbookEvent.ProblemAddEvent(param.getWorkbookId()));
     }
 
     private void validProblemOption(List<ProblemOptionDto> options) {

@@ -13,7 +13,12 @@ public class WorkbookEventsHandler {
     }
 
     @EventListener(classes = EventsPublisherWorkbookEvent.ProblemAddEvent.class)
-    public void addProblemCount(EventsPublisherWorkbookEvent.ProblemAddEvent event) {
-        workbookService.addProblemCount(event.getWorkbookId());
+    public void increaseProblemCount(EventsPublisherWorkbookEvent.ProblemAddEvent event) {
+        workbookService.increaseProblemCount(event.getWorkbookId());
+    }
+
+    @EventListener(classes = EventsPublisherWorkbookEvent.ProblemDeleteEvent.class)
+    public void decreaseProblemCount(EventsPublisherWorkbookEvent.ProblemDeleteEvent event) {
+        workbookService.decreaseProblemCount(event.getWorkbookId());
     }
 }

@@ -46,10 +46,19 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
     }
 
     @Override
-    public void updateAddProblemCountByWorkbookId(String workbookId) {
+    public void updateIncreaseProblemCountByWorkbookId(String workbookId) {
         queryFactory
                 .update(workbook)
                 .set(workbook.problemCount, workbook.problemCount.add(1))
+                .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
+                .execute();
+    }
+
+    @Override
+    public void updateDecreaseProblemCountByWorkbookId(String workbookId) {
+        queryFactory
+                .update(workbook)
+                .set(workbook.problemCount, workbook.problemCount.subtract(1))
                 .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
                 .execute();
     }

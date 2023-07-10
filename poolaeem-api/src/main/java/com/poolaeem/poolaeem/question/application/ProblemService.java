@@ -9,4 +9,6 @@ public interface ProblemService {
     ProblemVo readProblem(String userId, String problemId);
 
     void updateProblem(ProblemDto.ProblemUpdateParam param);
+
+    void deleteProblem(String userId, String problemId);
 }

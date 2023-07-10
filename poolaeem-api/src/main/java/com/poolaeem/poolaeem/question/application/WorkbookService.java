@@ -10,5 +10,7 @@ public interface WorkbookService {
 
     WorkbookVo readWorkbookInfo(String workbookId, String userId);
 
-    void addProblemCount(String workbookId);
+    void increaseProblemCount(String workbookId);
+
+    void decreaseProblemCount(String workbookId);
 }
