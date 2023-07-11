@@ -9,6 +9,10 @@ import com.poolaeem.poolaeem.question.presentation.dto.ProblemRequest;
 import com.poolaeem.poolaeem.question.presentation.dto.ProblemResponse;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -55,5 +59,16 @@ public class ProblemController {
                                            @PathVariable String problemId) {
         problemService.deleteProblem(user.getId(), problemId);
         return ApiResponseDto.OK();
+    }
+
+    @GetMapping("/api/workbooks/{workbookId}/problems")
+    public ApiResponseDto<?> readProblemList(@LoggedInUser UserVo user,
+                                             @PathVariable String workbookId,
+                                             @RequestParam(defaultValue = "0") @Min(0) int order,
+                                             @RequestParam(defaultValue = "20") @Max(100) int size) {
+        Slice<ProblemVo> problems = problemService.readProblemList(user.getId(), workbookId, order, PageRequest.of(0, size));
+
+        ProblemResponse.ProblemListRead response = new ProblemResponse.ProblemListRead(problems);
+        return ApiResponseDto.OK(response);
     }
 }

@@ -18,6 +18,8 @@ import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,6 +92,12 @@ public class ProblemServiceImpl implements ProblemService {
         problemRepository.delete(problem);
 
         decreaseProblemCount(problem.getWorkbook().getId());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Slice<ProblemVo> readProblemList(String userId, String workbookId, int order, PageRequest pageable) {
+        return problemRepository.findAllByWorkbookIdAndUserIdAndIsDeletedFalse(workbookId, userId, order, pageable);
     }
 
     private void decreaseProblemCount(String workbookId) {

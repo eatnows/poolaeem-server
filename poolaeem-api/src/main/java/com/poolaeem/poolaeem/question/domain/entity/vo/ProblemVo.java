@@ -1,28 +1,37 @@
 package com.poolaeem.poolaeem.question.domain.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class ProblemVo {
-    private String id;
+    private String problemId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String workbookId;
     private String question;
     private ProblemType type;
     private int optionCount;
-    private List<ProblemOptionVo> options = new ArrayList<>();
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<ProblemOptionVo> options;
 
-    @QueryProjection
-    public ProblemVo(String id, String workbookId, String question, ProblemType type, List<ProblemOptionVo> options) {
-        this.id = id;
+    public ProblemVo(String problemId, String workbookId, String question, ProblemType type, List<ProblemOptionVo> options) {
+        this.problemId = problemId;
         this.workbookId = workbookId;
         this.question = question;
         this.type = type;
         this.optionCount = options.size();
         this.options = options;
+    }
+
+    @QueryProjection
+    public ProblemVo(String problemId, String question, ProblemType type, int optionCount) {
+        this.problemId = problemId;
+        this.question = question;
+        this.type = type;
+        this.optionCount = optionCount;
     }
 }

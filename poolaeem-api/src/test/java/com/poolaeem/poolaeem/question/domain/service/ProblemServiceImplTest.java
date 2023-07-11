@@ -197,7 +197,7 @@ class ProblemServiceImplTest {
 
         ProblemVo problem = problemService.readProblem(userId, problemId);
 
-        assertThat(problem.getId()).isEqualTo(mockProblem.getId());
+        assertThat(problem.getProblemId()).isEqualTo(mockProblem.getId());
         assertThat(problem.getQuestion()).isEqualTo(mockProblem.getQuestion());
         assertThat(problem.getOptions()).hasSize(mockProblem.getOptions().size());
         assertThat(problem.getOptions().get(0).getOptionId()).isEqualTo(mockProblem.getOptions().get(0).getId());

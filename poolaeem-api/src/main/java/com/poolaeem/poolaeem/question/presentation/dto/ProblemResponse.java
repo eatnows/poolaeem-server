@@ -6,6 +6,7 @@ import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -20,10 +21,20 @@ public class ProblemResponse {
         private List<ProblemOptionVo> options;
 
         public ProblemRead(ProblemVo problemVo) {
-            this.problemId = problemVo.getId();
+            this.problemId = problemVo.getProblemId();
             this.question = problemVo.getQuestion();
             this.type = problemVo.getType();
             this.options = problemVo.getOptions();
+        }
+    }
+
+    @Getter
+    public static class ProblemListRead {
+        private List<ProblemVo> problems;
+        private boolean hasNext;
+        public ProblemListRead(Slice<ProblemVo> problems) {
+            this.problems = problems.getContent();
+            this.hasNext = problems.hasNext();
         }
     }
 }
