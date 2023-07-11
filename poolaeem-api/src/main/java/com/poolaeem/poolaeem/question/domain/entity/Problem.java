@@ -26,6 +26,13 @@ public class Problem extends BaseEntity {
     @Column(name = "question")
     private String question;
 
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private ProblemType type;
+
+    @Column(name = "option_count")
+    private int optionCount;
+
     @Column(name = "problem_order")
     private int order;
 
@@ -41,9 +48,11 @@ public class Problem extends BaseEntity {
         this.options = options;
     }
 
-    public Problem(Workbook workbook, String question, int order) {
+    public Problem(Workbook workbook, String question, ProblemType type, int optionCount, int order) {
         this.workbook = workbook;
         this.question = question;
+        this.type = type;
+        this.optionCount = optionCount;
         this.order = order;
     }
 
@@ -61,5 +70,9 @@ public class Problem extends BaseEntity {
 
     public void updateQuestion(String question) {
         this.question = question;
+    }
+
+    public void updateOptionCount(int size) {
+        this.optionCount = size;
     }
 }

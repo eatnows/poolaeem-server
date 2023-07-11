@@ -1,10 +1,12 @@
 package com.poolaeem.poolaeem.question.presentation;
 
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
+import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.presentation.dto.ProblemRequest;
 import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
+import com.poolaeem.poolaeem.test_config.restdocs.DocumentLinkGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -43,7 +45,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
-                                "Word",
+                                "Word", ProblemType.CHECKBOX,
                                 List.of(
                                         new ProblemOptionDto("단어", true),
                                         new ProblemOptionDto("세계", false),
@@ -65,6 +67,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
                         ),
                         requestFields(
                                 fieldWithPath("question").type(JsonFieldType.STRING).description("문제"),
+                                fieldWithPath("type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("선택지 정답 여부")
                         )
@@ -78,6 +81,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
 
         given(problemService.readProblem(any(), any()))
                 .willReturn(new ProblemVo(problemId, null, "Word",
+                        ProblemType.CHECKBOX,
                         List.of(
                                 new ProblemOptionVo("option-1", "단어", true),
                                 new ProblemOptionVo("option-2", "세계", false)
@@ -105,6 +109,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 beneathPath("data"),
                                 fieldWithPath("problemId").type(JsonFieldType.STRING).description("문항 id"),
                                 fieldWithPath("question").type(JsonFieldType.STRING).description("문제"),
+                                fieldWithPath("type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
                                 fieldWithPath("options[].optionId").type(JsonFieldType.STRING).description("선택지 id"),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("정답 여부")
@@ -123,6 +128,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemUpdate(
                                 "Computer",
+                                ProblemType.CHECKBOX,
                                 List.of(
                                         new ProblemOptionDto("option-1", "컴퓨터", true),
                                         new ProblemOptionDto("스마트폰", false)
@@ -143,6 +149,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
                         ),
                         requestFields(
                                 fieldWithPath("question").type(JsonFieldType.STRING).description("문제"),
+                                fieldWithPath("type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
                                 fieldWithPath("options[].optionId").type(JsonFieldType.STRING).optional().description("선택지 id"),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("선택지 정답 여부")

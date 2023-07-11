@@ -6,10 +6,7 @@ import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
-import com.poolaeem.poolaeem.question.domain.entity.Problem;
-import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
-import com.poolaeem.poolaeem.question.domain.entity.Workbook;
-import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.question.domain.entity.*;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
@@ -26,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +70,7 @@ class ProblemServiceImplTest {
         given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
                 .willReturn(Optional.of(new Workbook(userVo.getId(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
         given(problemRepository.save(any()))
-                .willReturn(new Problem(null, "Word", 1));
+                .willReturn(new Problem(null, "Word", ProblemType.CHECKBOX, 9, 1));
 
         problemService.createProblem(param);
 
@@ -177,7 +173,7 @@ class ProblemServiceImplTest {
         given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
                 .willReturn(Optional.of(new Workbook(userVo.getId(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
         given(problemRepository.save(any()))
-                .willReturn(new Problem(null, "Word", 1));
+                .willReturn(new Problem(null, "Word", ProblemType.CHECKBOX, 2, 1));
 
         problemService.createProblem(param);
 

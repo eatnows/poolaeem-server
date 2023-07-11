@@ -63,7 +63,7 @@ public class ProblemServiceImpl implements ProblemService {
                 .map(o -> new ProblemOptionVo(o.getId(), o.getValue(), o.getIsCorrect()))
                 .toList();
 
-        return new ProblemVo(problem.getId(), null, problem.getQuestion(), options);
+        return new ProblemVo(problem.getId(), null, problem.getQuestion(), problem.getType(), options);
     }
 
     @Transactional
@@ -76,6 +76,7 @@ public class ProblemServiceImpl implements ProblemService {
                 .orElseThrow(() -> new EntityNotFoundException("문항이 존재하지 않습니다"));
 
         problem.updateQuestion(param.getQuestion());
+        problem.updateOptionCount(param.getOptions().size());
         updateProblemOptions(problem, param.getOptions());
     }
 
@@ -191,7 +192,7 @@ public class ProblemServiceImpl implements ProblemService {
     private Problem saveProblem(ProblemDto.ProblemCreateParam param) {
         Workbook workbook = getWorkbook(param.getWorkbookId(), param.getReqUserId());
         int order = lastProblemOrder(workbook) + 1;
-        Problem problem = new Problem(workbook, param.getQuestion(), order);
+        Problem problem = new Problem(workbook, param.getQuestion(), param.getType(), param.getOptions().size(), order);
         return problemRepository.save(problem);
     }
 

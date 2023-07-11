@@ -892,6 +892,11 @@ Content-Length: 16
 <td class="tableblock halign-left valign-top"><p class="tableblock">문제</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../common/problem_type.html" class="popup">문항 종류 목록</a></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].value</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">선택지</p></td>
@@ -909,11 +914,12 @@ Content-Length: 16
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItMSIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3OTUyMTE4LCJleHAiOjM2ODc5NTM5MTh9.QHwZ4Jppb5Bgp-oain43voHX5J4bkzt-7zTWKQOjFI77_H4k0HXYe79RjJopmvrOHX3YEFECfDJuTOgoMUqBQGFRmqSdEmUF-vFXOcjezvxw4NQzFTFkq430sNxrhK_RMsSbKTMnByZuN7Opj_RNGmGlDygX1dyqqqwxFZPn3fivl5TUM9VNhGACbCEGzxIYi7ACGNR2Kj61Qf343Dxyw37bXQ0D3a63Izxq8ThAzOtIyICnnF_ZYvn-3Y1nx9cpcxMdqwIGVFYBYSOOaCKnLJ7BUxEvy8l9tqwmGd2jCJWAAeSKNfcGmo4jpPrj5jJFvBoV2ynygZHHvkIXP0v_LQ
 Accept: application/json
-Content-Length: 207
+Content-Length: 230
 Host: poolaeem.com
 
 {
   "question" : "Word",
+  "type" : "CHECKBOX",
   "options" : [ {
     "value" : "단어",
     "isCorrect" : true
@@ -1026,6 +1032,11 @@ Host: poolaeem.com</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">문제</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../common/problem_type.html" class="popup">문항 종류 목록</a></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].optionId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">선택지 id</p></td>
@@ -1049,13 +1060,14 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 293
+Content-Length: 318
 
 {
   "code" : 0,
   "data" : {
     "problemId" : "problem-id",
     "question" : "Word",
+    "type" : "CHECKBOX",
     "options" : [ {
       "optionId" : "option-1",
       "value" : "단어",
@@ -1134,6 +1146,11 @@ Content-Length: 293
 <td class="tableblock halign-left valign-top"><p class="tableblock">문제</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../common/problem_type.html" class="popup">문항 종류 목록</a></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].optionId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">선택지 id</p></td>
@@ -1156,11 +1173,12 @@ Content-Length: 293
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItMSIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3OTUyMTE4LCJleHAiOjM2ODc5NTM5MTh9.QHwZ4Jppb5Bgp-oain43voHX5J4bkzt-7zTWKQOjFI77_H4k0HXYe79RjJopmvrOHX3YEFECfDJuTOgoMUqBQGFRmqSdEmUF-vFXOcjezvxw4NQzFTFkq430sNxrhK_RMsSbKTMnByZuN7Opj_RNGmGlDygX1dyqqqwxFZPn3fivl5TUM9VNhGACbCEGzxIYi7ACGNR2Kj61Qf343Dxyw37bXQ0D3a63Izxq8ThAzOtIyICnnF_ZYvn-3Y1nx9cpcxMdqwIGVFYBYSOOaCKnLJ7BUxEvy8l9tqwmGd2jCJWAAeSKNfcGmo4jpPrj5jJFvBoV2ynygZHHvkIXP0v_LQ
 Accept: application/json
-Content-Length: 194
+Content-Length: 217
 Host: poolaeem.com
 
 {
   "question" : "Computer",
+  "type" : "CHECKBOX",
   "options" : [ {
     "optionId" : "option-1",
     "value" : "컴퓨터",

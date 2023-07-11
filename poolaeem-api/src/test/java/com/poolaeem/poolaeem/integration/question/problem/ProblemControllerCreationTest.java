@@ -4,6 +4,7 @@ import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.Problem;
+import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
@@ -60,7 +61,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
-                                "Word",
+                                "Word", ProblemType.CHECKBOX,
                                 List.of(new ProblemOptionDto("단어", true),
                                         new ProblemOptionDto("세계", false))
                         )))
@@ -86,7 +87,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
-                                "Word",
+                                "Word", ProblemType.CHECKBOX,
                                 List.of(new ProblemOptionDto("단어", true),
                                         new ProblemOptionDto("세계", false))
                         )))
@@ -112,7 +113,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
-                                "Word",
+                                "Word", ProblemType.CHECKBOX,
                                 List.of(new ProblemOptionDto("단어", true),
                                         new ProblemOptionDto("세계", false))
                         )))
@@ -146,7 +147,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
-                                "Word",
+                                "Word", ProblemType.CHECKBOX,
                                 List.of(new ProblemOptionDto("단어", true),
                                         new ProblemOptionDto("세계", false))
                         )))
@@ -178,7 +179,7 @@ class ProblemControllerCreationTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new ProblemRequest.ProblemCreate(
-                                "Word",
+                                "Word", ProblemType.CHECKBOX,
                                 List.of(new ProblemOptionDto("단어", true),
                                         new ProblemOptionDto("세계", false))
                         )))

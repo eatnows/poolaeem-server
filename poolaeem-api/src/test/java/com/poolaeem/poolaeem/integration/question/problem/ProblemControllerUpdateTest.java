@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.Problem;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
+import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.presentation.dto.ProblemRequest;
@@ -43,6 +44,7 @@ class ProblemControllerUpdateTest extends BaseIntegrationTest {
         String problemId = "problem-1";
         ProblemRequest.ProblemUpdate param = new ProblemRequest.ProblemUpdate(
                 "New",
+                ProblemType.CHECKBOX,
                 List.of(
                         new ProblemOptionDto("option-2", "세계", false),
                         new ProblemOptionDto("새로운", true),
@@ -78,6 +80,7 @@ class ProblemControllerUpdateTest extends BaseIntegrationTest {
         String problemId = "problem-4";
         ProblemRequest.ProblemUpdate param = new ProblemRequest.ProblemUpdate(
                 "New",
+                ProblemType.CHECKBOX,
                 List.of(
                         new ProblemOptionDto( "세계", false),
                         new ProblemOptionDto("새로운", true),

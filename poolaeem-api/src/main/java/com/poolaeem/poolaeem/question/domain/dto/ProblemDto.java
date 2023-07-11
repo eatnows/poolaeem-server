@@ -1,7 +1,9 @@
 package com.poolaeem.poolaeem.question.domain.dto;
 
+import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,6 +25,8 @@ public class ProblemDto {
         @NotBlank
         @Length(min = ProblemValidation.QUESTION_MIN_LENGTH, max = ProblemValidation.QUESTION_MAX_LENGTH)
         private String question;
+        @NotNull
+        private ProblemType type;
         @Size(min = ProblemValidation.OPTION_MIN_SIZE, max = ProblemValidation.OPTION_MAX_SIZE)
         private List<ProblemOptionDto> options = new ArrayList<>();
 

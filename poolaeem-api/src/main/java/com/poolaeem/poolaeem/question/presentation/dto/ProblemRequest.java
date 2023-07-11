@@ -1,8 +1,10 @@
 package com.poolaeem.poolaeem.question.presentation.dto;
 
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
+import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,11 +21,14 @@ public class ProblemRequest {
         @NotBlank
         @Length(min = ProblemValidation.QUESTION_MIN_LENGTH, max = ProblemValidation.QUESTION_MAX_LENGTH)
         private String question;
+        @NotNull
+        private ProblemType type;
         @Size.List(value = @Size(max = 10))
         private List<ProblemOptionDto> options = new ArrayList<>();
 
-        public ProblemCreate(String question, List<ProblemOptionDto> options) {
+        public ProblemCreate(String question, ProblemType type, List<ProblemOptionDto> options) {
             this.question = question;
+            this.type = type;
             this.options = options;
         }
     }
@@ -33,11 +38,14 @@ public class ProblemRequest {
         @NotBlank
         @Length(min = ProblemValidation.QUESTION_MIN_LENGTH, max = ProblemValidation.QUESTION_MAX_LENGTH)
         private String question;
+        @NotNull
+        private ProblemType type;
         @Size.List(value = @Size(max = 10))
         private List<ProblemOptionDto> options = new ArrayList<>();
 
-        public ProblemUpdate(String question, List<ProblemOptionDto> options) {
+        public ProblemUpdate(String question, ProblemType type, List<ProblemOptionDto> options) {
             this.question = question;
+            this.type = type;
             this.options = options;
         }
     }
