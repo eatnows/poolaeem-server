@@ -2,10 +2,10 @@ package com.poolaeem.poolaeem.integration.question.workbook;
 
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
-import com.poolaeem.poolaeem.workbook.domain.entity.Workbook;
-import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
-import com.poolaeem.poolaeem.workbook.infra.repository.WorkbookRepository;
-import com.poolaeem.poolaeem.workbook.presentation.dto.WorkbookRequest;
+import com.poolaeem.poolaeem.question.domain.entity.Workbook;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
+import com.poolaeem.poolaeem.question.presentation.dto.WorkbookRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

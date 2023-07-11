@@ -4,7 +4,7 @@ import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
-import com.poolaeem.poolaeem.workbook.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,6 @@ import java.sql.Connection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

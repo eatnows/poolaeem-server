@@ -3,7 +3,7 @@ CREATE TABLE problem_option (
     `problem_id` varchar(32) not null,
     `value` varchar(300) not null,
     `is_correct` bit(1) not null,
-    `choice_order` int(11) default 1 not null,
+    `option_order` int(11) default 1 not null,
     `is_deleted` bit(1) default 0 not null,
     `created_by` varchar(32) not null,
     `updated_by` varchar(32) not null,
