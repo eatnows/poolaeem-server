@@ -51,7 +51,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional(readOnly = true)
     @Override
     public WorkbookVo readWorkbookInfo(String workbookId, String reqUserId) {
-        WorkbookVo workbook = workbookRepository.findDtoByIdAndUserIdAndIsDeletedFalse(workbookId)
+        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
         validManage(workbook.getUserId(), reqUserId);
 

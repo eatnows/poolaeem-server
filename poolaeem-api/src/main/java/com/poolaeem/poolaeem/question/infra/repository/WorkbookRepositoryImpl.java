@@ -27,7 +27,7 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
     }
 
     @Override
-    public Optional<WorkbookVo> findDtoByIdAndUserIdAndIsDeletedFalse(String workbookId) {
+    public Optional<WorkbookVo> findDtoByIdAndIsDeletedFalse(String workbookId) {
         return Optional.ofNullable(
                 queryFactory
                         .select(new QWorkbookVo(

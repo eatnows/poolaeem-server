@@ -14,11 +14,12 @@ import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
+import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,8 +97,12 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Transactional(readOnly = true)
     @Override
-    public Slice<ProblemVo> readProblemList(String userId, String workbookId, int order, PageRequest pageable) {
-        return problemRepository.findAllByWorkbookIdAndUserIdAndIsDeletedFalse(workbookId, userId, order, pageable);
+    public Slice<ProblemVo> readProblemList(String userId, String workbookId, int order, Pageable pageable) {
+        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+        validWorkbookManage(workbook.getUserId(), userId);
+
+        return problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
     }
 
     private void decreaseProblemCount(String workbookId) {

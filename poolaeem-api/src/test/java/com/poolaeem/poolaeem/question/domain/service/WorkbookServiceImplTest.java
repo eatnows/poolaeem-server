@@ -177,7 +177,7 @@ class WorkbookServiceImplTest {
         String workbookId = "workbook-id";
         String reqUserId = "user-id";
 
-        given(workbookRepository.findDtoByIdAndUserIdAndIsDeletedFalse(workbookId))
+        given(workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId))
                 .willReturn(Optional.of(new WorkbookVo(
                         "workbook-id",
                         "user-id",
@@ -200,7 +200,7 @@ class WorkbookServiceImplTest {
         String workbookId = "workbook-id";
         String reqUserId = "other-user";
 
-        given(workbookRepository.findDtoByIdAndUserIdAndIsDeletedFalse(workbookId))
+        given(workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId))
                 .willReturn(Optional.of(new WorkbookVo(
                         "workbook-id",
                         "user-id",

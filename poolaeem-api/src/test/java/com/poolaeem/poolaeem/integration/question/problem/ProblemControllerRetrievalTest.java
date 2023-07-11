@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProblemControllerRetrievalTest extends BaseIntegrationTest {
     private final String READ_PROBLEM = "/api/problems/{problemId}";
+    private final String READ_PROBLEM_LIST = "/api/workbooks/{workbookId}/problems";
 
     @Autowired
     private DataSource dataSource;
@@ -82,5 +83,120 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
 
         result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code", is(ApiResponseCode.ENTITY_NOT_FOUND.getCode())));
+    }
+
+    @Test
+    @DisplayName("문항 목록을 조회할 수 있다.")
+    void testReadProblemList() throws Exception {
+        String workbookId = "workbook-1";
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_PROBLEM_LIST, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .param("order", "500")
+                        .param("size", "10")
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(false)))
+                .andExpect(jsonPath("$.data.problems.size()", is(3)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Video")))
+                .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
+                .andExpect(jsonPath("$.data.problems[1].question", is("School")))
+                .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[2].question", is("Word")));
+    }
+
+    @Test
+    @DisplayName("문항 목록이 더 존재하면 hasNext를 true로 반환한다")
+    void testHasNextTrueInReadProblemList() throws Exception {
+        String workbookId = "workbook-1";
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_PROBLEM_LIST, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .param("order", "500")
+                        .param("size", "2")
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(true)))
+                .andExpect(jsonPath("$.data.problems.size()", is(2)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Video")))
+                .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
+                .andExpect(jsonPath("$.data.problems[1].question", is("School")));
+    }
+
+    @Test
+    @DisplayName("order 다음 목록을 조회할 수 있다.")
+    void testPaginationInProblemList() throws Exception {
+        String workbookId = "workbook-1";
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_PROBLEM_LIST, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .param("order", "2")
+                        .param("size", "2")
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(false)))
+                .andExpect(jsonPath("$.data.problems.size()", is(1)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Word")));
+    }
+
+    @Test
+    @DisplayName("권한이 없는 문제집의 문항 목록은 조회할 수 없다.")
+    void testReadProblemListByOtherUser() throws Exception {
+        String workbookId = "workbook-2";
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_PROBLEM_LIST, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .param("order", "500")
+                        .param("size", "2")
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.FORBIDDEN.getCode())));
+    }
+
+    @Test
+    @DisplayName("문항 목록 정렬 순서는 최신순(Order의 값이 큰)으로 정렬된다")
+    void testReadProblemListOrder() throws Exception {
+        String workbookId = "workbook-1";
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_PROBLEM_LIST, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .param("order", "500")
+                        .param("size", "3")
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(false)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[0].order", is(3)))
+                .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
+                .andExpect(jsonPath("$.data.problems[1].order", is(2)))
+                .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[2].order", is(1)));
     }
 }

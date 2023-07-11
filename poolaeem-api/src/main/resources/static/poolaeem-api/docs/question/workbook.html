@@ -461,6 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_문항_조회">문항 조회</a></li>
 <li><a href="#_문항_수정">문항 수정</a></li>
 <li><a href="#_문항_삭제">문항 삭제</a></li>
+<li><a href="#_문항_목록_조회">문항 목록 조회</a></li>
 </ul>
 </li>
 </ul>
@@ -1281,11 +1282,82 @@ Content-Length: 16
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_문항_목록_조회"><a class="link" href="#_문항_목록_조회">문항 목록 조회</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_8"><a class="link" href="#_request_8">&#8201;&#8212;&#8201;Request</a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. /api/workbooks/{workbookId}/problems</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workbookId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">문제집 id</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bearer token</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>order</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">문항 순서</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">한 번에 반환하는 데이터 크기</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_response_8"><a class="link" href="#_response_8">&#8201;&#8212;&#8201;Response</a></h3>
+
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-10 23:09:58 +0900
+Last updated 2023-07-11 16:56:33 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -16,6 +16,8 @@ public class ProblemVo {
     private ProblemType type;
     private int optionCount;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer order;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ProblemOptionVo> options;
 
     public ProblemVo(String problemId, String workbookId, String question, ProblemType type, List<ProblemOptionVo> options) {
@@ -28,10 +30,11 @@ public class ProblemVo {
     }
 
     @QueryProjection
-    public ProblemVo(String problemId, String question, ProblemType type, int optionCount) {
+    public ProblemVo(String problemId, String question, ProblemType type, int optionCount, Integer order) {
         this.problemId = problemId;
         this.question = question;
         this.type = type;
         this.optionCount = optionCount;
+        this.order = order;
     }
 }

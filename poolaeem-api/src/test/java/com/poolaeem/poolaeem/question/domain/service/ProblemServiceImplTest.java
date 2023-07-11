@@ -8,6 +8,7 @@ import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.*;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
+import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
@@ -21,6 +22,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -327,6 +332,35 @@ class ProblemServiceImplTest {
         verify(optionRepository, times(1)).deleteAllByProblem(any());
         verify(problemRepository, times(1)).delete(any());
         verify(workbookEventsPublisher, times(1)).publish(any(EventsPublisherWorkbookEvent.ProblemDeleteEvent.class));
+    }
+
+    @Test
+    @DisplayName("문항 목록을 조회할 수 있다.")
+    void testReadProblemList() throws Exception {
+        String userId = "user-id";
+        String workbookId = "workbook-id";
+        int order = 0;
+        Pageable pageable = PageRequest.of(0, 20);
+
+        given(workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null)));
+        SliceImpl<ProblemVo> mockSlice = new SliceImpl<>(
+                List.of(
+                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, order),
+                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, order),
+                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, order),
+                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, order)
+                ),
+                pageable,
+                true
+        );
+        given(problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable))
+                .willReturn(mockSlice);
+
+        Slice<ProblemVo> result = problemService.readProblemList(userId, workbookId, order, pageable);
+
+        assertThat(result.getSize()).isEqualTo(mockSlice.getSize());
+        assertThat(result.hasNext()).isTrue();
     }
 
     private List<ProblemOptionDto> getOptions(int size) {

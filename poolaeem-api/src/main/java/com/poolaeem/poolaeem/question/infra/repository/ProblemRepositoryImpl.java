@@ -5,7 +5,7 @@ import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.QProblemVo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
@@ -47,20 +47,19 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
     }
 
     @Override
-    public Slice<ProblemVo> findAllByWorkbookIdAndUserIdAndIsDeletedFalse(String workbookId, String userId, int order, PageRequest pageable) {
+    public Slice<ProblemVo> findAllByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
         List<ProblemVo> list = queryFactory
                 .select(new QProblemVo(
                         problem.id,
                         problem.question,
                         problem.type,
-                        problem.optionCount
+                        problem.optionCount,
+                        problem.order
                 ))
                 .from(problem)
-                .innerJoin(problem.workbook, workbook)
-                .on(workbook.userId.eq(userId), workbook.isDeleted.isFalse())
                 .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
-                        problem.order.gt(order))
-                .orderBy(problem.order.asc())
+                        problem.order.lt(order))
+                .orderBy(problem.order.desc())
                 .limit(pageable.getPageSize() + 1L)
                 .fetch();
 

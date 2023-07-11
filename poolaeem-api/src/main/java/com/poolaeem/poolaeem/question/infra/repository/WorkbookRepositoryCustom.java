@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface WorkbookRepositoryCustom {
     Optional<Integer> findLastOrderByUserIdAndIsDeletedFalse(String userId);
 
-    Optional<WorkbookVo> findDtoByIdAndUserIdAndIsDeletedFalse(String workbookId);
+    Optional<WorkbookVo> findDtoByIdAndIsDeletedFalse(String workbookId);
 
     void updateIncreaseProblemCountByWorkbookId(String workbookId);
 
