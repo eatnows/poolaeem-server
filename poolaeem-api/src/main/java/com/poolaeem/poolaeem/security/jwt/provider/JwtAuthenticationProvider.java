@@ -12,10 +12,7 @@ import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -37,14 +34,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         DecodedJWT decodedJWT = validToken(token);
 
         String userId = decodedJWT.getClaim("code").asString();
-        String email = decodedJWT.getClaim("email").asString();
-        String name = decodedJWT.getClaim("name").asString();
         String role = decodedJWT.getClaim("role").asString();
 
         CustomUserDetail userDetails = new CustomUserDetail(new UserVo(
                 userId,
-                email,
-                name,
+                null,
+                null,
                 role == null ? UserRole.ROLE_USER : UserRole.valueOf(role),
                 null,
                 null,
@@ -63,8 +58,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     private DecodedJWT validToken(String token) {
-        Optional<DecodedJWT> decodedJWT = jwtTokenUtil.validAccessToken(token);
-
-        return decodedJWT.get();
+        return jwtTokenUtil.validAccessToken(token);
     }
 }
