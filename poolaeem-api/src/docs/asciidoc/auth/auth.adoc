@@ -11,7 +11,7 @@ endif::[]
 :docinfo: shared-head
 :linkattrs:
 
-=== _link:https://poolaeem.com/poolaeem-api/docs/main/list.html[목록으로 가기]_
+=== _link:https://poolaeem.com/poolaeem-api/docs/qczd1dqvnb0gf60yhchro9dz2kvf9io7/main/list.html[목록으로 가기]_
 
 == 공통 코드
 [cols=2*]
@@ -51,3 +51,13 @@ include::{snippets}/auth/agree-sign-up-terms/http-response.adoc[]
 === -- Request
 
 === -- Response
+
+
+== 리프레시 토큰으로 액세스 토큰 재발급
+=== -- Request
+include::{snippets}/auth/test-generate-access-token-by-refresh-token/path-parameters.adoc[]
+include::{snippets}/auth/test-generate-access-token-by-refresh-token/request-headers.adoc[]
+include::{snippets}/auth/test-generate-access-token-by-refresh-token/http-request.adoc[]
+=== -- Response
+include::{snippets}/auth/test-generate-access-token-by-refresh-token/response-headers.adoc[]
+include::{snippets}/auth/test-generate-access-token-by-refresh-token/http-response.adoc[]

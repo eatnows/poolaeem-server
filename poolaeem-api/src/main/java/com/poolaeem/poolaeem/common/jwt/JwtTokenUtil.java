@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.poolaeem.poolaeem.common.exception.encrypto.EncryptException;
 import com.poolaeem.poolaeem.common.exception.jwt.ExpiredTokenException;
 import com.poolaeem.poolaeem.common.exception.jwt.GenerateTokenException;
 import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
@@ -21,7 +20,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class JwtTokenUtil {
@@ -46,8 +44,8 @@ public class JwtTokenUtil {
                 .withIssuer(ISSUER)
                 .withSubject(SUBJECT_AUTHENTICATION)
                 .withClaim("code", generateTokenUser.getId())
-                .withClaim("email", generateTokenUser.getEmail())
-                .withClaim("name", generateTokenUser.getName())
+//                .withClaim("email", generateTokenUser.getEmail())
+//                .withClaim("name", generateTokenUser.getName())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TIME))
                 .sign(generateAlgorithm());
@@ -58,8 +56,8 @@ public class JwtTokenUtil {
                 .withIssuer(ISSUER)
                 .withSubject(SUBJECT_REFRESH)
                 .withClaim("code", generateTokenUser.getId())
-                .withClaim("email", generateTokenUser.getEmail())
-                .withClaim("name", generateTokenUser.getName())
+//                .withClaim("email", generateTokenUser.getEmail())
+//                .withClaim("name", generateTokenUser.getName())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TIME))
                 .sign(generateAlgorithm());
@@ -89,7 +87,7 @@ public class JwtTokenUtil {
         }
     }
 
-    public Optional<DecodedJWT> validAccessToken(String token) {
+    public DecodedJWT validAccessToken(String token) {
         try {
             DecodedJWT decodedJWT = JWT.require(generateAlgorithm()).build().verify(token);
 
@@ -97,11 +95,27 @@ public class JwtTokenUtil {
                 throw new InvalidTokenException();
             }
 
-            return Optional.ofNullable(decodedJWT);
+            return decodedJWT;
         } catch (TokenExpiredException e) {
             throw new ExpiredTokenException();
         } catch (Exception e) {
             throw new InvalidTokenException();
+        }
+    }
+
+    public DecodedJWT validRefreshToken(String token) {
+        try {
+            DecodedJWT decodedJWT = JWT.require(generateAlgorithm()).build().verify(token);
+
+            if (!SUBJECT_REFRESH.equals(decodedJWT.getSubject())) {
+                throw new InvalidTokenException("리프레시 토큰이 아닙니다.");
+            }
+
+            return decodedJWT;
+        } catch (TokenExpiredException e) {
+            throw new ExpiredTokenException("만료된 리프레시 토큰입니다.");
+        } catch (Exception e) {
+            throw new InvalidTokenException("잘못된 리프레시 토큰입니다.");
         }
     }
 }

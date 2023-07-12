@@ -88,7 +88,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/api/user").hasAnyRole("SCOPE_profile", "SCOPE_email")
                         .requestMatchers("/api/oidc").hasAnyRole("SCOPE_openid")
-                        .requestMatchers("/api/signup/terms", "/poolaeem-api/docs/**").permitAll()
+                        .requestMatchers("/api/signup/terms", "/api/access-token/refresh", "/poolaeem-api/docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(config -> {
@@ -115,7 +115,8 @@ public class SecurityConfig {
     private Filter jwtFilter() {
         FilterSkipMatcher matcher = new FilterSkipMatcher(List.of(
                 "/api/signin/oauth2",
-                "/api/signup/terms"
+                "/api/signup/terms",
+                "/api/access-token/refresh"
         ), "/api/**");
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(matcher, jwtAuthenticationSuccessHandler, jwtAuthenticationFailureHandler);
         filter.setAuthenticationManager(authenticationManager);

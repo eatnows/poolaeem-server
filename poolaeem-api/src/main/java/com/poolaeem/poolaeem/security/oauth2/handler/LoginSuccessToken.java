@@ -23,4 +23,8 @@ public class LoginSuccessToken {
         response.addHeader("access-token", accessToken);
         response.addHeader("refresh-token", refreshToken);
     }
+
+    public void addOnlyAccessTokenInResponse(HttpServletResponse response, String accessToken) {
+        response.addHeader("access-token", accessToken);
+    }
 }

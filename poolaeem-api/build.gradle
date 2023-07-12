@@ -63,7 +63,7 @@ asciidoctor.doFirst {
 task copyHTML(type: Copy) {
     dependsOn asciidoctor
     from file("build/docs/asciidoc")
-    into file("src/main/resources/static/poolaeem-api/docs")
+    into file("src/main/resources/static/poolaeem-api/docs/qczd1dqvnb0gf60yhchro9dz2kvf9io7")
 }
 
 build {

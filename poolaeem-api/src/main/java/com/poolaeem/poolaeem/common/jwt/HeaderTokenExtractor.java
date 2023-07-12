@@ -2,7 +2,6 @@ package com.poolaeem.poolaeem.common.jwt;
 
 import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 public class HeaderTokenExtractor {
