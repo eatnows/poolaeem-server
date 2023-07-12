@@ -1,10 +1,13 @@
 package com.poolaeem.poolaeem.common.jwt;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JwtTokenUtilTest {
 
@@ -53,7 +56,7 @@ class JwtTokenUtilTest {
     @Test
     @DisplayName("액세스 토큰을 생성할 수 있다.")
     void generateAccessToken() {
-        GenerateTokenUser generateTokenUser = new GenerateTokenUser("id", "email", "name", "image");
+        GenerateTokenUser generateTokenUser = new GenerateTokenUser("id");
         String token = jwtTokenUtil.generateAccessToken(generateTokenUser);
 
         String[] split = token.split("\\.");
@@ -63,10 +66,46 @@ class JwtTokenUtilTest {
     @Test
     @DisplayName("리프레쉬 토큰을 생성할 수 있다.")
     void generateRefreshToken() {
-        GenerateTokenUser generateTokenUser = new GenerateTokenUser("id", "email", "name", "image");
+        GenerateTokenUser generateTokenUser = new GenerateTokenUser("id");
         String token = jwtTokenUtil.generateRefreshToken(generateTokenUser);
 
         String[] split = token.split("\\.");
         assertThat(split).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("액세스 토큰을 검증할 수 있다.")
+    void testValidAccessToken() {
+        String accessToken = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItaWQiLCJlbWFpbCI6InRlc3RAcG9vbGFlZW0uY29tIiwibmFtZSI6Iu2SgOuCtOyehCIsImlhdCI6MTY4NzYxMzkyMywiZXhwIjozNjg3NjE1NzIzfQ.ZPSiOO__4_yunYkfdOSrzng-bk1dJ45oga-py4-9YkMY7FdEzNWvPALFuvVl8Vl1Ps4U1VwujSMisaQg7zDWTiMj3hWDaAFPIX-sppWoqAF0HZsO99KGzQOLIaHlPveh8MpYYbacfkRyimmOzhsSVT61rj-gT2RVJQQJnS3jZZuQE408EXYxiFXgUFnUM9JyiKkWHN6AsWhug5h7xpk3yHuUUBqlXaStt-Bqsl5vZCtdfNdSeV47KGwh-vsg3g7gFIX6O9ZCC-uTDwagK1e72uoArtqriXoR1MjQ84GZoWadZNksQEiUDOT5Ctx0B_jk1rXeuxpLlpqSHmdxzlZMsg";
+
+        DecodedJWT decodedJWT = jwtTokenUtil.validAccessToken(accessToken);
+        assertThat(decodedJWT.getClaim("code").asString()).isEqualTo("user-id");
+    }
+
+    @Test
+    @DisplayName("다른 토큰으로는 액세스 토큰을 검증할 수 없다.")
+    void testValidAccessTokenByOtherToken() {
+        String accessToken = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.kt98uhYRuZsA7-N2g44qhp3fXTVRnvAivauB_DoJRVu91_G5GQZjzfocYbfpS7Jd05QpcNitRxQuKZgo0B9yqwo2thKpHevkatghwhESzsYqA2hfTXaR9jdDXuTXAMlFciLyErxrnNTfMtPhaeFq_dZg9YPCaT-36rsqEXg-yf2cGGl9iz0oCXB3pHZgqmADip5huRiHISvTOdt-Z2IOAfJ5B-cUaz89JNneSGoQl1G-es9NP2b_GWg1k5FZjMBXxE_ZHpOL8lo4le85CbcZCMbOoGHmKoNqh81eXRv3itgqqRAWBtbDf9oqpUUIS5Ygk1y5RZF4cNpapmfAS89MVA";
+
+        assertThatThrownBy(() -> jwtTokenUtil.validAccessToken(accessToken))
+                .isInstanceOf(InvalidTokenException.class);
+    }
+
+    @Test
+    @DisplayName("리프레시 토큰을 검증할 수 있다.")
+    void testValidRefreshToken() {
+        String refreshToken = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.kt98uhYRuZsA7-N2g44qhp3fXTVRnvAivauB_DoJRVu91_G5GQZjzfocYbfpS7Jd05QpcNitRxQuKZgo0B9yqwo2thKpHevkatghwhESzsYqA2hfTXaR9jdDXuTXAMlFciLyErxrnNTfMtPhaeFq_dZg9YPCaT-36rsqEXg-yf2cGGl9iz0oCXB3pHZgqmADip5huRiHISvTOdt-Z2IOAfJ5B-cUaz89JNneSGoQl1G-es9NP2b_GWg1k5FZjMBXxE_ZHpOL8lo4le85CbcZCMbOoGHmKoNqh81eXRv3itgqqRAWBtbDf9oqpUUIS5Ygk1y5RZF4cNpapmfAS89MVA";
+
+        DecodedJWT decodedJWT = jwtTokenUtil.validRefreshToken(refreshToken);
+        assertThat(decodedJWT.getClaim("code").asString()).isEqualTo("user-id");
+    }
+
+    @Test
+    @DisplayName("다른 토큰으로는 리프레시 토큰을 검증할 수 없다.")
+    void testValidRefreshTokenByOtherToken() {
+        String refreshToken = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItaWQiLCJlbWFpbCI6InRlc3RAcG9vbGFlZW0uY29tIiwibmFtZSI6Iu2SgOuCtOyehCIsImlhdCI6MTY4NzYxMzkyMywiZXhwIjozNjg3NjE1NzIzfQ.ZPSiOO__4_yunYkfdOSrzng-bk1dJ45oga-py4-9YkMY7FdEzNWvPALFuvVl8Vl1Ps4U1VwujSMisaQg7zDWTiMj3hWDaAFPIX-sppWoqAF0HZsO99KGzQOLIaHlPveh8MpYYbacfkRyimmOzhsSVT61rj-gT2RVJQQJnS3jZZuQE408EXYxiFXgUFnUM9JyiKkWHN6AsWhug5h7xpk3yHuUUBqlXaStt-Bqsl5vZCtdfNdSeV47KGwh-vsg3g7gFIX6O9ZCC-uTDwagK1e72uoArtqriXoR1MjQ84GZoWadZNksQEiUDOT5Ctx0B_jk1rXeuxpLlpqSHmdxzlZMsg";
+
+        assertThatThrownBy(() -> jwtTokenUtil.validRefreshToken(refreshToken))
+                .isInstanceOf(InvalidTokenException.class);
     }
 }

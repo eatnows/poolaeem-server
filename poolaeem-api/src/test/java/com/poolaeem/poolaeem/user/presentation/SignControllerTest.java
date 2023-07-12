@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -30,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SignControllerTest extends ApiDocumentationTest {
     private final String GOOGLE_OAUTH2_SIGN_IN = "/api/signin/oauth2/google";
     private final String SIGN_UP_TERMS = "/api/signup/terms";
+    private final String GENERATE_ACCESS_TOKEN = "/api/access-token/refresh";
+
+    private final String BEARER_REFRESH_TOKEN = "Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.kt98uhYRuZsA7-N2g44qhp3fXTVRnvAivauB_DoJRVu91_G5GQZjzfocYbfpS7Jd05QpcNitRxQuKZgo0B9yqwo2thKpHevkatghwhESzsYqA2hfTXaR9jdDXuTXAMlFciLyErxrnNTfMtPhaeFq_dZg9YPCaT-36rsqEXg-yf2cGGl9iz0oCXB3pHZgqmADip5huRiHISvTOdt-Z2IOAfJ5B-cUaz89JNneSGoQl1G-es9NP2b_GWg1k5FZjMBXxE_ZHpOL8lo4le85CbcZCMbOoGHmKoNqh81eXRv3itgqqRAWBtbDf9oqpUUIS5Ygk1y5RZF4cNpapmfAS89MVA";
 
     @Test
     @DisplayName("구글 로그인 시도")
@@ -90,6 +93,33 @@ class SignControllerTest extends ApiDocumentationTest {
                         responseHeaders(
                                 headerWithName("access-token").description("access token"),
                                 headerWithName("refresh-token").description("refresh token")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("리프레시 토큰으로 액세스 토큰 발급")
+    void testGenerateAccessTokenByRefreshToken() throws Exception {
+        given(signService.generateAccessTokenByRefreshToken(anyString()))
+                .willReturn("access-token");
+
+        ResultActions result = this.mockMvc.perform(
+                post(GENERATE_ACCESS_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Refresh", BEARER_REFRESH_TOKEN)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(document("auth/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(),
+                        requestHeaders(
+                                headerWithName("Refresh").description("리프레시 토큰")
+                        ),
+                        responseHeaders(
+                                headerWithName("access-token").description("액세스 토큰")
                         )
                 ));
     }
