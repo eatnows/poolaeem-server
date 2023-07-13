@@ -18,8 +18,6 @@ public class ProblemVo {
     private Integer timeout;
     private int optionCount;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer order;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ProblemOptionVo> options;
 
     public ProblemVo(String problemId, String workbookId, String question, ProblemType type, Integer timeout, List<ProblemOptionVo> options) {
@@ -33,11 +31,10 @@ public class ProblemVo {
     }
 
     @QueryProjection
-    public ProblemVo(String problemId, String question, ProblemType type, int optionCount, Integer order) {
+    public ProblemVo(String problemId, String question, ProblemType type, int optionCount) {
         this.problemId = problemId;
         this.question = question;
         this.type = type;
         this.optionCount = optionCount;
-        this.order = order;
     }
 }

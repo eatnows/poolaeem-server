@@ -63,9 +63,9 @@ public class ProblemController {
 
     @GetMapping("/api/workbooks/{workbookId}/problems")
     public ApiResponseDto<ProblemResponse.ProblemListRead> readProblemList(@LoggedInUser UserVo user,
-                                             @PathVariable String workbookId,
-                                             @RequestParam(defaultValue = "500") @Min(0) int order,
-                                             @RequestParam(defaultValue = "20") @Max(100) int size) {
+                                                                           @PathVariable String workbookId,
+                                                                           @RequestParam(defaultValue = "0") @Min(0) int order,
+                                                                           @RequestParam(defaultValue = "20") @Max(100) int size) {
         Slice<ProblemVo> problems = problemService.readProblemList(user.getId(), workbookId, order, PageRequest.of(0, size));
 
         ProblemResponse.ProblemListRead response = new ProblemResponse.ProblemListRead(problems);

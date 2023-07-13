@@ -346,10 +346,10 @@ class ProblemServiceImplTest {
                 .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null)));
         SliceImpl<ProblemVo> mockSlice = new SliceImpl<>(
                 List.of(
-                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, order),
-                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, order),
-                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, order),
-                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, order)
+                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),
+                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2),
+                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10),
+                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5)
                 ),
                 pageable,
                 true

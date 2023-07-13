@@ -193,10 +193,10 @@ class ProblemControllerTest extends ApiDocumentationTest {
         given(problemService.readProblemList(anyString(), anyString(), anyInt(), any()))
                 .willReturn(new SliceImpl<>(
                         List.of(
-                                new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, 1),
-                                new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, 2),
-                                new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, 3),
-                                new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, 4)
+                                new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),
+                                new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2),
+                                new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10),
+                                new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5)
                         ),
                         PageRequest.of(0, 20),
                         true
@@ -231,7 +231,6 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.STRING).description("문항 id"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제"),
                                 fieldWithPath("problems[].type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
-                                fieldWithPath("problems[].order").type(JsonFieldType.NUMBER).description("문항 순서"),
                                 fieldWithPath("problems[].optionCount").type(JsonFieldType.NUMBER).description("선택지 개수")
                         )
                 ));

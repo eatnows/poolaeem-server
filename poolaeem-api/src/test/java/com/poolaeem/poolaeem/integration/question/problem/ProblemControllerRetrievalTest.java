@@ -95,7 +95,7 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 get(READ_PROBLEM_LIST, workbookId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
-                        .param("order", "500")
+                        .param("order", "0")
                         .param("size", "10")
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -104,12 +104,12 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.hasNext", is(false)))
                 .andExpect(jsonPath("$.data.problems.size()", is(3)))
-                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
-                .andExpect(jsonPath("$.data.problems[0].question", is("Video")))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Word")))
                 .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
                 .andExpect(jsonPath("$.data.problems[1].question", is("School")))
-                .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-1")))
-                .andExpect(jsonPath("$.data.problems[2].question", is("Word")));
+                .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[2].question", is("Video")));
     }
 
     @Test
@@ -121,7 +121,7 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 get(READ_PROBLEM_LIST, workbookId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
-                        .param("order", "500")
+                        .param("order", "0")
                         .param("size", "2")
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -130,8 +130,8 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.hasNext", is(true)))
                 .andExpect(jsonPath("$.data.problems.size()", is(2)))
-                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
-                .andExpect(jsonPath("$.data.problems[0].question", is("Video")))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Word")))
                 .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
                 .andExpect(jsonPath("$.data.problems[1].question", is("School")));
     }
@@ -154,8 +154,8 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.hasNext", is(false)))
                 .andExpect(jsonPath("$.data.problems.size()", is(1)))
-                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-1")))
-                .andExpect(jsonPath("$.data.problems[0].question", is("Word")));
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Video")));
     }
 
     @Test
@@ -177,7 +177,7 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("문항 목록 정렬 순서는 최신순(Order의 값이 큰)으로 정렬된다")
+    @DisplayName("문항 목록 정렬 순서는 오래된순으로 정렬된다")
     void testReadProblemListOrder() throws Exception {
         String workbookId = "workbook-1";
 
@@ -185,7 +185,7 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 get(READ_PROBLEM_LIST, workbookId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
-                        .param("order", "500")
+                        .param("order", "0")
                         .param("size", "3")
                         .accept(MediaType.APPLICATION_JSON)
         );
@@ -193,11 +193,11 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.hasNext", is(false)))
-                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
-                .andExpect(jsonPath("$.data.problems[0].order", is(3)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Word")))
                 .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
-                .andExpect(jsonPath("$.data.problems[1].order", is(2)))
-                .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-1")))
-                .andExpect(jsonPath("$.data.problems[2].order", is(1)));
+                .andExpect(jsonPath("$.data.problems[1].question", is("School")))
+                .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[2].question", is("Video")));
     }
 }

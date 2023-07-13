@@ -53,13 +53,12 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
                         problem.id,
                         problem.question,
                         problem.type,
-                        problem.optionCount,
-                        problem.order
+                        problem.optionCount
                 ))
                 .from(problem)
                 .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
-                        problem.order.lt(order))
-                .orderBy(problem.order.desc())
+                        problem.order.gt(order))
+                .orderBy(problem.order.asc())
                 .limit(pageable.getPageSize() + 1L)
                 .fetch();
 
