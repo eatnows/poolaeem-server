@@ -18,6 +18,7 @@ public class ProblemResponse {
         private String problemId;
         private String question;
         private ProblemType type;
+        private int timeout;
         private List<ProblemOptionVo> options;
 
         public ProblemRead(ProblemVo problemVo) {
@@ -25,6 +26,7 @@ public class ProblemResponse {
             this.question = problemVo.getQuestion();
             this.type = problemVo.getType();
             this.options = problemVo.getOptions();
+            this.timeout = problemVo.getTimeout();
         }
     }
 

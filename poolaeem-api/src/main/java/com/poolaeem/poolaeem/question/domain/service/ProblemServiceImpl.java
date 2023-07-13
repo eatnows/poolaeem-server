@@ -66,7 +66,7 @@ public class ProblemServiceImpl implements ProblemService {
                 .map(o -> new ProblemOptionVo(o.getId(), o.getValue(), o.getIsCorrect()))
                 .toList();
 
-        return new ProblemVo(problem.getId(), null, problem.getQuestion(), problem.getType(), options);
+        return new ProblemVo(problem.getId(), null, problem.getQuestion(), problem.getType(), problem.getTimeout(), options);
     }
 
     @Transactional

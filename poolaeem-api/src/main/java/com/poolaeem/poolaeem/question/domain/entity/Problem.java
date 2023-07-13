@@ -30,6 +30,9 @@ public class Problem extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProblemType type;
 
+    @Column(name = "timeout")
+    private Integer timeout;
+
     @Column(name = "option_count")
     private int optionCount;
 
@@ -65,6 +68,11 @@ public class Problem extends BaseEntity {
     @PrePersist
     private void prePersist() {
         this.id = UUIDGenerator.generate();
+        if (type == ProblemType.CHECKBOX) {
+            this.timeout = timeout == null ? 30 : timeout;
+        } else {
+            this.timeout = timeout == null ? 0 : timeout;
+        }
         this.isDeleted = false;
     }
 

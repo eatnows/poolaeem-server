@@ -58,6 +58,7 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.data.problemId", is(problemId)))
                 .andExpect(jsonPath("$.data.question", is("School")))
                 .andExpect(jsonPath("$.data.type", is("CHECKBOX")))
+                .andExpect(jsonPath("$.data.timeout", is(30)))
                 .andExpect(jsonPath("$.data.options[0].optionId", is("option-3")))
                 .andExpect(jsonPath("$.data.options[0].value", is("스쿨버스")))
                 .andExpect(jsonPath("$.data.options[0].isCorrect", is(false)))
