@@ -233,7 +233,7 @@ class ProblemServiceImplTest {
         problemService.updateProblem(param);
 
         verify(optionRepository, times(1)).saveAll(any());
-        verify(optionRepository, times(1)).deleteAll(any());
+        verify(optionRepository, times(1)).softDeleteAllByIdIn(any());
     }
 
     @ParameterizedTest
@@ -329,8 +329,8 @@ class ProblemServiceImplTest {
 
         problemService.deleteProblem(userId, problemId);
 
-        verify(optionRepository, times(1)).deleteAllByProblem(any());
-        verify(problemRepository, times(1)).delete(any());
+        verify(optionRepository, times(1)).softDeleteAllByProblem(any());
+        verify(problemRepository, times(1)).softDelete(any());
         verify(workbookEventsPublisher, times(1)).publish(any(EventsPublisherWorkbookEvent.ProblemDeleteEvent.class));
     }
 

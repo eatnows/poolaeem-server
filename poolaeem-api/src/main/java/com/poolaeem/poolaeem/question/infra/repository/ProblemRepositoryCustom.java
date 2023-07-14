@@ -14,4 +14,6 @@ public interface ProblemRepositoryCustom {
     Optional<Problem> findByIdAndIsDeletedFalseAndUserId(String problemId, String userId);
 
     Slice<ProblemVo> findAllByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable);
+
+    void softDelete(Problem problem);
 }

@@ -8,5 +8,7 @@ import java.util.List;
 public interface ProblemOptionRepositoryCustom {
     List<ProblemOption> findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(String problemId);
 
-    void deleteAllByProblem(Problem problem);
+    void softDeleteAllByProblem(Problem problem);
+
+    void softDeleteAllByIdIn(List<ProblemOption> deleteList);
 }
