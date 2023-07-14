@@ -66,7 +66,7 @@ public class ProblemServiceImpl implements ProblemService {
                 .map(o -> new ProblemOptionVo(o.getId(), o.getValue(), o.getIsCorrect()))
                 .toList();
 
-        return new ProblemVo(problem.getId(), null, problem.getQuestion(), problem.getType(), options);
+        return new ProblemVo(problem.getId(), null, problem.getQuestion(), problem.getType(), problem.getTimeout(), options);
     }
 
     @Transactional
@@ -89,8 +89,8 @@ public class ProblemServiceImpl implements ProblemService {
         Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(problemId, userId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        problemOptionRepository.deleteAllByProblem(problem);
-        problemRepository.delete(problem);
+        problemOptionRepository.softDeleteAllByProblem(problem);
+        problemRepository.softDelete(problem);
 
         decreaseProblemCount(problem.getWorkbook().getId());
     }
@@ -112,7 +112,7 @@ public class ProblemServiceImpl implements ProblemService {
     private void updateProblemOptions(Problem problem, List<ProblemOptionDto> reqOptions) {
         List<ProblemOption> options = problemOptionRepository.findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(problem.getId());
 
-        hardDeleteOptions(options, reqOptions);
+        softDeleteOptions(options, reqOptions);
         updateOptionsOrder(options, reqOptions);
         addNewOptions(problem, reqOptions);
     }
@@ -141,7 +141,7 @@ public class ProblemServiceImpl implements ProblemService {
         problemOptionRepository.saveAll(newList);
     }
 
-    private void hardDeleteOptions(List<ProblemOption> dbOptions, List<ProblemOptionDto> reqOptions) {
+    private void softDeleteOptions(List<ProblemOption> dbOptions, List<ProblemOptionDto> reqOptions) {
         Map<String, ProblemOptionDto> reqOptionMap = reqOptions.stream()
                 .filter(option -> option.getOptionId() != null)
                 .collect(Collectors.toMap(ProblemOptionDto::getOptionId, Function.identity()));
@@ -153,7 +153,7 @@ public class ProblemServiceImpl implements ProblemService {
             }
         }
 
-        problemOptionRepository.deleteAll(deleteList);
+        problemOptionRepository.softDeleteAllByIdIn(deleteList);
     }
 
     private void increaseProblemCount(ProblemDto.ProblemCreateParam param) {

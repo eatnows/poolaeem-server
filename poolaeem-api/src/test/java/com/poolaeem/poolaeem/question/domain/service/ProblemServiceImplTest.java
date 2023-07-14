@@ -233,7 +233,7 @@ class ProblemServiceImplTest {
         problemService.updateProblem(param);
 
         verify(optionRepository, times(1)).saveAll(any());
-        verify(optionRepository, times(1)).deleteAll(any());
+        verify(optionRepository, times(1)).softDeleteAllByIdIn(any());
     }
 
     @ParameterizedTest
@@ -329,8 +329,8 @@ class ProblemServiceImplTest {
 
         problemService.deleteProblem(userId, problemId);
 
-        verify(optionRepository, times(1)).deleteAllByProblem(any());
-        verify(problemRepository, times(1)).delete(any());
+        verify(optionRepository, times(1)).softDeleteAllByProblem(any());
+        verify(problemRepository, times(1)).softDelete(any());
         verify(workbookEventsPublisher, times(1)).publish(any(EventsPublisherWorkbookEvent.ProblemDeleteEvent.class));
     }
 
@@ -346,10 +346,10 @@ class ProblemServiceImplTest {
                 .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null)));
         SliceImpl<ProblemVo> mockSlice = new SliceImpl<>(
                 List.of(
-                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, order),
-                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, order),
-                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, order),
-                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, order)
+                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),
+                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2),
+                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10),
+                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5)
                 ),
                 pageable,
                 true

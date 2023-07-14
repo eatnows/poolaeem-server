@@ -14,27 +14,27 @@ public class ProblemVo {
     private String workbookId;
     private String question;
     private ProblemType type;
-    private int optionCount;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer order;
+    private Integer timeout;
+    private int optionCount;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ProblemOptionVo> options;
 
-    public ProblemVo(String problemId, String workbookId, String question, ProblemType type, List<ProblemOptionVo> options) {
+    public ProblemVo(String problemId, String workbookId, String question, ProblemType type, Integer timeout, List<ProblemOptionVo> options) {
         this.problemId = problemId;
         this.workbookId = workbookId;
         this.question = question;
         this.type = type;
+        this.timeout = timeout;
         this.optionCount = options.size();
         this.options = options;
     }
 
     @QueryProjection
-    public ProblemVo(String problemId, String question, ProblemType type, int optionCount, Integer order) {
+    public ProblemVo(String problemId, String question, ProblemType type, int optionCount) {
         this.problemId = problemId;
         this.question = question;
         this.type = type;
         this.optionCount = optionCount;
-        this.order = order;
     }
 }

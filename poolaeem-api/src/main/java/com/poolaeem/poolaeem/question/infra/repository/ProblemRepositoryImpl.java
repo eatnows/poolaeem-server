@@ -1,6 +1,9 @@
 package com.poolaeem.poolaeem.question.infra.repository;
 
+import com.poolaeem.poolaeem.common.component.logged_user.LoggedInUser;
+import com.poolaeem.poolaeem.common.component.time.TimeComponent;
 import com.poolaeem.poolaeem.question.domain.entity.Problem;
+import com.poolaeem.poolaeem.question.domain.entity.QProblem;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.QProblemVo;
@@ -53,13 +56,12 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
                         problem.id,
                         problem.question,
                         problem.type,
-                        problem.optionCount,
-                        problem.order
+                        problem.optionCount
                 ))
                 .from(problem)
                 .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
-                        problem.order.lt(order))
-                .orderBy(problem.order.desc())
+                        problem.order.gt(order))
+                .orderBy(problem.order.asc())
                 .limit(pageable.getPageSize() + 1L)
                 .fetch();
 
@@ -70,5 +72,16 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
         }
 
         return new SliceImpl<>(list, pageable, hasNext);
+    }
+
+    @Override
+    public void softDelete(Problem problem) {
+        queryFactory
+                .update(QProblem.problem)
+                .set(QProblem.problem.isDeleted, true)
+                .set(QProblem.problem.updatedBy, LoggedInUser.getUserId())
+                .set(QProblem.problem.updatedAt, TimeComponent.nowUtc())
+                .where(QProblem.problem.eq(problem), QProblem.problem.isDeleted.isFalse())
+                .execute();
     }
 }

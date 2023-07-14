@@ -1038,6 +1038,11 @@ Host: poolaeem.com</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../common/problem_type.html" class="popup">문항 종류 목록</a></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">풀이 제한 시간 (초)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].optionId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">선택지 id</p></td>
@@ -1061,7 +1066,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 318
+Content-Length: 338
 
 {
   "code" : 0,
@@ -1069,6 +1074,7 @@ Content-Length: 318
     "problemId" : "problem-id",
     "question" : "Word",
     "type" : "CHECKBOX",
+    "timeout" : 30,
     "options" : [ {
       "optionId" : "option-1",
       "value" : "단어",
@@ -1357,7 +1363,7 @@ Content-Length: 16
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-13 00:05:56 +0900
+Last updated 2023-07-13 00:43:56 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

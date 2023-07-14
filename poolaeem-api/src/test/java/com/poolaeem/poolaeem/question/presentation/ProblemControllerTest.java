@@ -83,7 +83,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
 
         given(problemService.readProblem(any(), any()))
                 .willReturn(new ProblemVo(problemId, null, "Word",
-                        ProblemType.CHECKBOX,
+                        ProblemType.CHECKBOX, 30,
                         List.of(
                                 new ProblemOptionVo("option-1", "단어", true),
                                 new ProblemOptionVo("option-2", "세계", false)
@@ -112,6 +112,7 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("problemId").type(JsonFieldType.STRING).description("문항 id"),
                                 fieldWithPath("question").type(JsonFieldType.STRING).description("문제"),
                                 fieldWithPath("type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
+                                fieldWithPath("timeout").type(JsonFieldType.NUMBER).description("풀이 제한 시간 (초)"),
                                 fieldWithPath("options[].optionId").type(JsonFieldType.STRING).description("선택지 id"),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("정답 여부")
@@ -192,10 +193,10 @@ class ProblemControllerTest extends ApiDocumentationTest {
         given(problemService.readProblemList(anyString(), anyString(), anyInt(), any()))
                 .willReturn(new SliceImpl<>(
                         List.of(
-                                new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, 1),
-                                new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, 2),
-                                new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, 3),
-                                new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, 4)
+                                new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),
+                                new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2),
+                                new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10),
+                                new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5)
                         ),
                         PageRequest.of(0, 20),
                         true
@@ -230,7 +231,6 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.STRING).description("문항 id"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제"),
                                 fieldWithPath("problems[].type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
-                                fieldWithPath("problems[].order").type(JsonFieldType.NUMBER).description("문항 순서"),
                                 fieldWithPath("problems[].optionCount").type(JsonFieldType.NUMBER).description("선택지 개수")
                         )
                 ));
