@@ -13,4 +13,6 @@ public interface WorkbookService {
     void increaseProblemCount(String workbookId);
 
     void decreaseProblemCount(String workbookId);
+
+    WorkbookVo readWorkbookInfoForSolve(String workbookId);
 }

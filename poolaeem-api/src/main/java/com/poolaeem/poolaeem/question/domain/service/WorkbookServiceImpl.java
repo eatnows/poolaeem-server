@@ -70,6 +70,13 @@ public class WorkbookServiceImpl implements WorkbookService {
         workbookRepository.updateDecreaseProblemCountByWorkbookId(workbookId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public WorkbookVo readWorkbookInfoForSolve(String workbookId) {
+        return workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+    }
+
     private Workbook getWorkbookEntity(String workbookdId) {
         return workbookRepository.findByIdAndIsDeletedFalse(workbookdId)
                 .orElseThrow(WorkbookNotFoundException::new);

@@ -37,7 +37,8 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
                                 workbook.description,
                                 workbook.problemCount,
                                 workbook.solvedCount,
-                                workbook.theme
+                                workbook.theme,
+                                workbook.createdAt
                         ))
                         .from(workbook)
                         .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
