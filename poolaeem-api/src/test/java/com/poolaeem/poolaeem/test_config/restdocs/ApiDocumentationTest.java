@@ -17,6 +17,8 @@ import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessToken;
 import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.poolaeem.poolaeem.security.oauth2.service.CustomOAuth2UserService;
 import com.poolaeem.poolaeem.security.oauth2.service.CustomOidcUserService;
+import com.poolaeem.poolaeem.solve.application.SolveService;
+import com.poolaeem.poolaeem.solve.presentation.SolveController;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
@@ -29,6 +31,7 @@ import com.poolaeem.poolaeem.user.presentation.SignController;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.presentation.WorkbookController;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -37,6 +40,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -49,13 +53,15 @@ import static org.mockito.BDDMockito.given;
             SignController.class,
             ProfileInfoController.class,
             WorkbookController.class,
-            ProblemController.class
+            ProblemController.class,
+            SolveController.class
     },
     properties = "spring.config.location=classpath:/application.yml"
 )
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
 @ImportAutoConfiguration({SecurityConfig.class})
+@ExtendWith(RestDocumentationExtension.class)
 public abstract class ApiDocumentationTest {
 
     protected final String ACCESS_TOKEN = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItMSIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3OTUyMTE4LCJleHAiOjM2ODc5NTM5MTh9.QHwZ4Jppb5Bgp-oain43voHX5J4bkzt-7zTWKQOjFI77_H4k0HXYe79RjJopmvrOHX3YEFECfDJuTOgoMUqBQGFRmqSdEmUF-vFXOcjezvxw4NQzFTFkq430sNxrhK_RMsSbKTMnByZuN7Opj_RNGmGlDygX1dyqqqwxFZPn3fivl5TUM9VNhGACbCEGzxIYi7ACGNR2Kj61Qf343Dxyw37bXQ0D3a63Izxq8ThAzOtIyICnnF_ZYvn-3Y1nx9cpcxMdqwIGVFYBYSOOaCKnLJ7BUxEvy8l9tqwmGd2jCJWAAeSKNfcGmo4jpPrj5jJFvBoV2ynygZHHvkIXP0v_LQ";
@@ -120,4 +126,6 @@ public abstract class ApiDocumentationTest {
     protected WorkbookService workbookService;
     @MockBean
     protected ProblemService problemService;
+    @MockBean
+    protected SolveService solveService;
 }
