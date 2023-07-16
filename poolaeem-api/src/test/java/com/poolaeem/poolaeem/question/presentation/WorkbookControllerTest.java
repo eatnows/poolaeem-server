@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.ZonedDateTime;
+
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
@@ -120,8 +122,8 @@ class WorkbookControllerTest extends ApiDocumentationTest {
                         "알찬 구성으로 영단어를 모아봤습니다.",
                         4,
                         2,
-                        WorkbookTheme.PINK
-                ));
+                        WorkbookTheme.PINK,
+                        ZonedDateTime.now()));
 
         ResultActions result = this.mockMvc.perform(
                 get(READ_WORKBOOK_INFO, workbookId)

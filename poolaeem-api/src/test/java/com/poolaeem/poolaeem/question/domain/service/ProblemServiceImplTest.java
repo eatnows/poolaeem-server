@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -343,7 +344,7 @@ class ProblemServiceImplTest {
         Pageable pageable = PageRequest.of(0, 20);
 
         given(workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId))
-                .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null)));
+                .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null, ZonedDateTime.now())));
         SliceImpl<ProblemVo> mockSlice = new SliceImpl<>(
                 List.of(
                         new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),

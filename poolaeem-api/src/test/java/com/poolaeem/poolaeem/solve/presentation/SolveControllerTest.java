@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.solve.presentation;
 
+import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
 import com.poolaeem.poolaeem.solve.domain.dto.WorkbookAuthor;
 import com.poolaeem.poolaeem.solve.domain.dto.WorkbookSolveDto;
 import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
@@ -23,19 +24,18 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.snippet.Attributes.attributes;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("단위: 문제 풀이 컨트롤러 테스트")
 class SolveControllerTest extends ApiDocumentationTest {
-    private final String READ_WORKBOOK_INFO = "/api/workbooks/{workbookId}/info/solve";
+    private final String READ_WORKBOOK_INFO = "/api/workbooks/{workbookId}/solve/introduction";
 
     @Test
-    @DisplayName("풀 문제의 정보를 조회할 수 있다.")
-    void testSolveReadWorkbookInfo() throws Exception {
+    @DisplayName("문제집 풀이 정보를 조회할 수 있다.")
+    void testReadWorkbookSolveIntroduction() throws Exception {
         String workbookId = "workbook-id";
 
-        given(solveService.readSolveInfo(workbookId))
+        given(solveService.readSolveIntroduction(workbookId))
                 .willReturn(new WorkbookSolveDto.SolveInfoRead(
                         workbookId,
                         "문제집1",
@@ -72,6 +72,27 @@ class SolveControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("problemCount").type(JsonFieldType.NUMBER).description("문제집의 문항수"),
                                 fieldWithPath("solvedCount").type(JsonFieldType.NUMBER).description("문제집을 풀이한 수")
                         )
+                ));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 문제집 소개는 조회할 수 없다.")
+    void testReadWorkbookSolveIntroductionForNotFound() throws Exception {
+        String workbookId = "not-exist-workbook";
+
+        given(solveService.readSolveIntroduction(workbookId))
+                .willThrow(new WorkbookNotFoundException());
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_WORKBOOK_INFO, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isNotFound())
+                .andDo(document("solve/question/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse()
                 ));
     }
 }

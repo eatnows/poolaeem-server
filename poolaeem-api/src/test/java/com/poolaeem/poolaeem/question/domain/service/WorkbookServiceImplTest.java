@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -185,8 +186,8 @@ class WorkbookServiceImplTest {
                         "문제집 설명",
                         3,
                         2,
-                        WorkbookTheme.PINK
-                )));
+                        WorkbookTheme.PINK,
+                        ZonedDateTime.now())));
 
         WorkbookVo workbook = workbookService.readWorkbookInfo(workbookId, reqUserId);
 
@@ -208,8 +209,8 @@ class WorkbookServiceImplTest {
                         "문제집 설명",
                         3,
                         2,
-                        WorkbookTheme.PINK
-                )));
+                        WorkbookTheme.PINK,
+                        ZonedDateTime.now())));
 
         assertThatThrownBy(() -> workbookService.readWorkbookInfo(workbookId, reqUserId))
                 .isInstanceOf(ForbiddenRequestException.class);
