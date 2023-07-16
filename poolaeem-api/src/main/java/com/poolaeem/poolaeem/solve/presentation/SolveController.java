@@ -16,9 +16,9 @@ public class SolveController {
         this.solveService = solveService;
     }
 
-    @GetMapping("/api/workbooks/{workbookId}/info/solve")
-    public ApiResponseDto<SolveResponse.SolveInfoRead> readSolveWorkbookInfo(@PathVariable String workbookId) {
-        WorkbookSolveDto.SolveInfoRead info = solveService.readSolveInfo(workbookId);
+    @GetMapping("/api/workbooks/{workbookId}/solve/introduction")
+    public ApiResponseDto<SolveResponse.SolveInfoRead> readWorkbookSolveIntroduction(@PathVariable String workbookId) {
+        WorkbookSolveDto.SolveInfoRead info = solveService.readSolveIntroduction(workbookId);
         SolveResponse.SolveInfoRead response = new SolveResponse.SolveInfoRead(info);
         return ApiResponseDto.OK(response);
     }

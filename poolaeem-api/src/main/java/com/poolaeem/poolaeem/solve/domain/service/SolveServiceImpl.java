@@ -16,7 +16,7 @@ public class SolveServiceImpl implements SolveService {
 
     @Transactional(readOnly = true)
     @Override
-    public WorkbookSolveDto.SolveInfoRead readSolveInfo(String workbookId) {
+    public WorkbookSolveDto.SolveInfoRead readSolveIntroduction(String workbookId) {
         return solveWorkbookClient.readWorkbookInfo(workbookId);
     }
 }
