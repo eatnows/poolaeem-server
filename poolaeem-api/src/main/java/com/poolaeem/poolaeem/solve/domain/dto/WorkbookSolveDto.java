@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.solve.domain.dto;
 
 import com.poolaeem.poolaeem.common.component.time.TimeComponent;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,16 +15,18 @@ public class WorkbookSolveDto {
         private String workbookId;
         private String name;
         private String description;
-        private WorkbookAuthor author;
+        private WorkbookTheme theme;
+        private WorkbookCreator creator;
         private ZonedDateTime createdAt;
         private int problemCount;
         private int solvedCount;
 
-        public SolveInfoRead(String workbookId, String name, String description, WorkbookAuthor author, ZonedDateTime createdAt, int problemCount, int solvedCount) {
+        public SolveInfoRead(String workbookId, String name, String description, WorkbookTheme theme, WorkbookCreator creator, ZonedDateTime createdAt, int problemCount, int solvedCount) {
             this.workbookId = workbookId;
             this.name = name;
             this.description = description;
-            this.author = author;
+            this.theme = theme;
+            this.creator = creator;
             this.createdAt = createdAt;
             this.problemCount = problemCount;
             this.solvedCount = solvedCount;

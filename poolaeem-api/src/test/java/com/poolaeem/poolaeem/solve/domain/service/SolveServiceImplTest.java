@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.solve.domain.service;
 
-import com.poolaeem.poolaeem.solve.domain.dto.WorkbookAuthor;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.solve.domain.dto.WorkbookCreator;
 import com.poolaeem.poolaeem.solve.domain.dto.WorkbookSolveDto;
 import com.poolaeem.poolaeem.solve.infra.SolveWorkbookClient;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,8 @@ class SolveServiceImplTest {
                         workbookId,
                         "문제집",
                         "단어장",
-                        new WorkbookAuthor(
+                        WorkbookTheme.PINK,
+                        new WorkbookCreator(
                                 "만든이",
                                 "https://poolaeem.com/profile/test/123"
                         ),
@@ -44,6 +46,6 @@ class SolveServiceImplTest {
         WorkbookSolveDto.SolveInfoRead info = solveService.readSolveIntroduction(workbookId);
 
         assertThat(info.getWorkbookId()).isEqualTo(workbookId);
-        assertThat(info.getAuthor().getName()).isEqualTo("만든이");
+        assertThat(info.getCreator().getName()).isEqualTo("만든이");
     }
 }

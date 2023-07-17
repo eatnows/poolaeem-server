@@ -1,6 +1,6 @@
 package com.poolaeem.poolaeem.solve.infra;
 
-import com.poolaeem.poolaeem.solve.domain.dto.WorkbookAuthor;
+import com.poolaeem.poolaeem.solve.domain.dto.WorkbookCreator;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,8 @@ public class SolveUserClientImpl implements SolveUserClient {
 
     @Transactional(readOnly = true)
     @Override
-    public WorkbookAuthor readWorkbookAuthor(String userId) {
+    public WorkbookCreator readWorkbookCreator(String userId) {
         ProfileDto.ProfileInfo info = profileInfoService.readProfileInfo(userId);
-        return new WorkbookAuthor(info.getName(), info.getProfileImageUrl());
+        return new WorkbookCreator(info.getName(), info.getProfileImageUrl());
     }
 }

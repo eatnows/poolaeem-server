@@ -3,7 +3,7 @@ package com.poolaeem.poolaeem.solve.infra;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.solve.domain.dto.WorkbookSolveDto;
-import com.poolaeem.poolaeem.solve.domain.dto.WorkbookAuthor;
+import com.poolaeem.poolaeem.solve.domain.dto.WorkbookCreator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,13 +19,14 @@ public class SolveWorkbookClientImpl implements SolveWorkbookClient {
     @Override
     public WorkbookSolveDto.SolveInfoRead readWorkbookInfo(String workbookId) {
         WorkbookVo workbook = workbookService.readWorkbookInfoForSolve(workbookId);
-        WorkbookAuthor author = solveUserClient.readWorkbookAuthor(workbook.getUserId());
+        WorkbookCreator creator = solveUserClient.readWorkbookCreator(workbook.getUserId());
 
         return new WorkbookSolveDto.SolveInfoRead(
                 workbook.getId(),
                 workbook.getName(),
                 workbook.getDescription(),
-                author,
+                workbook.getTheme(),
+                creator,
                 workbook.getCreatedAt(),
                 workbook.getProblemCount(),
                 workbook.getSolvedCount()

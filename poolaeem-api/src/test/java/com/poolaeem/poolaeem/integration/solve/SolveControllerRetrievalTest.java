@@ -2,6 +2,7 @@ package com.poolaeem.poolaeem.integration.solve;
 
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,8 +53,9 @@ class SolveControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.name", is("고등영어1")))
                 .andExpect(jsonPath("$.data.description", is("고등학교에서 사용하는 영단어 문제입니다.")))
-                .andExpect(jsonPath("$.data.author.name", is("풀내임")))
-                .andExpect(jsonPath("$.data.author.profileImageUrl", containsString("file-1")))
+                .andExpect(jsonPath("$.data.theme", is(WorkbookTheme.PINK.name())))
+                .andExpect(jsonPath("$.data.creator.name", is("풀내임")))
+                .andExpect(jsonPath("$.data.creator.profileImageUrl", containsString("file-1")))
                 .andExpect(jsonPath("$.data.createdAt", is("2023-07-04T23:36+09:00")))
                 .andExpect(jsonPath("$.data.problemCount", is(3)))
                 .andExpect(jsonPath("$.data.solvedCount", is(2)));

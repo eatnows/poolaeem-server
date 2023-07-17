@@ -1,10 +1,12 @@
 package com.poolaeem.poolaeem.solve.presentation;
 
 import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
-import com.poolaeem.poolaeem.solve.domain.dto.WorkbookAuthor;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.solve.domain.dto.WorkbookCreator;
 import com.poolaeem.poolaeem.solve.domain.dto.WorkbookSolveDto;
 import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
 import com.poolaeem.poolaeem.test_config.restdocs.DocumentFormatGenerator;
+import com.poolaeem.poolaeem.test_config.restdocs.DocumentLinkGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -40,7 +42,8 @@ class SolveControllerTest extends ApiDocumentationTest {
                         workbookId,
                         "문제집1",
                         "기초 영단어 문제 모음",
-                        new WorkbookAuthor(
+                        WorkbookTheme.PINK,
+                        new WorkbookCreator(
                                 "원작자",
                                 "https://image.poolaeem.com/test/profile/1234"
                         ),
@@ -66,8 +69,9 @@ class SolveControllerTest extends ApiDocumentationTest {
                                 beneathPath("data"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("문제집 이름"),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("문제집 설명글"),
-                                fieldWithPath("author.name").type(JsonFieldType.STRING).description("문제집 만든이"),
-                                fieldWithPath("author.profileImageUrl").type(JsonFieldType.STRING).description("만든이 프로필 이미지 주소"),
+                                fieldWithPath("theme").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.WORKBOOK_THEME)),
+                                fieldWithPath("creator.name").type(JsonFieldType.STRING).description("문제집 만든이"),
+                                fieldWithPath("creator.profileImageUrl").type(JsonFieldType.STRING).description("만든이 프로필 이미지 주소"),
                                 fieldWithPath("createdAt").type(JsonFieldType.STRING).attributes(DocumentFormatGenerator.getDateTimeFormat()).description("문제집 생성일"),
                                 fieldWithPath("problemCount").type(JsonFieldType.NUMBER).description("문제집의 문항수"),
                                 fieldWithPath("solvedCount").type(JsonFieldType.NUMBER).description("문제집을 풀이한 수")
