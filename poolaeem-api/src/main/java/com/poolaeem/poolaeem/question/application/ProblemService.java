@@ -17,5 +17,5 @@ public interface ProblemService {
 
     Slice<ProblemVo> readProblemList(String userId, String workbookId, int order, Pageable pageable);
 
-    SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order);
+    SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order, Pageable of);
 }

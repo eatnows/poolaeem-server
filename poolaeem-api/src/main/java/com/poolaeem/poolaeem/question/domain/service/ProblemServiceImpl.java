@@ -19,7 +19,6 @@ import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -107,9 +106,10 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Transactional(readOnly = true)
     @Override
-    public SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order) {
-        Pageable pageable = PageRequest.of(0, 20);
-        SliceImpl<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
+    public SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order, Pageable pageable) {
+        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+        SliceImpl<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbook, order, pageable);
 
         addOptionsInProblem(problems.getContent());
 

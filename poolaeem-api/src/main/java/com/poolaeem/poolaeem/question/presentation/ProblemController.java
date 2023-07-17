@@ -75,8 +75,9 @@ public class ProblemController {
 
     @GetMapping("/api/workbooks/{workbookId}/problems/solve")
     public ApiResponseDto<ProblemResponse.SolveProblemsRead> readSolveProblems(@PathVariable String workbookId,
-                                                                               @RequestParam(defaultValue = "0") int order) {
-        SliceImpl<ProblemVo> problems = problemService.readSolveProblems(workbookId, order);
+                                                                               @RequestParam(defaultValue = "0") int order,
+                                                                               @RequestParam(defaultValue = "20") @Max(20) int size) {
+        SliceImpl<ProblemVo> problems = problemService.readSolveProblems(workbookId, order, PageRequest.of(0, size));
 
         ProblemResponse.SolveProblemsRead response = new ProblemResponse.SolveProblemsRead(problems);
         return ApiResponseDto.OK(response);

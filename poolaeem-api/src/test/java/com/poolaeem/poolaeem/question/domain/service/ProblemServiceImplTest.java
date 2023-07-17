@@ -7,6 +7,7 @@ import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.*;
+import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.SliceImpl;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -362,6 +364,71 @@ class ProblemServiceImplTest {
 
         assertThat(result.getSize()).isEqualTo(mockSlice.getSize());
         assertThat(result.hasNext()).isTrue();
+    }
+
+    @Test
+    @DisplayName("풀이할 문항과 문항의 선택지를 조회할 수 있다.")
+    void testReadSolveProblemsAndOptions() {
+        String workbookId = "workbook-id";
+        int order = 0;
+
+        List<ProblemVo> mockProblems = List.of(
+                new ProblemVo(
+                        "problem-1",
+                        "Computer",
+                        ProblemType.CHECKBOX,
+                        30
+                ),
+                new ProblemVo(
+                        "problem-2",
+                        "Mouse",
+                        ProblemType.CHECKBOX,
+                        30
+                )
+        );
+        given(workbookRepository.findByIdAndIsDeletedFalse(anyString()))
+                .willReturn(Optional.of(new Workbook("workbook-id", null, "문제집", "", 2, 2, WorkbookTheme.PINK)));
+        given(problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(any(), anyInt(), any()))
+                .willReturn(new SliceImpl<>(mockProblems, PageRequest.of(0, 20), true));
+
+        given(optionRepository.findAllDtoByProblemIdInAndIsDeletedFalse(anyList()))
+                .willReturn(Arrays.asList(
+                        new ProblemOptionVo(
+                                "option-1",
+                                "problem-1",
+                                "스마트폰"
+                        ),
+                        new ProblemOptionVo(
+                                "option-2",
+                                "problem-1",
+                                "컴퓨터"
+                        ),
+                        new ProblemOptionVo(
+                                "option-3",
+                                "problem-2",
+                                "마우스"
+                        ),
+                        new ProblemOptionVo(
+                                "option-4",
+                                "problem-2",
+                                "키보드"
+                        ),
+                        new ProblemOptionVo(
+                                "option-5",
+                                "problem-2",
+                                "트랙패드"
+                        )
+                ));
+
+
+        SliceImpl<ProblemVo> problems = problemService.readSolveProblems(workbookId, order, PageRequest.of(0, 20));
+
+        // 문항 목록의 크기는 고정값 20으로 설정. 변경될 시 변경
+        assertThat(problems.getSize()).isEqualTo(20);
+        assertThat(problems.getContent()).hasSize(mockProblems.size());
+        assertThat(problems.getContent().get(0).getProblemId()).isEqualTo(mockProblems.get(0).getProblemId());
+        assertThat(problems.getContent().get(0).getOptions()).hasSize(2);
+        assertThat(problems.getContent().get(0).getOptions().get(0).getProblemId()).isNull();
     }
 
     private List<ProblemOptionDto> getOptions(int size) {

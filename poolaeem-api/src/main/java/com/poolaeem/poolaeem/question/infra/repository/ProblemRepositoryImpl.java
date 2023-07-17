@@ -86,7 +86,7 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
     }
 
     @Override
-    public SliceImpl<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
+    public SliceImpl<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(Workbook workbook, int order, Pageable pageable) {
         List<ProblemVo> result = queryFactory
                 .select(new QProblemVo(
                         problem.id,
@@ -95,7 +95,7 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
                         problem.timeout
                 ))
                 .from(problem)
-                .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
+                .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse(),
                         problem.order.gt(order))
                 .orderBy(problem.order.asc())
                 .limit(pageable.getPageSize() + 1L)
