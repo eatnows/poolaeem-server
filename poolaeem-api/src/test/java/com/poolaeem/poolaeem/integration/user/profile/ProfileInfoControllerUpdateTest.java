@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RecordApplicationEvents
 @DisplayName("통합: 유저 정보 수정 테스트")
+@Sql(scripts = "classpath:/sql/file/file.sql")
 class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
     private final String UPDATE_USER_NAME = "/api/profile/name";
     private final String UPDATE_PROFILE_IMAGE = "/api/profile/image";

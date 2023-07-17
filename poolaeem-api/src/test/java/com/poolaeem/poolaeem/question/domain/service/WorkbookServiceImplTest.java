@@ -6,7 +6,9 @@ import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
+import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookCreator;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
+import com.poolaeem.poolaeem.question.infra.WorkbookUserClient;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +26,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,6 +38,8 @@ class WorkbookServiceImplTest {
     private WorkbookServiceImpl workbookService;
     @Mock
     private WorkbookRepository workbookRepository;
+    @Mock
+    private WorkbookUserClient workbookUserClient;
 
     @Test
     @DisplayName("문제집을 생성할 수 있다.")
@@ -214,5 +219,33 @@ class WorkbookServiceImplTest {
 
         assertThatThrownBy(() -> workbookService.readWorkbookInfo(workbookId, reqUserId))
                 .isInstanceOf(ForbiddenRequestException.class);
+    }
+
+    @Test
+    @DisplayName("문제집 풀이 소개를 조회할 수 있다.")
+    void testReadWorkbookSolveIntroduction() throws Exception {
+        String workbookId = "workbook-id";
+
+        given(workbookUserClient.readWorkbookCreator(anyString()))
+                .willReturn(new WorkbookCreator(
+                        "만든이",
+                        "https://poolaeem.com/profile/test/123"
+                ));
+        given(workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(new WorkbookVo(
+                        workbookId,
+                        "user-id",
+                        "문제집",
+                        "단어장",
+                        20,
+                        2,
+                        WorkbookTheme.PINK,
+                        ZonedDateTime.now()
+                )));
+
+        WorkbookDto.SolveIntroductionRead info = workbookService.readSolveIntroduction(workbookId);
+
+        assertThat(info.getWorkbookId()).isEqualTo(workbookId);
+        assertThat(info.getCreator().getName()).isEqualTo("만든이");
     }
 }

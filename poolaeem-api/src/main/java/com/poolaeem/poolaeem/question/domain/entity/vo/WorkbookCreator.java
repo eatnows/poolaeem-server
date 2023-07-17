@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.solve.domain.dto;
+package com.poolaeem.poolaeem.question.domain.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

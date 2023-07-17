@@ -27,15 +27,6 @@ endif::[]
 |반환 데이터 값
 |===
 
-== 문제집 풀이 소개 조회
-=== -- Request
-include::{snippets}/solve/question/test-read-workbook-solve-introduction/path-parameters.adoc[]
-include::{snippets}/solve/question/test-read-workbook-solve-introduction/http-request.adoc[]
-=== -- Response
-include::{snippets}/solve/question/test-read-workbook-solve-introduction/response-fields-beneath-data.adoc[]
-NOTE: 성공
-include::{snippets}/solve/question/test-read-workbook-solve-introduction/http-response.adoc[]
-WARNING: 문제집이 존재하지 않음
-include::{snippets}/solve/question/test-read-workbook-solve-introduction-for-not-found/http-response.adoc[]
+
 
 
