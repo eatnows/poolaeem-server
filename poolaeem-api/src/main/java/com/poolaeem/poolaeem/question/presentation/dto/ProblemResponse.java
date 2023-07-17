@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 
@@ -35,6 +36,17 @@ public class ProblemResponse {
         private List<ProblemVo> problems;
         private boolean hasNext;
         public ProblemListRead(Slice<ProblemVo> problems) {
+            this.problems = problems.getContent();
+            this.hasNext = problems.hasNext();
+        }
+    }
+
+    @Getter
+    public static class SolveProblemsRead {
+        private List<ProblemVo> problems;
+        private boolean hasNext;
+
+        public SolveProblemsRead(SliceImpl<ProblemVo> problems) {
             this.problems = problems.getContent();
             this.hasNext = problems.hasNext();
         }

@@ -8,13 +8,21 @@ public class ProblemOptionVo {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String problemId;
     private String value;
-    private boolean isCorrect;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean isCorrect;
 
     @QueryProjection
     public ProblemOptionVo(String id, String value, boolean isCorrect) {
         this.optionId = id;
         this.value = value;
         this.isCorrect = isCorrect;
+    }
+
+    @QueryProjection
+    public ProblemOptionVo(String optionId, String problemId, String value) {
+        this.optionId = optionId;
+        this.problemId = problemId;
+        this.value = value;
     }
 
     public String getOptionId() {
@@ -29,7 +37,11 @@ public class ProblemOptionVo {
         return value;
     }
 
-    public boolean getIsCorrect() {
+    public Boolean getIsCorrect() {
         return isCorrect;
+    }
+
+    public void removeProblemId() {
+        this.problemId = null;
     }
 }

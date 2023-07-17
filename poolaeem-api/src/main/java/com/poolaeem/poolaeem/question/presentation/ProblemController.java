@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -69,6 +70,15 @@ public class ProblemController {
         Slice<ProblemVo> problems = problemService.readProblemList(user.getId(), workbookId, order, PageRequest.of(0, size));
 
         ProblemResponse.ProblemListRead response = new ProblemResponse.ProblemListRead(problems);
+        return ApiResponseDto.OK(response);
+    }
+
+    @GetMapping("/api/workbooks/{workbookId}/problems/solve")
+    public ApiResponseDto<ProblemResponse.SolveProblemsRead> readSolveProblems(@PathVariable String workbookId,
+                                                                               @RequestParam(defaultValue = "0") int order) {
+        SliceImpl<ProblemVo> problems = problemService.readSolveProblems(workbookId, order);
+
+        ProblemResponse.SolveProblemsRead response = new ProblemResponse.SolveProblemsRead(problems);
         return ApiResponseDto.OK(response);
     }
 }

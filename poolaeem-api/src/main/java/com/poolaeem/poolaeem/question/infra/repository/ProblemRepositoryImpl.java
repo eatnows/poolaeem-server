@@ -84,4 +84,29 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
                 .where(QProblem.problem.eq(problem), QProblem.problem.isDeleted.isFalse())
                 .execute();
     }
+
+    @Override
+    public SliceImpl<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
+        List<ProblemVo> result = queryFactory
+                .select(new QProblemVo(
+                        problem.id,
+                        problem.question,
+                        problem.type,
+                        problem.timeout
+                ))
+                .from(problem)
+                .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
+                        problem.order.gt(order))
+                .orderBy(problem.order.asc())
+                .limit(pageable.getPageSize() + 1L)
+                .fetch();
+
+        boolean hasNext = false;
+        if (result.size() > pageable.getPageSize()) {
+            hasNext = true;
+            result.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(result, pageable, hasNext);
+    }
 }

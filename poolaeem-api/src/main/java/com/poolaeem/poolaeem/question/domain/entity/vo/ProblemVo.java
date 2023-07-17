@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,8 @@ public class ProblemVo {
     private ProblemType type;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer timeout;
-    private int optionCount;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer optionCount;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ProblemOptionVo> options;
 
@@ -36,5 +38,27 @@ public class ProblemVo {
         this.question = question;
         this.type = type;
         this.optionCount = optionCount;
+    }
+
+    @QueryProjection
+    public ProblemVo(String problemId, String question, ProblemType type, Integer timeout) {
+        this.problemId = problemId;
+        this.question = question;
+        this.type = type;
+        this.timeout = timeout;
+    }
+
+    public void addAllOptions(List<ProblemOptionVo> problemOptions) {
+        if (this.options == null) {
+            this.options = new ArrayList<>();
+        }
+        this.options.addAll(problemOptions);
+    }
+
+    public void addOption(ProblemOptionVo problemOption) {
+        if (this.options == null) {
+            this.options = new ArrayList<>();
+        }
+        this.options.add(problemOption);
     }
 }

@@ -12,11 +12,4 @@ public class SolveController {
     }
 
 
-
-//    @GetMapping("/api/workbooks/{workbookId}/problems/solve")
-//    public ApiResponseDto<?> readSolveProblems(@PathVariable String workbookId,
-//                                               @RequestParam int order) {
-//        solveService.readSolveProblems(workbookId, order);
-//        return ApiResponseDto.OK();
-//    }
 }

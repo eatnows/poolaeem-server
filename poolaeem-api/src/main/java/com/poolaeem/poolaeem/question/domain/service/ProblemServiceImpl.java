@@ -19,14 +19,14 @@ import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -103,6 +103,32 @@ public class ProblemServiceImpl implements ProblemService {
         validWorkbookManage(workbook.getUserId(), userId);
 
         return problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order) {
+        Pageable pageable = PageRequest.of(0, 20);
+        SliceImpl<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
+
+        addOptionsInProblem(problems.getContent());
+
+        return problems;
+    }
+
+    private void addOptionsInProblem(List<ProblemVo> problems) {
+        List<String> problemIds = problems.stream().map(ProblemVo::getProblemId).toList();
+
+        List<ProblemOptionVo> options = problemOptionRepository.findAllDtoByProblemIdInAndIsDeletedFalse(problemIds);
+        Collections.shuffle(options);
+
+        Map<String, ProblemVo> map = problems.stream().collect(Collectors.toMap(ProblemVo::getProblemId, Function.identity()));
+
+        for (ProblemOptionVo option : options) {
+            ProblemVo problemVo = map.get(option.getProblemId());
+            option.removeProblemId();
+            problemVo.addOption(option);
+        }
     }
 
     private void decreaseProblemCount(String workbookId) {

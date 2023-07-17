@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface ProblemRepositoryCustom {
     Slice<ProblemVo> findAllByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable);
 
     void softDelete(Problem problem);
+
+    SliceImpl<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable);
 }
