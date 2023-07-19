@@ -4,7 +4,8 @@ import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+
+import java.util.List;
 
 public interface ProblemService {
     void createProblem(ProblemDto.ProblemCreateParam param);
@@ -17,5 +18,7 @@ public interface ProblemService {
 
     Slice<ProblemVo> readProblemList(String userId, String workbookId, int order, Pageable pageable);
 
-    SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order, Pageable of);
+    Slice<ProblemVo> readSolveProblems(String workbookId, int order, Pageable of);
+
+    List<ProblemVo> getCorrectAnswers(String workbookId);
 }

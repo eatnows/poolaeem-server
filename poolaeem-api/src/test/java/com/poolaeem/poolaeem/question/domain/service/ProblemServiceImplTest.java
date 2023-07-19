@@ -64,6 +64,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto("세계", false),
                         new ProblemOptionDto("나무", false),
@@ -96,6 +97,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 TextGenerator.generate(length),
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto("세계", false),
                         new ProblemOptionDto("나무", false),
@@ -122,6 +124,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 getOptions(size)
         );
 
@@ -139,6 +142,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto(TextGenerator.generate(length), false))
         );
@@ -157,6 +161,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", isCorrect),
                         new ProblemOptionDto("단어2", isCorrect))
         );
@@ -174,6 +179,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto("세계", false)
                 )
@@ -349,15 +355,15 @@ class ProblemServiceImplTest {
                 .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null, ZonedDateTime.now())));
         SliceImpl<ProblemVo> mockSlice = new SliceImpl<>(
                 List.of(
-                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),
-                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2),
-                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10),
-                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5)
+                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, 30),
+                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, 30),
+                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, 30),
+                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, 30)
                 ),
                 pageable,
                 true
         );
-        given(problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable))
+        given(problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable))
                 .willReturn(mockSlice);
 
         Slice<ProblemVo> result = problemService.readProblemList(userId, workbookId, order, pageable);
@@ -377,12 +383,14 @@ class ProblemServiceImplTest {
                         "problem-1",
                         "Computer",
                         ProblemType.CHECKBOX,
+                        10,
                         30
                 ),
                 new ProblemVo(
                         "problem-2",
                         "Mouse",
                         ProblemType.CHECKBOX,
+                        10,
                         30
                 )
         );
@@ -421,7 +429,7 @@ class ProblemServiceImplTest {
                 ));
 
 
-        SliceImpl<ProblemVo> problems = problemService.readSolveProblems(workbookId, order, PageRequest.of(0, 20));
+        Slice<ProblemVo> problems = problemService.readSolveProblems(workbookId, order, PageRequest.of(0, 20));
 
         // 문항 목록의 크기는 고정값 20으로 설정. 변경될 시 변경
         assertThat(problems.getSize()).isEqualTo(20);

@@ -21,7 +21,6 @@ import com.poolaeem.poolaeem.question.infra.repository.ProblemRepository;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,17 +100,40 @@ public class ProblemServiceImpl implements ProblemService {
                 .orElseThrow(WorkbookNotFoundException::new);
         validWorkbookManage(workbook.getUserId(), userId);
 
-        return problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
+        return problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public SliceImpl<ProblemVo> readSolveProblems(String workbookId, int order, Pageable pageable) {
-        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(workbookId)
+    public Slice<ProblemVo> readSolveProblems(String workbookId, int order, Pageable pageable) {
+        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
-        SliceImpl<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbook, order, pageable);
+        Slice<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbook.getId(), order, pageable);
 
         addOptionsInProblem(problems.getContent());
+
+        return problems;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProblemVo> getCorrectAnswers(String workbookId) {
+        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+
+        List<String> problemIds = problemRepository.findAllProblemIdByWorkbook(workbook);
+        List<ProblemOptionVo> options = problemOptionRepository.findAllCorrectAnswerByWorkbook(workbook);
+
+        List<ProblemVo> problems = problemIds.stream().map(id -> new ProblemVo(id, null, null, null, null))
+                .toList();
+        Map<String, ProblemVo> map = problems.stream()
+                .collect(Collectors.toMap(ProblemVo::getProblemId, Function.identity()));
+
+        for (ProblemOptionVo option : options) {
+            ProblemVo problemVo = map.get(option.getProblemId());
+
+            problemVo.addOption(option);
+        }
 
         return problems;
     }

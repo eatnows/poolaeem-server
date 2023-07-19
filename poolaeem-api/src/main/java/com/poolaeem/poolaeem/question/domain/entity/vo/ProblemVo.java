@@ -33,18 +33,11 @@ public class ProblemVo {
     }
 
     @QueryProjection
-    public ProblemVo(String problemId, String question, ProblemType type, int optionCount) {
+    public ProblemVo(String problemId, String question, ProblemType type, Integer optionCount, Integer timeout) {
         this.problemId = problemId;
         this.question = question;
         this.type = type;
         this.optionCount = optionCount;
-    }
-
-    @QueryProjection
-    public ProblemVo(String problemId, String question, ProblemType type, Integer timeout) {
-        this.problemId = problemId;
-        this.question = question;
-        this.type = type;
         this.timeout = timeout;
     }
 

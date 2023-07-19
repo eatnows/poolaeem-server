@@ -23,4 +23,13 @@ public class EventsPublisherWorkbookEvent {
             this.workbookId = workbookId;
         }
     }
+
+    @Getter
+    public static class SolvedCountAddEvent {
+        private String workbookId;
+
+        public SolvedCountAddEvent(String workbookId) {
+            this.workbookId = workbookId;
+        }
+    }
 }

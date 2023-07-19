@@ -30,10 +30,11 @@ public class ProblemDto {
         @Size(min = ProblemValidation.OPTION_MIN_SIZE, max = ProblemValidation.OPTION_MAX_SIZE)
         private List<ProblemOptionDto> options = new ArrayList<>();
 
-        public ProblemCreateParam(String workbookId, String reqUserId, String question, List<ProblemOptionDto> options) {
+        public ProblemCreateParam(String workbookId, String reqUserId, String question, ProblemType type, List<ProblemOptionDto> options) {
             this.workbookId = workbookId;
             this.reqUserId = reqUserId;
             this.question = question;
+            this.type = type;
             this.options = options;
         }
     }

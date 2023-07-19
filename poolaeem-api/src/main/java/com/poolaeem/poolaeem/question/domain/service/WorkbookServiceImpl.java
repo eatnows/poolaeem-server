@@ -76,13 +76,6 @@ public class WorkbookServiceImpl implements WorkbookService {
 
     @Transactional(readOnly = true)
     @Override
-    public WorkbookVo readWorkbookInfoForSolve(String workbookId) {
-        return workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId) {
         WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
@@ -100,8 +93,14 @@ public class WorkbookServiceImpl implements WorkbookService {
         );
     }
 
-    private Workbook getWorkbookEntity(String workbookdId) {
-        return workbookRepository.findByIdAndIsDeletedFalse(workbookdId)
+    @Transactional
+    @Override
+    public void increaseSolvedCount(String workbookId) {
+        workbookRepository.updateIncreaseSolvedCountByWorkbookId(workbookId);
+    }
+
+    private Workbook getWorkbookEntity(String workbookId) {
+        return workbookRepository.findByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
     }
 

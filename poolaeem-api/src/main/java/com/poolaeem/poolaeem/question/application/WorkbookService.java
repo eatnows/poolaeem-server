@@ -15,8 +15,8 @@ public interface WorkbookService {
 
     void decreaseProblemCount(String workbookId);
 
-    WorkbookVo readWorkbookInfoForSolve(String workbookId);
-
     @Transactional(readOnly = true)
     WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId);
+
+    void increaseSolvedCount(String workbookId);
 }

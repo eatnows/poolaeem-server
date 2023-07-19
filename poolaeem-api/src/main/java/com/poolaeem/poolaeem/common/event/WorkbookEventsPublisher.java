@@ -19,7 +19,13 @@ public class WorkbookEventsPublisher {
     }
 
     public void publish(EventsPublisherWorkbookEvent.ProblemDeleteEvent event) {
-        if (event == null) throw new NullPointerException("문항 삭제 이벤트가 존재하지 않습니다");
+        if (event == null) throw new NullPointerException("문항 삭제 이벤트가 존재하지 않습니다.");
+
+        publisher.publishEvent(event);
+    }
+
+    public void publish(EventsPublisherWorkbookEvent.SolvedCountAddEvent event) {
+        if (event == null) throw new NullPointerException("풀이 횟수 증가 이벤트가 존재하지 않습니다.");
 
         publisher.publishEvent(event);
     }

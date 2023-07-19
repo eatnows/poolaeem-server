@@ -50,31 +50,6 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
     }
 
     @Override
-    public Slice<ProblemVo> findAllByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
-        List<ProblemVo> list = queryFactory
-                .select(new QProblemVo(
-                        problem.id,
-                        problem.question,
-                        problem.type,
-                        problem.optionCount
-                ))
-                .from(problem)
-                .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
-                        problem.order.gt(order))
-                .orderBy(problem.order.asc())
-                .limit(pageable.getPageSize() + 1L)
-                .fetch();
-
-        boolean hasNext = false;
-        if (list.size() > pageable.getPageSize()) {
-            hasNext = true;
-            list.remove(pageable.getPageSize());
-        }
-
-        return new SliceImpl<>(list, pageable, hasNext);
-    }
-
-    @Override
     public void softDelete(Problem problem) {
         queryFactory
                 .update(QProblem.problem)
@@ -86,16 +61,17 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
     }
 
     @Override
-    public SliceImpl<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(Workbook workbook, int order, Pageable pageable) {
+    public Slice<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
         List<ProblemVo> result = queryFactory
                 .select(new QProblemVo(
                         problem.id,
                         problem.question,
                         problem.type,
+                        problem.optionCount,
                         problem.timeout
                 ))
                 .from(problem)
-                .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse(),
+                .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
                         problem.order.gt(order))
                 .orderBy(problem.order.asc())
                 .limit(pageable.getPageSize() + 1L)
@@ -108,5 +84,14 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
         }
 
         return new SliceImpl<>(result, pageable, hasNext);
+    }
+
+    @Override
+    public List<String> findAllProblemIdByWorkbook(Workbook workbook) {
+        return queryFactory
+                .select(problem.id)
+                .from(problem)
+                .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
+                .fetch();
     }
 }
