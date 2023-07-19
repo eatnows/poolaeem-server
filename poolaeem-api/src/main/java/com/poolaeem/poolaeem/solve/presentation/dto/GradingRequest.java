@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SolveRequest {
+public class GradingRequest {
 
     @Getter
-    public static class WorkbookSolve {
+    public static class WorkbookGrade {
         private String name;
         private List<UserAnswer> problems;
 
-        public WorkbookSolve(String name, List<UserAnswer> problems) {
+        public WorkbookGrade(String name, List<UserAnswer> problems) {
             this.name = name;
             this.problems = problems;
         }

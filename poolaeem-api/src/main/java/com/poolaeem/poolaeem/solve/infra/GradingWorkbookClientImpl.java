@@ -11,10 +11,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class SolveWorkbookClientImpl implements SolveWorkbookClient {
+public class GradingWorkbookClientImpl implements GradingWorkbookClient {
     private final ProblemService problemService;
 
-    public SolveWorkbookClientImpl(ProblemService problemService) {
+    public GradingWorkbookClientImpl(ProblemService problemService) {
         this.problemService = problemService;
     }
 

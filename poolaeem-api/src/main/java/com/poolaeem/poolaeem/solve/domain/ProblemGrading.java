@@ -24,16 +24,16 @@ public class ProblemGrading {
         }
     }
 
-    public boolean doGrading(List<String> userAnswers) {
-        if (correctAnswers.size() != userAnswers.size()) {
-            isCorrect = false;
+    public boolean grade(List<String> userAnswers) {
+        List<String> distinctAnswers = userAnswers.stream().distinct().toList();
+        if (correctAnswers.size() != distinctAnswers.size()) {
             return false;
         }
         isCorrect = true;
-        for (String answer : userAnswers) {
+        for (String answer : distinctAnswers) {
             if (!correctAnswers.contains(answer.toLowerCase())) {
                 isCorrect = false;
-                return false;
+                break;
             }
         }
 
