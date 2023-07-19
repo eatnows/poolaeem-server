@@ -1,7 +1,6 @@
 package com.poolaeem.poolaeem.solve.domain;
 
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
-import com.poolaeem.poolaeem.solve.domain.dto.AnswerDto;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -25,18 +24,16 @@ public class ProblemGrading {
         }
     }
 
-    public boolean doGrading(List<AnswerDto> userAnswers) {
+    public boolean doGrading(List<String> userAnswers) {
         if (correctAnswers.size() != userAnswers.size()) {
             isCorrect = false;
             return false;
         }
         isCorrect = true;
-        for (AnswerDto userAnswer : userAnswers) {
-            for (String answer : userAnswer.getAnswer()) {
-                if (!correctAnswers.contains(answer.toLowerCase())) {
-                    isCorrect = false;
-                    return false;
-                }
+        for (String answer : userAnswers) {
+            if (!correctAnswers.contains(answer.toLowerCase())) {
+                isCorrect = false;
+                return false;
             }
         }
 

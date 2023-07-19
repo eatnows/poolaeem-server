@@ -14,5 +14,10 @@ public class SolveRequest {
     public static class WorkbookSolve {
         private String name;
         private List<UserAnswer> problems;
+
+        public WorkbookSolve(String name, List<UserAnswer> problems) {
+            this.name = name;
+            this.problems = problems;
+        }
     }
 }

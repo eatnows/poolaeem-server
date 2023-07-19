@@ -7,10 +7,7 @@ Content-Type: application/json
     {
       "problemId": "01ee2610504f4bfc8cdc87ad1a9e836d",
       "answers": [
-        {
-          "optionId": "01ee2610b954435a9cc67e6f3b3c6097",
-          "answer": ["게임"]
-        }
+          "게임1"
       ]
     }
   ]
