@@ -17,8 +17,8 @@ import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessToken;
 import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.poolaeem.poolaeem.security.oauth2.service.CustomOAuth2UserService;
 import com.poolaeem.poolaeem.security.oauth2.service.CustomOidcUserService;
-import com.poolaeem.poolaeem.solve.application.SolveService;
-import com.poolaeem.poolaeem.solve.presentation.SolveController;
+import com.poolaeem.poolaeem.solve.application.GradingService;
+import com.poolaeem.poolaeem.solve.presentation.GradingController;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
@@ -54,7 +54,7 @@ import static org.mockito.BDDMockito.given;
             ProfileInfoController.class,
             WorkbookController.class,
             ProblemController.class,
-            SolveController.class
+            GradingController.class
     },
     properties = "spring.config.location=classpath:/application.yml"
 )
@@ -127,5 +127,5 @@ public abstract class ApiDocumentationTest {
     @MockBean
     protected ProblemService problemService;
     @MockBean
-    protected SolveService solveService;
+    protected GradingService gradingService;
 }

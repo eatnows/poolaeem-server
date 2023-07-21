@@ -1817,6 +1817,12 @@ Host: poolaeem.com</code></pre>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">선택지 개수</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>problems[].timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">풀이 제한시간</p></td>
+</tr>
 </tbody>
 </table>
 <div class="listingblock">
@@ -1826,7 +1832,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 569
+Content-Length: 657
 
 {
   "code" : 0,
@@ -1835,21 +1841,25 @@ Content-Length: 569
       "problemId" : "problem-1",
       "question" : "Computer",
       "type" : "CHECKBOX",
+      "timeout" : 30,
       "optionCount" : 4
     }, {
       "problemId" : "problem-2",
       "question" : "Mouse",
       "type" : "CHECKBOX",
+      "timeout" : 30,
       "optionCount" : 2
     }, {
       "problemId" : "problem-2",
       "question" : "Monitor",
       "type" : "CHECKBOX",
+      "timeout" : 30,
       "optionCount" : 10
     }, {
       "problemId" : "problem-2",
       "question" : "keyboard",
       "type" : "CHECKBOX",
+      "timeout" : 30,
       "optionCount" : 5
     } ],
     "hasNext" : true

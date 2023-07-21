@@ -394,8 +394,8 @@ class ProblemServiceImplTest {
                         30
                 )
         );
-        given(workbookRepository.findByIdAndIsDeletedFalse(anyString()))
-                .willReturn(Optional.of(new Workbook("workbook-id", null, "문제집", "", 2, 2, WorkbookTheme.PINK)));
+        given(workbookRepository.findDtoByIdAndIsDeletedFalse(anyString()))
+                .willReturn(Optional.of(new WorkbookVo("workbook-id", null, "문제집", "", 2, 2, WorkbookTheme.PINK, ZonedDateTime.now())));
         given(problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(any(), anyInt(), any()))
                 .willReturn(new SliceImpl<>(mockProblems, PageRequest.of(0, 20), true));
 
@@ -437,6 +437,37 @@ class ProblemServiceImplTest {
         assertThat(problems.getContent().get(0).getProblemId()).isEqualTo(mockProblems.get(0).getProblemId());
         assertThat(problems.getContent().get(0).getOptions()).hasSize(2);
         assertThat(problems.getContent().get(0).getOptions().get(0).getProblemId()).isNull();
+    }
+
+    @Test
+    @DisplayName("문제집의 모든 문항과 정답을 조회할 수 있다.")
+    void testReadCorrectAnswersInWorkbook() {
+        String workbookId = "workbook-id";
+
+        Workbook mockWorkbook = new Workbook(workbookId, null, null, null, 0, 0, WorkbookTheme.PINK);
+        given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(mockWorkbook));
+
+        ProblemVo mockProblem1 = new ProblemVo("problem-1", ProblemType.CHECKBOX);
+        ProblemVo mockProblem2 = new ProblemVo("problem-2", ProblemType.SUBJECTIVE);
+        given(problemRepository.findAllProblemIdAndTypeByWorkbook(mockWorkbook))
+                .willReturn(List.of(mockProblem1, mockProblem2));
+        ProblemOptionVo mockOption1 = new ProblemOptionVo("option-1", "problem-1","객관식정답1");
+        ProblemOptionVo mockOption2 = new ProblemOptionVo("option-2", "problem-1", "객관식정답2");
+        ProblemOptionVo mockOption3 = new ProblemOptionVo("option-3", "problem-2", "서술형정답");
+        given(optionRepository.findAllCorrectAnswerByWorkbook(mockWorkbook))
+                .willReturn(List.of(mockOption1, mockOption2, mockOption3));
+
+        List<ProblemVo> correctAnswers = problemService.getCorrectAnswers(workbookId);
+
+        assertThat(correctAnswers).hasSize(2);
+        assertThat(correctAnswers.get(0).getProblemId()).isEqualTo("problem-1");
+        assertThat(correctAnswers.get(0).getOptions()).hasSize(2);
+        assertThat(correctAnswers.get(0).getOptions().get(0).getOptionId()).isEqualTo("option-1");
+        assertThat(correctAnswers.get(0).getOptions().get(1).getOptionId()).isEqualTo("option-2");
+        assertThat(correctAnswers.get(1).getProblemId()).isEqualTo("problem-2");
+        assertThat(correctAnswers.get(1).getOptions()).hasSize(1);
+        assertThat(correctAnswers.get(1).getOptions().get(0).getOptionId()).isEqualTo("option-3");
     }
 
     private List<ProblemOptionDto> getOptions(int size) {
