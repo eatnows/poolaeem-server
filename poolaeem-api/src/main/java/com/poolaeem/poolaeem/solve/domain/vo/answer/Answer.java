@@ -1,7 +1,6 @@
 package com.poolaeem.poolaeem.solve.domain.vo.answer;
 
 
-import com.poolaeem.poolaeem.solve.domain.dto.SelectAnswer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

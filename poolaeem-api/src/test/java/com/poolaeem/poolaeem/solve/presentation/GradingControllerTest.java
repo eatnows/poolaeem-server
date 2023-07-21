@@ -1,7 +1,7 @@
 package com.poolaeem.poolaeem.solve.presentation;
 
 
-import com.poolaeem.poolaeem.solve.domain.dto.SelectAnswer;
+import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 import com.poolaeem.poolaeem.solve.domain.dto.UserAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.Answer;
 import com.poolaeem.poolaeem.solve.presentation.dto.GradingRequest;

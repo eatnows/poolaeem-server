@@ -3,7 +3,7 @@ package com.poolaeem.poolaeem.solve.domain.vo.problem;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.Answer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.MultipleOptionAnswer;
-import com.poolaeem.poolaeem.solve.domain.dto.SelectAnswer;
+import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 
 import java.util.HashMap;
 import java.util.List;

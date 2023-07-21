@@ -4,7 +4,7 @@ import com.poolaeem.poolaeem.common.event.WorkbookEventsPublisher;
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherWorkbookEvent;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
-import com.poolaeem.poolaeem.solve.domain.dto.SelectAnswer;
+import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.Answer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.MultipleOptionAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.problem.CheckBoxProblem;

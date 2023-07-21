@@ -4,7 +4,7 @@ import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
-import com.poolaeem.poolaeem.solve.domain.dto.SelectAnswer;
+import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.MultipleOptionAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.SubjectiveAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.problem.CheckBoxProblem;

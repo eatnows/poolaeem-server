@@ -1,4 +1,4 @@
-package com.poolaeem.poolaeem.solve.domain.dto;
+package com.poolaeem.poolaeem.solve.domain.vo.answer;
 
 import lombok.Getter;
 
