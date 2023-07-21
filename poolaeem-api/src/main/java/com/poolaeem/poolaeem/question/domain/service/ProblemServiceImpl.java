@@ -121,11 +121,10 @@ public class ProblemServiceImpl implements ProblemService {
         Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
 
-        List<String> problemIds = problemRepository.findAllProblemIdByWorkbook(workbook);
+        List<ProblemVo> problems = problemRepository.findAllProblemIdAndTypeByWorkbook(workbook);
         List<ProblemOptionVo> options = problemOptionRepository.findAllCorrectAnswerByWorkbook(workbook);
 
-        List<ProblemVo> problems = problemIds.stream().map(id -> new ProblemVo(id, null, null, null, null))
-                .toList();
+
         Map<String, ProblemVo> map = problems.stream()
                 .collect(Collectors.toMap(ProblemVo::getProblemId, Function.identity()));
 

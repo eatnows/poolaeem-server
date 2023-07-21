@@ -41,6 +41,12 @@ public class ProblemVo {
         this.timeout = timeout;
     }
 
+    @QueryProjection
+    public ProblemVo(String problemId, ProblemType type) {
+        this.problemId = problemId;
+        this.type = type;
+    }
+
     public void addAllOptions(List<ProblemOptionVo> problemOptions) {
         if (this.options == null) {
             this.options = new ArrayList<>();

@@ -18,5 +18,5 @@ public interface ProblemRepositoryCustom {
 
     Slice<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable);
 
-    List<String> findAllProblemIdByWorkbook(Workbook workbook);
+    List<ProblemVo> findAllProblemIdAndTypeByWorkbook(Workbook workbook);
 }

@@ -1,6 +1,6 @@
 package com.poolaeem.poolaeem.solve.infra;
 
-import com.poolaeem.poolaeem.solve.domain.ProblemGrading;
+import com.poolaeem.poolaeem.solve.domain.vo.problem.ProblemGrading;
 
 import java.util.Map;
 

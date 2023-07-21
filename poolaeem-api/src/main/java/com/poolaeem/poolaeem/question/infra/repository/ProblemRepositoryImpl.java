@@ -87,9 +87,12 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
     }
 
     @Override
-    public List<String> findAllProblemIdByWorkbook(Workbook workbook) {
+    public List<ProblemVo> findAllProblemIdAndTypeByWorkbook(Workbook workbook) {
         return queryFactory
-                .select(problem.id)
+                .select(new QProblemVo(
+                        problem.id,
+                        problem.type
+                ))
                 .from(problem)
                 .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
                 .fetch();

@@ -1,10 +1,10 @@
 package com.poolaeem.poolaeem.solve.domain.dto;
 
-import com.poolaeem.poolaeem.solve.domain.UserAnswer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -14,7 +14,7 @@ public class SolveDto {
         private String userId;
         private String workbookId;
         private String name;
-        private List<UserAnswer> problems;
+        private List<UserAnswer> problems = new ArrayList<>();
 
         public WorkbookGradingParam(String userId, String workbookId, String name, List<UserAnswer> problems) {
             this.userId = userId;

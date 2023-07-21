@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/workbooks/01ee25fe37c84ee28d2a45504f474d66/solve
+POST http://localhost:8080/api/workbooks/01ee25fe37c84ee28d2a45504f474d66/grade
 Content-Type: application/json
 
 {
@@ -6,9 +6,14 @@ Content-Type: application/json
   "problems": [
     {
       "problemId": "01ee2610504f4bfc8cdc87ad1a9e836d",
-      "answers": [
-          "게임1"
-      ]
+      "answer": {
+        "values": [
+          {
+            "optionId": "01ee2610b954435a9cc67e6f3b3c6097",
+            "answer": "게임"
+          }
+        ]
+      }
     }
   ]
 }
