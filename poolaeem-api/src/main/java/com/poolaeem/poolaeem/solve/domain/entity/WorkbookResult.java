@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.solve.domain.entity;
 
+import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class WorkbookResult {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "workbook_id", nullable = false)
     private String workbookId;
@@ -43,5 +43,10 @@ public class WorkbookResult {
         this.userName = userName;
         this.totalQuestion = totalQuestion;
         this.correctCount = correctCount;
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.id = UUIDGenerator.generate();
     }
 }

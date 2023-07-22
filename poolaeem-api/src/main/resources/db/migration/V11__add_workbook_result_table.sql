@@ -1,5 +1,5 @@
 CREATE TABLE workbook_result (
-    `id` bigint(11) not null auto_increment,
+    `id` varchar(32) not null,
     `workbook_id` varchar(32) not null,
     `user_id` varchar(32) default null,
     `user_name` varchar(300) not null,

@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.solve.domain.vo.problem;
 
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
+import com.poolaeem.poolaeem.solve.domain.entity.AnswerResult;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.Answer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.MultipleOptionAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
@@ -22,18 +23,22 @@ public class CheckBoxProblem extends ProblemGrading {
     }
 
     @Override
-    public boolean grade(Answer userAnswers) {
+    public boolean grade(Answer userAnswers, List<AnswerResult> answerResults) {
+        isCorrect = true;
         List<SelectAnswer> answers = userAnswers.getValues();
         if (answerMap.size() != answers.size()) {
-            return false;
+            isCorrect = false;
         }
 
         for (SelectAnswer answer : answers) {
             if (!answerMap.containsKey(answer.getOptionId())) {
-                return false;
+                isCorrect = false;
+                answerResults.add(new AnswerResult(getProblemId(), answer.getAnswer(), false));
+                continue;
             }
+            answerResults.add(new AnswerResult(getProblemId(), answer.getAnswer(), true));
         }
 
-        return true;
+        return isCorrect;
     }
 }
