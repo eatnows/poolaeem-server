@@ -17,8 +17,8 @@ public class ValidationExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<ApiResponseDto<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         try {
-            ApiResponseCode apiResponseCode = ApiResponseCode.REQUEST_VALIDATION;
-            ApiResponseDto<String> responseDto = new ApiResponseDto<>(apiResponseCode, apiResponseCode.getMessage());
+            ApiResponseCode apiResponseCode = ApiResponseCode.BAD_REQUEST_DATA;
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(apiResponseCode, e.getMessage());
 
             log.info("> method argument not valid exception: ", e);
 
@@ -35,7 +35,7 @@ public class ValidationExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     private ResponseEntity<ApiResponseDto<String>> handleValidationException(ValidationException e) {
         try {
-            ApiResponseCode apiResponseCode = ApiResponseCode.REQUEST_VALIDATION;
+            ApiResponseCode apiResponseCode = ApiResponseCode.BAD_REQUEST_DATA;
             ApiResponseDto<String> responseDto = new ApiResponseDto<>(apiResponseCode, apiResponseCode.getMessage());
 
             log.info("> validation exception: ", e);

@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.integration.question.workbook;
 
+import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.component.TextGenerator;
@@ -74,8 +75,8 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
                                 )))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isBadRequest())
-                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(MethodArgumentNotValidException.class))
-                .andExpect(jsonPath("$.code", is(ApiResponseCode.REQUEST_VALIDATION.getCode())));
+                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class))
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.BAD_REQUEST_DATA.getCode())));
     }
 
     @ParameterizedTest
@@ -95,8 +96,8 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
                                 )))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isBadRequest())
-                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(MethodArgumentNotValidException.class))
-                .andExpect(jsonPath("$.code", is(ApiResponseCode.REQUEST_VALIDATION.getCode())));
+                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class))
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.BAD_REQUEST_DATA.getCode())));
     }
 
     @Test

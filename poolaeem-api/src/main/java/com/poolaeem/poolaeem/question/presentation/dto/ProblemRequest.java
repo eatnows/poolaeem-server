@@ -5,11 +5,9 @@ import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.question.domain.validation.ProblemValidation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +16,10 @@ import java.util.List;
 public class ProblemRequest {
     @Getter
     public static class ProblemCreate {
-        @NotBlank
-        @Length(min = ProblemValidation.QUESTION_MIN_LENGTH, max = ProblemValidation.QUESTION_MAX_LENGTH)
+        @NotBlank(message = ProblemValidation.Message.QUESTION_LENGTH)
         private String question;
-        @NotNull
+        @NotNull(message = ProblemValidation.Message.PROBLEM_TYPE)
         private ProblemType type;
-        @Size.List(value = @Size(max = 10))
         private List<ProblemOptionDto> options = new ArrayList<>();
 
         public ProblemCreate(String question, ProblemType type, List<ProblemOptionDto> options) {
@@ -35,12 +31,10 @@ public class ProblemRequest {
 
     @Getter
     public static class ProblemUpdate {
-        @NotBlank
-        @Length(min = ProblemValidation.QUESTION_MIN_LENGTH, max = ProblemValidation.QUESTION_MAX_LENGTH)
+        @NotBlank(message = ProblemValidation.Message.QUESTION_LENGTH)
         private String question;
-        @NotNull
+        @NotNull(message = ProblemValidation.Message.PROBLEM_TYPE)
         private ProblemType type;
-        @Size.List(value = @Size(max = 10))
         private List<ProblemOptionDto> options = new ArrayList<>();
 
         public ProblemUpdate(String question, ProblemType type, List<ProblemOptionDto> options) {

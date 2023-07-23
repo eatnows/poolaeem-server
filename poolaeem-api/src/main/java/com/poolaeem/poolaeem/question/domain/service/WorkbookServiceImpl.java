@@ -1,8 +1,8 @@
 package com.poolaeem.poolaeem.question.domain.service;
 
+import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
-import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
@@ -56,7 +56,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Override
     public WorkbookVo readWorkbookInfo(String workbookId, String reqUserId) {
         WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
         validManage(workbook.getUserId(), reqUserId);
 
         return workbook;
@@ -78,7 +78,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Override
     public WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId) {
         WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
         WorkbookCreator creator = workbookUserClient.readWorkbookCreator(workbook.getUserId());
 
         return new WorkbookDto.SolveIntroductionRead (
@@ -101,7 +101,7 @@ public class WorkbookServiceImpl implements WorkbookService {
 
     private Workbook getWorkbookEntity(String workbookId) {
         return workbookRepository.findByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
     }
 
     private void validManage(String ownerUserId, String reqUserId) {
@@ -115,10 +115,10 @@ public class WorkbookServiceImpl implements WorkbookService {
             throw new BadRequestDataException();
         }
         if (name.length() < WorkbookValidation.NAME_MIN_LENGTH || name.length() > WorkbookValidation.NAME_MAX_LENGTH) {
-            throw new BadRequestDataException();
+            throw new BadRequestDataException(WorkbookValidation.Message.WORKBOOK_NAME_LENGTH);
         }
         if (description.length() < WorkbookValidation.DESCRIPTION_MIN_LENGTH || description.length() > WorkbookValidation.DESCRIPTION_MAX_LENGTH) {
-            throw new BadRequestDataException();
+            throw new BadRequestDataException(WorkbookValidation.Message.DESCRIPTION_LENGTH);
         }
     }
 

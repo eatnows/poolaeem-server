@@ -1,6 +1,6 @@
 package com.poolaeem.poolaeem.question.presentation;
 
-import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
+import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookCreator;
 import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
@@ -215,7 +215,7 @@ class WorkbookControllerTest extends ApiDocumentationTest {
         String workbookId = "not-exist-workbook";
 
         given(workbookService.readSolveIntroduction(workbookId))
-                .willThrow(new WorkbookNotFoundException());
+                .willThrow(new EntityNotFoundException());
 
         ResultActions result = this.mockMvc.perform(
                 get(READ_WORKBOOK_SOLVE_INTRODUCTION, workbookId)
