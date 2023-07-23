@@ -2,9 +2,11 @@ package com.poolaeem.poolaeem.solve.domain.vo.problem;
 
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.solve.domain.entity.AnswerResult;
+import com.poolaeem.poolaeem.solve.domain.entity.ProblemResult;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.Answer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.SubjectiveAnswer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectiveProblem extends ProblemGrading {
@@ -14,17 +16,19 @@ public class SubjectiveProblem extends ProblemGrading {
     }
 
     @Override
-    public boolean grade(Answer userAnswers, List<AnswerResult> answerResults) {
+    public QuestionResultVo grade(Answer userAnswers) {
         String userValue = userAnswers.getValue();
         SubjectiveAnswer correctAnswer = (SubjectiveAnswer) getAnswer();
+        isCorrect = true;
 
-        isCorrect = false;
+        List<AnswerResult> results = new ArrayList<>();
         if (correctAnswer.grade(userValue)) {
-            isCorrect = true;
+            results.add(new AnswerResult(getProblemId(), userValue, true));
+        } else {
+            isCorrect = false;
+            results.add(new AnswerResult(getProblemId(), userValue, false));
         }
 
-        answerResults.add(new AnswerResult(getProblemId(), userValue, isCorrect));
-
-        return isCorrect;
+        return new QuestionResultVo(new ProblemResult(getProblemId(), isCorrect), results);
     }
 }

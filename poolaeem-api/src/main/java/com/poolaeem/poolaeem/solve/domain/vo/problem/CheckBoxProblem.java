@@ -2,10 +2,12 @@ package com.poolaeem.poolaeem.solve.domain.vo.problem;
 
 import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import com.poolaeem.poolaeem.solve.domain.entity.AnswerResult;
+import com.poolaeem.poolaeem.solve.domain.entity.ProblemResult;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.Answer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.MultipleOptionAnswer;
 import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,22 +25,27 @@ public class CheckBoxProblem extends ProblemGrading {
     }
 
     @Override
-    public boolean grade(Answer userAnswers, List<AnswerResult> answerResults) {
-        isCorrect = true;
+    public QuestionResultVo grade(Answer userAnswers) {
         List<SelectAnswer> answers = userAnswers.getValues();
-        if (answerMap.size() != answers.size()) {
-            isCorrect = false;
-        }
+        isCorrect = true;
 
+        List<AnswerResult> results = new ArrayList<>();
         for (SelectAnswer answer : answers) {
-            if (!answerMap.containsKey(answer.getOptionId())) {
-                isCorrect = false;
-                answerResults.add(new AnswerResult(getProblemId(), answer.getAnswer(), false));
+            if (answerMap.containsKey(answer.getOptionId())) {
+                results.add(new AnswerResult(getProblemId(), answer.getAnswer(), true));
                 continue;
             }
-            answerResults.add(new AnswerResult(getProblemId(), answer.getAnswer(), true));
+            isCorrect = false;
+            results.add(new AnswerResult(getProblemId(), answer.getAnswer(), false));
         }
 
+        return new QuestionResultVo(new ProblemResult(getProblemId(), getResultOfProblem(results)), results);
+    }
+
+    private boolean getResultOfProblem(List<AnswerResult> answerResults) {
+        if (answerMap.size() != answerResults.size()) {
+            isCorrect = false;
+        }
         return isCorrect;
     }
 }

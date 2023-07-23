@@ -445,13 +445,13 @@ class ProblemServiceImplTest {
         String workbookId = "workbook-id";
 
         Workbook mockWorkbook = new Workbook(workbookId, null, null, null, 0, 0, WorkbookTheme.PINK);
-        given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
+        Problem mockProblem1 = new Problem("problem-1", mockWorkbook, "question-1", ProblemType.CHECKBOX);
+        Problem mockProblem2 = new Problem("problem-2", mockWorkbook, "question-2", ProblemType.SUBJECTIVE);
+        mockWorkbook.addProblem(mockProblem1);
+        mockWorkbook.addProblem(mockProblem2);
+        given(workbookRepository.findByIdAndIsDeletedFalseFetchJoinProblems(workbookId))
                 .willReturn(Optional.of(mockWorkbook));
 
-        ProblemVo mockProblem1 = new ProblemVo("problem-1", ProblemType.CHECKBOX);
-        ProblemVo mockProblem2 = new ProblemVo("problem-2", ProblemType.SUBJECTIVE);
-        given(problemRepository.findAllProblemIdAndTypeByWorkbook(mockWorkbook))
-                .willReturn(List.of(mockProblem1, mockProblem2));
         ProblemOptionVo mockOption1 = new ProblemOptionVo("option-1", "problem-1","객관식정답1");
         ProblemOptionVo mockOption2 = new ProblemOptionVo("option-2", "problem-1", "객관식정답2");
         ProblemOptionVo mockOption3 = new ProblemOptionVo("option-3", "problem-2", "서술형정답");

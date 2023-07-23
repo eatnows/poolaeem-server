@@ -10,6 +10,7 @@ import com.poolaeem.poolaeem.solve.domain.vo.problem.ProblemGrading;
 import com.poolaeem.poolaeem.solve.domain.dto.UserAnswer;
 import com.poolaeem.poolaeem.solve.domain.dto.SolveDto;
 import com.poolaeem.poolaeem.solve.domain.entity.WorkbookResult;
+import com.poolaeem.poolaeem.solve.domain.vo.problem.QuestionResultVo;
 import com.poolaeem.poolaeem.solve.infra.GradingWorkbookClient;
 import com.poolaeem.poolaeem.solve.infra.repository.WorkbookResultRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,19 +45,21 @@ public class GradingServiceImpl implements GradingService {
         validUserName(param.getName());
         validProblemEmpty(param.getProblems());
         String workbookId = param.getWorkbookId();
-        List<AnswerResult> answerResults = new ArrayList<>();
 
-        List<ProblemResult> results = gradeProblems(workbookId, param.getProblems(), answerResults);
+        List<QuestionResultVo> results = gradeProblems(workbookId, param.getProblems());
 
-        saveResult(param, results, answerResults);
+        saveResult(param, results);
         increaseSolveCountInWorkbook(workbookId);
 
-        return results.stream().map(ProblemResult::getIsCorrect).toList();
+        return results.stream().map(QuestionResultVo::getProblemResult).map(ProblemResult::getIsCorrect).toList();
     }
 
-    private void saveResult(SolveDto.WorkbookGradingParam param, List<ProblemResult> results, List<AnswerResult> answerResults) {
-        saveWorkbookResult(param, results);
-        asyncSaveAllResult(param.getUserId(), results, answerResults);
+    private void saveResult(SolveDto.WorkbookGradingParam param, List<QuestionResultVo> results) {
+        List<ProblemResult> problemResults = results.stream().map(QuestionResultVo::getProblemResult).toList();
+        List<AnswerResult> answerResults = results.stream().map(QuestionResultVo::getAnswerResults).flatMap(Collection::stream).toList();
+
+        saveWorkbookResult(param, problemResults);
+        asyncSaveAllResult(param.getUserId(), problemResults, answerResults);
     }
 
     private void asyncSaveAllResult(String userId, List<ProblemResult> problemResults, List<AnswerResult> answerResults) {
@@ -87,15 +91,15 @@ public class GradingServiceImpl implements GradingService {
         workbookResultRepository.save(workbookResult);
     }
 
-    private List<ProblemResult> gradeProblems(String workbookId, List<UserAnswer> userAnswers, List<AnswerResult> answerResults) {
+    private List<QuestionResultVo> gradeProblems(String workbookId, List<UserAnswer> userAnswers) {
         Map<String, ProblemGrading> correctAnswerMap = gradingWorkbookClient.getCorrectAnswers(workbookId);
 
-        List<ProblemResult> results = new ArrayList<>();
+        List<QuestionResultVo> results = new ArrayList<>();
         for (UserAnswer userAnswer : userAnswers) {
             ProblemGrading problem = correctAnswerMap.get(userAnswer.getProblemId());
 
-            boolean result = problem.grade(userAnswer.getAnswer(), answerResults);
-            results.add(new ProblemResult(problem.getProblemId(), result));
+            QuestionResultVo result = problem.grade(userAnswer.getAnswer());
+            results.add(result);
         }
 
         return results;

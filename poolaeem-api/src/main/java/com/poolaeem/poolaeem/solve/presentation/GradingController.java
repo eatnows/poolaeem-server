@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class GradingController {
@@ -27,10 +28,7 @@ public class GradingController {
     public ApiResponseDto<GradingResponse.GradingResult> gradeWorkbook(@LoggedInUser UserVo user,
                                                                        @PathVariable String workbookId,
                                                                        @Valid @RequestBody GradingRequest.WorkbookGrade dto) {
-        String userId = null;
-        if (user != null) {
-            userId = user.getId();
-        }
+        String userId = Optional.ofNullable(user).map(UserVo::getId).orElse(null);
 
         List<Boolean> results = gradingService.gradeWorkbook(new SolveDto.WorkbookGradingParam(userId, workbookId, dto.getName(), dto.getProblems()));
         GradingResponse.GradingResult response = new GradingResponse.GradingResult(dto.getName(), results);

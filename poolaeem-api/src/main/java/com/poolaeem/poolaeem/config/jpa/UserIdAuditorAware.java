@@ -2,6 +2,7 @@ package com.poolaeem.poolaeem.config.jpa;
 
 import com.poolaeem.poolaeem.common.exception.auth.UnAuthorizationException;
 import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
+import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +22,8 @@ public class UserIdAuditorAware implements AuditorAware<String> {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(((CustomUserDetail) authentication.getPrincipal()).getUser().getId());
+        return Optional.ofNullable(((CustomUserDetail) authentication.getPrincipal()))
+                .map(CustomUserDetail::getUser)
+                .map(UserVo::getId);
     }
 }

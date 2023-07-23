@@ -118,10 +118,12 @@ public class ProblemServiceImpl implements ProblemService {
     @Transactional(readOnly = true)
     @Override
     public List<ProblemVo> getCorrectAnswers(String workbookId) {
-        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalse(workbookId)
+        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalseFetchJoinProblems(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
 
-        List<ProblemVo> problems = problemRepository.findAllProblemIdAndTypeByWorkbook(workbook);
+        List<ProblemVo> problems = workbook.getProblems().stream()
+                .map(problem -> new ProblemVo(problem.getId(), problem.getType()))
+                .toList();
         List<ProblemOptionVo> options = problemOptionRepository.findAllCorrectAnswerByWorkbook(workbook);
 
 

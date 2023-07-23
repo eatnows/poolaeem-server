@@ -14,7 +14,6 @@ import java.util.List;
 @Table(name = "problem")
 @NoArgsConstructor
 public class Problem extends BaseEntity {
-
     @Id
     @Column(name = "id")
     private String id;
@@ -63,6 +62,13 @@ public class Problem extends BaseEntity {
         this.id = id;
         this.workbook = workbook;
         this.question = question;
+    }
+
+    public Problem(String id, Workbook workbook, String question, ProblemType type) {
+        this.id = id;
+        this.workbook = workbook;
+        this.question = question;
+        this.type = type;
     }
 
     @PrePersist
