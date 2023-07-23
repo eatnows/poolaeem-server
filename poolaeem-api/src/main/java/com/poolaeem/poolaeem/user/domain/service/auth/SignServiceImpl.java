@@ -1,8 +1,11 @@
 package com.poolaeem.poolaeem.user.domain.service.auth;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.auth.DuplicateSignUpException;
 import com.poolaeem.poolaeem.common.exception.auth.UserNotSignedUpException;
+import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
 import com.poolaeem.poolaeem.user.application.SignService;
@@ -29,11 +32,13 @@ public class SignServiceImpl implements SignService {
     private final UserRepository userRepository;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
     private final SignUpOAuth2UserService signUpOAuth2UserService;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService) {
+    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil) {
         this.userRepository = userRepository;
         this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
         this.signUpOAuth2UserService = signUpOAuth2UserService;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @Transactional
@@ -51,6 +56,14 @@ public class SignServiceImpl implements SignService {
         matchRequestEmailAndUserEmail(email, providerUser.getEmail());
 
         return saveUser(providerUser);
+    }
+
+    @Override
+    public String generateAccessTokenByRefreshToken(String refreshToken) {
+        DecodedJWT decodedJWT = jwtTokenUtil.validRefreshToken(refreshToken);
+        String userId = decodedJWT.getClaim("code").asString();
+        GenerateTokenUser generateTokenUser = new GenerateTokenUser(userId);
+        return jwtTokenUtil.generateAccessToken(generateTokenUser);
     }
 
     private void matchRequestEmailAndUserEmail(String requestEmail, String userEmail) {

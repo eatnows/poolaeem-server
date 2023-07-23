@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +30,7 @@ class ProfileInfoControllerRetrievalTest extends BaseIntegrationTest {
     public void init() {
         try (Connection conn = dataSource.getConnection()) {
             ScriptUtils.executeSqlScript(conn, new ClassPathResource("/sql/user/user.sql"));
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("/sql/file/file.sql"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +51,6 @@ class ProfileInfoControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.data.userId", is("user-1")))
                 .andExpect(jsonPath("$.data.email", is("test@poolaeem.com")))
                 .andExpect(jsonPath("$.data.name", is("풀내임")))
-                .andExpect(jsonPath("$.data.profileImageUrl", nullValue()));
+                .andExpect(jsonPath("$.data.profileImageUrl", containsString("file-1")));
     }
 }

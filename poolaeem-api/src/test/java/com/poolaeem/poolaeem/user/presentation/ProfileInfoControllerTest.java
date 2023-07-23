@@ -1,21 +1,19 @@
 package com.poolaeem.poolaeem.user.presentation;
 
-import com.poolaeem.poolaeem.config.restdocs.ApiDocumentationTest;
+import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
 import com.poolaeem.poolaeem.user.presentation.dto.profile.ProfileInfoRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.poolaeem.poolaeem.config.restdocs.RestDocumentUtils.getDocumentRequest;
-import static com.poolaeem.poolaeem.config.restdocs.RestDocumentUtils.getDocumentResponse;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
+import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;

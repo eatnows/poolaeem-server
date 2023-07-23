@@ -3,11 +3,11 @@ package com.poolaeem.poolaeem.common.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -24,19 +24,10 @@ public class BaseEntity {
     private String updatedBy;
 
     @Column(name = "CREATED_AT")
+    @CreatedDate
     private ZonedDateTime createdAt;
 
     @Column(name = "UPDATED_AT")
+    @LastModifiedDate
     private ZonedDateTime updatedAt;
-
-    @PrePersist
-    private void perPersist() {
-        this.createdAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
-        this.updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
-    }
-
-    @PreUpdate
-    private void preUpdate() {
-        this.updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
-    }
 }

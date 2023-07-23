@@ -1,5 +1,7 @@
 package com.poolaeem.poolaeem.common.component.uuid;
 
+import com.fasterxml.uuid.Generators;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -7,11 +9,12 @@ import java.util.UUID;
 
 public class UUIDGenerator {
     public static String generate() {
+        return Generators.timeBasedEpochGenerator().generate().toString().replace("-", "");
 
-        final long most64SigBits = get64MostSignificantBitsForVersion1();
-        final long least64SigBits = get64LeastSignificantBitsForVersion1();
+//        final long most64SigBits = get64MostSignificantBitsForVersion1();
+//        final long least64SigBits = get64LeastSignificantBitsForVersion1();
 
-        return new UUID(most64SigBits, least64SigBits).toString().replace("-", "");
+//        return new UUID(most64SigBits, least64SigBits).toString().replace("-", "");
     }
 
     public static String generateV4() {

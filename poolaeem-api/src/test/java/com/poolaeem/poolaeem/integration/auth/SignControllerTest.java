@@ -35,12 +35,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("통합: 계정인증 테스트")
-@Sql(scripts = {
-        "classpath:/sql/user/user.sql"
-})
+//@Sql(scripts = {
+//        "classpath:/sql/user/user.sql"
+//})
 class SignControllerTest extends BaseIntegrationTest {
 
     private final String AGREE_SIGN_UP_TERMS = "/api/signup/terms";
+    private final String GENERATE_ACCESS_TOKEN_BY_REFRESH_TOKEN = "/api/access-token/refresh";
+    private final String BEARER_REFRESH_TOKEN = "Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.abGtDWHblKjihChHShvBKcKo1uu0CkLPInmDduFNPeYMUduZICgvaYzBlvvTK8brekrSC3ahlH4ROnCTxVwFN-IqxUxdIxNS-FXAQcoZBWRnWRHeLK56ZcwKo1RmCbzD4d1hEP907fb_zjAPrgrk6GgWO-L-Yq0z0K1Ntgdgz5M7I4gWRayeI13TBdaR6DqcAfrNCqK3Gg_0cxtgwN7cGvVBVPoG1jufXPt1uxynwfMHzTXY7UtvKRjDO3g0vyTBF52abK85eBMmvKIaGMEKOKWuN75ZYFS8xIFluGOouZsoLII_jTVIV1xMcWHe0a3WNxV5sh-EugLrVsJVfIJofQ";
 
     @MockBean
     private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
@@ -159,5 +161,20 @@ class SignControllerTest extends BaseIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class))
                 .andExpect(jsonPath("$.code", is(ApiResponseCode.BAD_REQUEST_DATA.getCode())));
+    }
+
+    @Test
+    @DisplayName("리프레쉬 토큰으로 액세스 토큰을 발급받을 수 있다.")
+    void testGenerateAccessTokenByRefreshToken() throws Exception {
+        ResultActions result = this.mockMvc.perform(
+                post(GENERATE_ACCESS_TOKEN_BY_REFRESH_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Refresh", BEARER_REFRESH_TOKEN)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(header().exists("access-token"))
+                .andExpect(jsonPath("$.code", is(0)));
     }
 }

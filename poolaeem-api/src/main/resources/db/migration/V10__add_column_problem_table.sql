@@ -1,0 +1,1 @@
+ALTER TABLE `problem` ADD COLUMN `timeout` smallint unsigned default 0 NOT NULL AFTER `type`;

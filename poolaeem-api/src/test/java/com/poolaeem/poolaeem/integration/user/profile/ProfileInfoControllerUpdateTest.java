@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RecordApplicationEvents
 @DisplayName("통합: 유저 정보 수정 테스트")
-@Sql(scripts = "classpath:/sql/user/user.sql")
+@Sql(scripts = "classpath:/sql/file/file.sql")
 class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
     private final String UPDATE_USER_NAME = "/api/profile/name";
     private final String UPDATE_PROFILE_IMAGE = "/api/profile/image";
@@ -71,7 +71,7 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
                 .andExpect(jsonPath("$.data.userId", is("user-1")))
                 .andExpect(jsonPath("$.data.email", is("test@poolaeem.com")))
                 .andExpect(jsonPath("$.data.name", is(newUserName)))
-                .andExpect(jsonPath("$.data.profileImageUrl", nullValue()));
+                .andExpect(jsonPath("$.data.profileImageUrl", containsString("file-1")));
     }
 
     @ParameterizedTest
@@ -100,7 +100,7 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
         String userId = "user-1";
 
         User before = userRepository.findByIdAndIsDeletedFalse(userId).get();
-        assertThat(before.getProfileImage()).isNull();
+        assertThat(before.getProfileImage()).isEqualTo("file-1");
 
         ResultActions result = this.mockMvc.perform(
                 multipart(UPDATE_PROFILE_IMAGE)
@@ -112,6 +112,7 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
 
         User after = userRepository.findByIdAndIsDeletedFalse(userId).get();
         assertThat(after.getProfileImage()).isNotNull();
+        assertThat(after.getProfileImage()).isNotEqualTo("file-1");
         assertThat(applicationEvents.stream(EventsPublisherFileEvent.FileUploadEvent.class).count()).isEqualTo(1);
 
         result.andExpect(status().isOk())
@@ -131,7 +132,7 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
         String userId = "user-1";
 
         User before = userRepository.findByIdAndIsDeletedFalse(userId).get();
-        assertThat(before.getProfileImage()).isNull();
+        assertThat(before.getProfileImage()).isEqualTo("file-1");
         this.mockMvc.perform(
                 multipart(UPDATE_PROFILE_IMAGE)
                         .file(mockFile)
@@ -140,7 +141,7 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
                         .accept(MediaType.APPLICATION_JSON)
         );
         User before2 = userRepository.findByIdAndIsDeletedFalse(userId).get();
-        assertThat(before2.getProfileImage()).isNotNull();
+        assertThat(before2.getProfileImage()).isNotEqualTo("file-1");
 
         ResultActions result = this.mockMvc.perform(
                 multipart(UPDATE_PROFILE_IMAGE)
@@ -151,7 +152,7 @@ class ProfileInfoControllerUpdateTest extends BaseLocalStackTest {
         User after = userRepository.findByIdAndIsDeletedFalse(userId).get();
         assertThat(after.getProfileImage()).isNull();
 
-        assertThat(applicationEvents.stream(EventsPublisherFileEvent.FileDeleteEvent.class).count()).isEqualTo(1);
+        assertThat(applicationEvents.stream(EventsPublisherFileEvent.FileDeleteEvent.class).count()).isEqualTo(2);
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)))

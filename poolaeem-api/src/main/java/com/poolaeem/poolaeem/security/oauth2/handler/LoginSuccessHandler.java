@@ -65,7 +65,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         response.setStatus(HttpStatus.OK.value());
 
         User user = userOptional.get();
-        loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId(), user.getEmail(), user.getName(), null));
+        loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId()));
 
         try (OutputStream os = response.getOutputStream()){
             objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.SUCCESS));

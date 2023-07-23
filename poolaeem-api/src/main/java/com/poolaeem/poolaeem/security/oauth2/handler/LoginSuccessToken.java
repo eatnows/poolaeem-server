@@ -20,7 +20,13 @@ public class LoginSuccessToken {
         String accessToken = jwtTokenUtil.generateAccessToken(generateTokenUser);
         String refreshToken = jwtTokenUtil.generateRefreshToken(generateTokenUser);
 
+        response.addHeader("Access-Control-Expose-Headers", "access-token, refresh-token");
         response.addHeader("access-token", accessToken);
         response.addHeader("refresh-token", refreshToken);
+    }
+
+    public void addOnlyAccessTokenInResponse(HttpServletResponse response, String accessToken) {
+        response.addHeader("Access-Control-Expose-Headers", "access-token");
+        response.addHeader("access-token", accessToken);
     }
 }

@@ -7,6 +7,7 @@ import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,7 +19,11 @@ public class ExceptionHandlerAdvice {
     private ResponseEntity<ApiResponseDto<String>> handleServiceException(ServiceException e) {
         try {
             ApiResponseCode responseCode = e.getApiResponseCode();
-            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, responseCode.getMessage());
+            String message = responseCode.getMessage();
+            if (StringUtils.hasText(e.getMessage())) {
+                message = e.getMessage();
+            }
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, message);
 
             log.info("> service exception: ", e);
 

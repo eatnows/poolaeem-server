@@ -7,14 +7,12 @@ import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.NonLoggedInUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
 import com.poolaeem.poolaeem.security.jwt.token.PreAuthenticationToken;
+import com.poolaeem.poolaeem.user.domain.entity.UserRole;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -35,7 +33,21 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String token = (String) authentication.getPrincipal();
         DecodedJWT decodedJWT = validToken(token);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getClaim("code").asString());
+        String userId = decodedJWT.getClaim("code").asString();
+        String role = decodedJWT.getClaim("role").asString();
+
+        CustomUserDetail userDetails = new CustomUserDetail(new UserVo(
+                userId,
+                null,
+                null,
+                role == null ? UserRole.ROLE_USER : UserRole.valueOf(role),
+                null,
+                null,
+                null,
+                null
+        ));
+
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getClaim("code").asString());
 
         return new PostAuthenticationToken(userDetails);
     }
@@ -46,8 +58,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     private DecodedJWT validToken(String token) {
-        Optional<DecodedJWT> decodedJWT = jwtTokenUtil.validAccessToken(token);
-
-        return decodedJWT.get();
+        return jwtTokenUtil.validAccessToken(token);
     }
 }

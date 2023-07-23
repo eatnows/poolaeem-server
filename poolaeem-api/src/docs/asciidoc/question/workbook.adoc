@@ -1,0 +1,136 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+= 문제 출제 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 1
+:sectlinks:
+:docinfo: shared-head
+:linkattrs:
+
+=== _link:https://poolaeem.com/poolaeem-api/docs/qczd1dqvnb0gf60yhchro9dz2kvf9io7/main/list.html[목록으로 가기]_
+
+== 공통 코드
+[cols=2*]
+|===
+|코드
+|설명
+
+|code
+|내부 코드 - 0 : SUCCESS
+|message
+|성공 및 에러 메시지
+|data
+|반환 데이터 값
+|===
+
+= 문제집
+
+== 문제집 정보 조회
+=== -- Request
+include::{snippets}/question/workbook/test-read-workbook-info/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-info/request-headers.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-info/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-read-workbook-info/response-fields-beneath-data.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-info/http-response.adoc[]
+
+
+== 문제집 생성
+=== -- Request
+include::{snippets}/question/workbook/test-create-workbook/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-create-workbook/request-headers.adoc[]
+include::{snippets}/question/workbook/test-create-workbook/request-fields.adoc[]
+include::{snippets}/question/workbook/test-create-workbook/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-create-workbook/http-response.adoc[]
+
+
+== 문제집 정보 수정
+=== -- Request
+include::{snippets}/question/workbook/test-update-workbook-info/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-update-workbook-info/request-headers.adoc[]
+include::{snippets}/question/workbook/test-update-workbook-info/request-fields.adoc[]
+include::{snippets}/question/workbook/test-update-workbook-info/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-update-workbook-info/http-response.adoc[]
+
+== 문제집 풀이 소개 조회
+=== -- Request
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/response-fields-beneath-data.adoc[]
+NOTE: 성공
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/http-response.adoc[]
+WARNING: 문제집이 존재하지 않음
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction-for-not-found/http-response.adoc[]
+
+
+
+= 문항
+== 문항 추가
+=== -- Request
+include::{snippets}/question/problem/test-create-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-create-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-create-problem/request-fields.adoc[]
+include::{snippets}/question/problem/test-create-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-create-problem/http-response.adoc[]
+
+
+== 문항 조회
+=== -- Request
+include::{snippets}/question/problem/test-read-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-read-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-read-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-read-problem/response-fields-beneath-data.adoc[]
+include::{snippets}/question/problem/test-read-problem/http-response.adoc[]
+
+
+== 문항 수정
+=== -- Request
+include::{snippets}/question/problem/test-update-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-update-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-update-problem/request-fields.adoc[]
+include::{snippets}/question/problem/test-update-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-update-problem/http-response.adoc[]
+
+
+== 문항 삭제
+=== -- Request
+include::{snippets}/question/problem/test-delete-problem/path-parameters.adoc[]
+include::{snippets}/question/problem/test-delete-problem/request-headers.adoc[]
+include::{snippets}/question/problem/test-delete-problem/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-delete-problem/http-response.adoc[]
+
+
+== 문항 목록 조회
+=== -- Request
+include::{snippets}/question/problem/read-problem-list/path-parameters.adoc[]
+include::{snippets}/question/problem/read-problem-list/request-headers.adoc[]
+include::{snippets}/question/problem/read-problem-list/query-parameters.adoc[]
+include::{snippets}/question/problem/read-problem-list/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/read-problem-list/response-fields-beneath-data.adoc[]
+include::{snippets}/question/problem/read-problem-list/http-response.adoc[]
+
+
+== 풀이할 문항들 조회
+=== -- Request
+include::{snippets}/question/problem/test-read-solve-problems/path-parameters.adoc[]
+include::{snippets}/question/problem/test-read-solve-problems/query-parameters.adoc[]
+include::{snippets}/question/problem/test-read-solve-problems/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-read-solve-problems/response-fields-beneath-data.adoc[]
+NOTE: 성공
+include::{snippets}/question/problem/test-read-solve-problems/http-response.adoc[]
+WARNING: 존재하지 않는 문제집
+include::{snippets}/question/problem/test-read-solve-problems-for-not-exist-workbook/http-response.adoc[]
+

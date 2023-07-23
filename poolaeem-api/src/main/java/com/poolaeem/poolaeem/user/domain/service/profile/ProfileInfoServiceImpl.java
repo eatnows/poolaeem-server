@@ -98,7 +98,6 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
     private String getProfileImageUrl(UserVo user) {
         String profileImageUrl = null;
         if (existProfileImage(user.getProfileImage())) {
-            // TODO 유저 프로필 이미지 조회 주소 생성
             profileImageUrl = fileService.getImageUrl(user.getProfileImage());
         }
 
