@@ -48,4 +48,11 @@ public class WorkbookController {
         WorkbookResponse.WorkbookInfoRead response = new WorkbookResponse.WorkbookInfoRead(workbook);
         return ApiResponseDto.OK(response);
     }
+
+    @GetMapping("/api/workbooks/{workbookId}/solve/introduction")
+    public ApiResponseDto<WorkbookResponse.SolveIntroductionRead> readWorkbookSolveIntroduction(@PathVariable String workbookId) {
+        WorkbookDto.SolveIntroductionRead info = workbookService.readSolveIntroduction(workbookId);
+        WorkbookResponse.SolveIntroductionRead response = new WorkbookResponse.SolveIntroductionRead(info);
+        return ApiResponseDto.OK(response);
+    }
 }

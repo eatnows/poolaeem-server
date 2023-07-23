@@ -7,6 +7,7 @@ import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemOptionDto;
 import com.poolaeem.poolaeem.question.domain.entity.*;
+import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.infra.repository.ProblemOptionRepository;
@@ -27,7 +28,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +64,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto("세계", false),
                         new ProblemOptionDto("나무", false),
@@ -93,6 +97,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 TextGenerator.generate(length),
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto("세계", false),
                         new ProblemOptionDto("나무", false),
@@ -119,6 +124,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 getOptions(size)
         );
 
@@ -136,6 +142,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto(TextGenerator.generate(length), false))
         );
@@ -154,6 +161,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", isCorrect),
                         new ProblemOptionDto("단어2", isCorrect))
         );
@@ -171,6 +179,7 @@ class ProblemServiceImplTest {
                 workbookId,
                 userVo.getId(),
                 "Word",
+                ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
                         new ProblemOptionDto("세계", false)
                 )
@@ -343,24 +352,122 @@ class ProblemServiceImplTest {
         Pageable pageable = PageRequest.of(0, 20);
 
         given(workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId))
-                .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null)));
+                .willReturn(Optional.of(new WorkbookVo(workbookId, userId, "문제집", null, 0, 0, null, ZonedDateTime.now())));
         SliceImpl<ProblemVo> mockSlice = new SliceImpl<>(
                 List.of(
-                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4),
-                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2),
-                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10),
-                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5)
+                        new ProblemVo("problem-1", "Computer", ProblemType.CHECKBOX, 4, 30),
+                        new ProblemVo("problem-2", "Mouse", ProblemType.CHECKBOX, 2, 30),
+                        new ProblemVo("problem-2", "Monitor", ProblemType.CHECKBOX, 10, 30),
+                        new ProblemVo("problem-2", "keyboard", ProblemType.CHECKBOX, 5, 30)
                 ),
                 pageable,
                 true
         );
-        given(problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable))
+        given(problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable))
                 .willReturn(mockSlice);
 
         Slice<ProblemVo> result = problemService.readProblemList(userId, workbookId, order, pageable);
 
         assertThat(result.getSize()).isEqualTo(mockSlice.getSize());
         assertThat(result.hasNext()).isTrue();
+    }
+
+    @Test
+    @DisplayName("풀이할 문항과 문항의 선택지를 조회할 수 있다.")
+    void testReadSolveProblemsAndOptions() {
+        String workbookId = "workbook-id";
+        int order = 0;
+
+        List<ProblemVo> mockProblems = List.of(
+                new ProblemVo(
+                        "problem-1",
+                        "Computer",
+                        ProblemType.CHECKBOX,
+                        10,
+                        30
+                ),
+                new ProblemVo(
+                        "problem-2",
+                        "Mouse",
+                        ProblemType.CHECKBOX,
+                        10,
+                        30
+                )
+        );
+        given(workbookRepository.findDtoByIdAndIsDeletedFalse(anyString()))
+                .willReturn(Optional.of(new WorkbookVo("workbook-id", null, "문제집", "", 2, 2, WorkbookTheme.PINK, ZonedDateTime.now())));
+        given(problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(any(), anyInt(), any()))
+                .willReturn(new SliceImpl<>(mockProblems, PageRequest.of(0, 20), true));
+
+        given(optionRepository.findAllDtoByProblemIdInAndIsDeletedFalse(anyList()))
+                .willReturn(Arrays.asList(
+                        new ProblemOptionVo(
+                                "option-1",
+                                "problem-1",
+                                "스마트폰"
+                        ),
+                        new ProblemOptionVo(
+                                "option-2",
+                                "problem-1",
+                                "컴퓨터"
+                        ),
+                        new ProblemOptionVo(
+                                "option-3",
+                                "problem-2",
+                                "마우스"
+                        ),
+                        new ProblemOptionVo(
+                                "option-4",
+                                "problem-2",
+                                "키보드"
+                        ),
+                        new ProblemOptionVo(
+                                "option-5",
+                                "problem-2",
+                                "트랙패드"
+                        )
+                ));
+
+
+        Slice<ProblemVo> problems = problemService.readSolveProblems(workbookId, order, PageRequest.of(0, 20));
+
+        // 문항 목록의 크기는 고정값 20으로 설정. 변경될 시 변경
+        assertThat(problems.getSize()).isEqualTo(20);
+        assertThat(problems.getContent()).hasSize(mockProblems.size());
+        assertThat(problems.getContent().get(0).getProblemId()).isEqualTo(mockProblems.get(0).getProblemId());
+        assertThat(problems.getContent().get(0).getOptions()).hasSize(2);
+        assertThat(problems.getContent().get(0).getOptions().get(0).getProblemId()).isNull();
+    }
+
+    @Test
+    @DisplayName("문제집의 모든 문항과 정답을 조회할 수 있다.")
+    void testReadCorrectAnswersInWorkbook() {
+        String workbookId = "workbook-id";
+
+        Workbook mockWorkbook = new Workbook(workbookId, null, null, null, 0, 0, WorkbookTheme.PINK);
+        Problem mockProblem1 = new Problem("problem-1", mockWorkbook, "question-1", ProblemType.CHECKBOX);
+        Problem mockProblem2 = new Problem("problem-2", mockWorkbook, "question-2", ProblemType.SUBJECTIVE);
+        mockWorkbook.addProblem(mockProblem1);
+        mockWorkbook.addProblem(mockProblem2);
+        given(workbookRepository.findByIdAndIsDeletedFalseFetchJoinProblems(workbookId))
+                .willReturn(Optional.of(mockWorkbook));
+
+        ProblemOptionVo mockOption1 = new ProblemOptionVo("option-1", "problem-1","객관식정답1");
+        ProblemOptionVo mockOption2 = new ProblemOptionVo("option-2", "problem-1", "객관식정답2");
+        ProblemOptionVo mockOption3 = new ProblemOptionVo("option-3", "problem-2", "서술형정답");
+        given(optionRepository.findAllCorrectAnswerByWorkbook(mockWorkbook))
+                .willReturn(List.of(mockOption1, mockOption2, mockOption3));
+
+        List<ProblemVo> correctAnswers = problemService.getCorrectAnswers(workbookId);
+
+        assertThat(correctAnswers).hasSize(2);
+        assertThat(correctAnswers.get(0).getProblemId()).isEqualTo("problem-1");
+        assertThat(correctAnswers.get(0).getOptions()).hasSize(2);
+        assertThat(correctAnswers.get(0).getOptions().get(0).getOptionId()).isEqualTo("option-1");
+        assertThat(correctAnswers.get(0).getOptions().get(1).getOptionId()).isEqualTo("option-2");
+        assertThat(correctAnswers.get(1).getProblemId()).isEqualTo("problem-2");
+        assertThat(correctAnswers.get(1).getOptions()).hasSize(1);
+        assertThat(correctAnswers.get(1).getOptions().get(0).getOptionId()).isEqualTo("option-3");
     }
 
     private List<ProblemOptionDto> getOptions(int size) {

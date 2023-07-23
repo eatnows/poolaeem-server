@@ -1,10 +1,10 @@
-[cols="3,2,5,5"]
 ===== Request Headers
 |===
-|헤더명|설명
+|헤더명|필수값|설명
 
 {{#headers}}
 |{{#tableCellContent}}`+{{name}}+`{{/tableCellContent}}
+|{{#tableCellContent}}`+{{^optional}}true{{/optional}}+`{{/tableCellContent}}
 |{{#tableCellContent}}{{description}}{{/tableCellContent}}
 
 {{/headers}}

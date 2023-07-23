@@ -2,6 +2,7 @@ package com.poolaeem.poolaeem.integration.question.problem;
 
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
+import com.poolaeem.poolaeem.question.domain.entity.ProblemType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProblemControllerRetrievalTest extends BaseIntegrationTest {
     private final String READ_PROBLEM = "/api/problems/{problemId}";
     private final String READ_PROBLEM_LIST = "/api/workbooks/{workbookId}/problems";
+    private final String READ_SOLVE_PROBLEM_LIST = "/api/workbooks/{workbookId}/problems/solve";
 
     @Autowired
     private DataSource dataSource;
@@ -199,5 +201,61 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.data.problems[1].question", is("School")))
                 .andExpect(jsonPath("$.data.problems[2].problemId", is("problem-3")))
                 .andExpect(jsonPath("$.data.problems[2].question", is("Video")));
+    }
+
+    @Test
+    @DisplayName("풀이할 문항의 목록을 조회할 수 있다.")
+    void testReadSolveProblems() throws Exception {
+        String workbookId = "workbook-1";
+        this.mockMvc.perform(
+                        get(READ_SOLVE_PROBLEM_LIST, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("order", "0")
+                                .param("size", "2")
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(true)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Word")))
+                .andExpect(jsonPath("$.data.problems[0].type", is(ProblemType.CHECKBOX.name())))
+                .andExpect(jsonPath("$.data.problems[0].options.size()", is(2)))
+                .andExpect(jsonPath("$.data.problems[1].problemId", is("problem-2")))
+                .andExpect(jsonPath("$.data.problems[1].question", is("School")))
+                .andExpect(jsonPath("$.data.problems[1].type", is(ProblemType.CHECKBOX.name())))
+                .andExpect(jsonPath("$.data.problems[1].options.size()", is(3)));
+    }
+
+    @Test
+    @DisplayName("풀이할 다음 문항 목록을 조회할 수 있다.")
+    void testReadSolveProblemsPaging() throws Exception {
+        String workbookId = "workbook-1";
+        this.mockMvc.perform(
+                        get(READ_SOLVE_PROBLEM_LIST, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("order", "2")
+                                .param("size", "3")
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(false)))
+                .andExpect(jsonPath("$.data.problems[0].problemId", is("problem-3")))
+                .andExpect(jsonPath("$.data.problems[0].question", is("Video")))
+                .andExpect(jsonPath("$.data.problems[0].type", is(ProblemType.CHECKBOX.name())))
+                .andExpect(jsonPath("$.data.problems[0].options.size()", is(3)));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 문제집의 풀이 문항들은 조회할 수 없다 ")
+    void testReadSolveProblemsForNotExistWorkbook() throws Exception {
+        String workbookId = "not-exist-workbook";
+        this.mockMvc.perform(
+                        get(READ_SOLVE_PROBLEM_LIST, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("order", "2")
+                                .param("size", "3")
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.WORKBOOK_NOT_FOUND.getCode())));
     }
 }

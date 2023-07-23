@@ -5,6 +5,8 @@ import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
+import java.time.ZonedDateTime;
+
 @Getter
 public class WorkbookVo {
     private String id;
@@ -15,10 +17,10 @@ public class WorkbookVo {
     private int problemCount;
     private int solvedCount;
     private WorkbookTheme theme;
-    private int order;
+    private ZonedDateTime createdAt;
 
     @QueryProjection
-    public WorkbookVo(String id, String userId, String name, String description, int problemCount, int solvedCount, WorkbookTheme theme) {
+    public WorkbookVo(String id, String userId, String name, String description, int problemCount, int solvedCount, WorkbookTheme theme, ZonedDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -26,5 +28,6 @@ public class WorkbookVo {
         this.problemCount = problemCount;
         this.solvedCount = solvedCount;
         this.theme = theme;
+        this.createdAt = createdAt;
     }
 }

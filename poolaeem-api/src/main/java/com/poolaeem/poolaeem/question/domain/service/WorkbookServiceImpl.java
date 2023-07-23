@@ -6,18 +6,22 @@ import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
+import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookCreator;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.domain.validation.WorkbookValidation;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
+import com.poolaeem.poolaeem.question.infra.WorkbookUserClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WorkbookServiceImpl implements WorkbookService {
     private final WorkbookRepository workbookRepository;
+    private final WorkbookUserClient workbookUserClient;
 
-    public WorkbookServiceImpl(WorkbookRepository workbookRepository) {
+    public WorkbookServiceImpl(WorkbookRepository workbookRepository, WorkbookUserClient workbookUserClient) {
         this.workbookRepository = workbookRepository;
+        this.workbookUserClient = workbookUserClient;
     }
 
     @Transactional
@@ -70,8 +74,33 @@ public class WorkbookServiceImpl implements WorkbookService {
         workbookRepository.updateDecreaseProblemCountByWorkbookId(workbookId);
     }
 
-    private Workbook getWorkbookEntity(String workbookdId) {
-        return workbookRepository.findByIdAndIsDeletedFalse(workbookdId)
+    @Transactional(readOnly = true)
+    @Override
+    public WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId) {
+        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+        WorkbookCreator creator = workbookUserClient.readWorkbookCreator(workbook.getUserId());
+
+        return new WorkbookDto.SolveIntroductionRead (
+                workbook.getId(),
+                workbook.getName(),
+                workbook.getDescription(),
+                workbook.getTheme(),
+                creator,
+                workbook.getCreatedAt(),
+                workbook.getProblemCount(),
+                workbook.getSolvedCount()
+        );
+    }
+
+    @Transactional
+    @Override
+    public void increaseSolvedCount(String workbookId) {
+        workbookRepository.updateIncreaseSolvedCountByWorkbookId(workbookId);
+    }
+
+    private Workbook getWorkbookEntity(String workbookId) {
+        return workbookRepository.findByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(WorkbookNotFoundException::new);
     }
 

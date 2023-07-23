@@ -1,0 +1,46 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+= 문제 풀이 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 1
+:sectlinks:
+:docinfo: shared-head
+:linkattrs:
+
+=== _link:https://poolaeem.com/poolaeem-api/docs/qczd1dqvnb0gf60yhchro9dz2kvf9io7/main/list.html[목록으로 가기]_
+
+== 공통 코드
+[cols=2*]
+|===
+|코드
+|설명
+
+|code
+|내부 코드 - 0 : SUCCESS
+|message
+|성공 및 에러 메시지
+|data
+|반환 데이터 값
+|===
+
+= -
+
+== 문제 채점
+=== -- Request
+include::{snippets}/solve/test-solve-workbook/path-parameters.adoc[]
+include::{snippets}/solve/test-solve-workbook/request-fields.adoc[]
+include::{snippets}/solve/test-solve-workbook/http-request.adoc[]
+=== -- Response
+include::{snippets}/solve/test-solve-workbook/response-fields-beneath-data.adoc[]
+NOTE: 성공
+include::{snippets}/solve/test-solve-workbook/http-response.adoc[]
+WARNING: 풀이자 이름이 존재하지 않는다
+include::{snippets}/solve/test-grade-workbook-for-not-exist-name/http-response.adoc[]
+WARNING: 풀이가 존재하지 않는다
+include::{snippets}/solve/test-grade-workbook-for-not-exist-answer/http-response.adoc[]
+
+

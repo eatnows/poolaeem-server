@@ -24,9 +24,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,7 +100,58 @@ public class ProblemServiceImpl implements ProblemService {
                 .orElseThrow(WorkbookNotFoundException::new);
         validWorkbookManage(workbook.getUserId(), userId);
 
-        return problemRepository.findAllByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
+        return problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Slice<ProblemVo> readSolveProblems(String workbookId, int order, Pageable pageable) {
+        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+        Slice<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbook.getId(), order, pageable);
+
+        addOptionsInProblem(problems.getContent());
+
+        return problems;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProblemVo> getCorrectAnswers(String workbookId) {
+        Workbook workbook = workbookRepository.findByIdAndIsDeletedFalseFetchJoinProblems(workbookId)
+                .orElseThrow(WorkbookNotFoundException::new);
+
+        List<ProblemVo> problems = workbook.getProblems().stream()
+                .map(problem -> new ProblemVo(problem.getId(), problem.getType()))
+                .toList();
+        List<ProblemOptionVo> options = problemOptionRepository.findAllCorrectAnswerByWorkbook(workbook);
+
+
+        Map<String, ProblemVo> map = problems.stream()
+                .collect(Collectors.toMap(ProblemVo::getProblemId, Function.identity()));
+
+        for (ProblemOptionVo option : options) {
+            ProblemVo problemVo = map.get(option.getProblemId());
+
+            problemVo.addOption(option);
+        }
+
+        return problems;
+    }
+
+    private void addOptionsInProblem(List<ProblemVo> problems) {
+        List<String> problemIds = problems.stream().map(ProblemVo::getProblemId).toList();
+
+        List<ProblemOptionVo> options = problemOptionRepository.findAllDtoByProblemIdInAndIsDeletedFalse(problemIds);
+        Collections.shuffle(options);
+
+        Map<String, ProblemVo> map = problems.stream().collect(Collectors.toMap(ProblemVo::getProblemId, Function.identity()));
+
+        for (ProblemOptionVo option : options) {
+            ProblemVo problemVo = map.get(option.getProblemId());
+            option.removeProblemId();
+            problemVo.addOption(option);
+        }
     }
 
     private void decreaseProblemCount(String workbookId) {

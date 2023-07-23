@@ -37,7 +37,8 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
                                 workbook.description,
                                 workbook.problemCount,
                                 workbook.solvedCount,
-                                workbook.theme
+                                workbook.theme,
+                                workbook.createdAt
                         ))
                         .from(workbook)
                         .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
@@ -59,6 +60,15 @@ public class WorkbookRepositoryImpl implements WorkbookRepositoryCustom {
         queryFactory
                 .update(workbook)
                 .set(workbook.problemCount, workbook.problemCount.subtract(1))
+                .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
+                .execute();
+    }
+
+    @Override
+    public void updateIncreaseSolvedCountByWorkbookId(String workbookId) {
+        queryFactory
+                .update(workbook)
+                .set(workbook.solvedCount, workbook.solvedCount.add(1))
                 .where(workbook.id.eq(workbookId), workbook.isDeleted.isFalse())
                 .execute();
     }

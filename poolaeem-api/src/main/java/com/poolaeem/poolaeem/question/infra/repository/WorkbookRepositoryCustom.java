@@ -12,4 +12,6 @@ public interface WorkbookRepositoryCustom {
     void updateIncreaseProblemCountByWorkbookId(String workbookId);
 
     void updateDecreaseProblemCountByWorkbookId(String workbookId);
+
+    void updateIncreaseSolvedCountByWorkbookId(String workbookId);
 }

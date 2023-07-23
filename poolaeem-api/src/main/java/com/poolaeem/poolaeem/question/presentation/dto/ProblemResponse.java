@@ -39,4 +39,15 @@ public class ProblemResponse {
             this.hasNext = problems.hasNext();
         }
     }
+
+    @Getter
+    public static class SolveProblemsRead {
+        private List<ProblemVo> problems;
+        private boolean hasNext;
+
+        public SolveProblemsRead(Slice<ProblemVo> problems) {
+            this.problems = problems.getContent();
+            this.hasNext = problems.hasNext();
+        }
+    }
 }

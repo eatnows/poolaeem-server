@@ -58,6 +58,16 @@ include::{snippets}/question/workbook/test-update-workbook-info/http-request.ado
 === -- Response
 include::{snippets}/question/workbook/test-update-workbook-info/http-response.adoc[]
 
+== 문제집 풀이 소개 조회
+=== -- Request
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/response-fields-beneath-data.adoc[]
+NOTE: 성공
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction/http-response.adoc[]
+WARNING: 문제집이 존재하지 않음
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction-for-not-found/http-response.adoc[]
 
 
 
@@ -106,4 +116,21 @@ include::{snippets}/question/problem/test-delete-problem/http-response.adoc[]
 include::{snippets}/question/problem/read-problem-list/path-parameters.adoc[]
 include::{snippets}/question/problem/read-problem-list/request-headers.adoc[]
 include::{snippets}/question/problem/read-problem-list/query-parameters.adoc[]
+include::{snippets}/question/problem/read-problem-list/http-request.adoc[]
 === -- Response
+include::{snippets}/question/problem/read-problem-list/response-fields-beneath-data.adoc[]
+include::{snippets}/question/problem/read-problem-list/http-response.adoc[]
+
+
+== 풀이할 문항들 조회
+=== -- Request
+include::{snippets}/question/problem/test-read-solve-problems/path-parameters.adoc[]
+include::{snippets}/question/problem/test-read-solve-problems/query-parameters.adoc[]
+include::{snippets}/question/problem/test-read-solve-problems/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/problem/test-read-solve-problems/response-fields-beneath-data.adoc[]
+NOTE: 성공
+include::{snippets}/question/problem/test-read-solve-problems/http-response.adoc[]
+WARNING: 존재하지 않는 문제집
+include::{snippets}/question/problem/test-read-solve-problems-for-not-exist-workbook/http-response.adoc[]
+

@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Table(name = "workbook")
@@ -41,6 +44,9 @@ public class Workbook extends BaseEntity {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workbook")
+    private List<Problem> problems = new ArrayList<>();
+
     public Workbook(String id, String userId, String name, String description, int problemCount, int solvedCount, WorkbookTheme theme) {
         this.id = id;
         this.userId = userId;
@@ -72,5 +78,9 @@ public class Workbook extends BaseEntity {
     public void updateInfo(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public void addProblem(Problem problem) {
+        problems.add(problem);
     }
 }

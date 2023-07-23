@@ -28,7 +28,7 @@ public class ProblemController {
                                            @PathVariable String workbookId,
                                            @Valid @RequestBody ProblemRequest.ProblemCreate dto) {
         ProblemDto.ProblemCreateParam param =
-                new ProblemDto.ProblemCreateParam(workbookId, user.getId(), dto.getQuestion(), dto.getOptions());
+                new ProblemDto.ProblemCreateParam(workbookId, user.getId(), dto.getQuestion(), dto.getType(), dto.getOptions());
         problemService.createProblem(param);
 
         return ApiResponseDto.OK();
@@ -69,6 +69,16 @@ public class ProblemController {
         Slice<ProblemVo> problems = problemService.readProblemList(user.getId(), workbookId, order, PageRequest.of(0, size));
 
         ProblemResponse.ProblemListRead response = new ProblemResponse.ProblemListRead(problems);
+        return ApiResponseDto.OK(response);
+    }
+
+    @GetMapping("/api/workbooks/{workbookId}/problems/solve")
+    public ApiResponseDto<ProblemResponse.SolveProblemsRead> readSolveProblems(@PathVariable String workbookId,
+                                                                               @RequestParam(defaultValue = "0") int order,
+                                                                               @RequestParam(defaultValue = "20") @Max(20) int size) {
+        Slice<ProblemVo> problems = problemService.readSolveProblems(workbookId, order, PageRequest.of(0, size));
+
+        ProblemResponse.SolveProblemsRead response = new ProblemResponse.SolveProblemsRead(problems);
         return ApiResponseDto.OK(response);
     }
 }

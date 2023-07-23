@@ -50,13 +50,25 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
     }
 
     @Override
-    public Slice<ProblemVo> findAllByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
-        List<ProblemVo> list = queryFactory
+    public void softDelete(Problem problem) {
+        queryFactory
+                .update(QProblem.problem)
+                .set(QProblem.problem.isDeleted, true)
+                .set(QProblem.problem.updatedBy, LoggedInUser.getUserId())
+                .set(QProblem.problem.updatedAt, TimeComponent.nowUtc())
+                .where(QProblem.problem.eq(problem), QProblem.problem.isDeleted.isFalse())
+                .execute();
+    }
+
+    @Override
+    public Slice<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable) {
+        List<ProblemVo> result = queryFactory
                 .select(new QProblemVo(
                         problem.id,
                         problem.question,
                         problem.type,
-                        problem.optionCount
+                        problem.optionCount,
+                        problem.timeout
                 ))
                 .from(problem)
                 .where(problem.workbook.id.eq(workbookId), problem.isDeleted.isFalse(),
@@ -66,22 +78,23 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
                 .fetch();
 
         boolean hasNext = false;
-        if (list.size() > pageable.getPageSize()) {
+        if (result.size() > pageable.getPageSize()) {
             hasNext = true;
-            list.remove(pageable.getPageSize());
+            result.remove(pageable.getPageSize());
         }
 
-        return new SliceImpl<>(list, pageable, hasNext);
+        return new SliceImpl<>(result, pageable, hasNext);
     }
 
     @Override
-    public void softDelete(Problem problem) {
-        queryFactory
-                .update(QProblem.problem)
-                .set(QProblem.problem.isDeleted, true)
-                .set(QProblem.problem.updatedBy, LoggedInUser.getUserId())
-                .set(QProblem.problem.updatedAt, TimeComponent.nowUtc())
-                .where(QProblem.problem.eq(problem), QProblem.problem.isDeleted.isFalse())
-                .execute();
+    public List<ProblemVo> findAllProblemIdAndTypeByWorkbook(Workbook workbook) {
+        return queryFactory
+                .select(new QProblemVo(
+                        problem.id,
+                        problem.type
+                ))
+                .from(problem)
+                .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
+                .fetch();
     }
 }
