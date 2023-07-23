@@ -36,7 +36,7 @@ public class SignController {
 
     @PostMapping("/api/access-token/refresh")
     public ApiResponseDto<?> generateAccessTokenByRefreshToken(HttpServletResponse response,
-                                                            @RequestHeader HttpHeaders headers) {
+                                                               @RequestHeader HttpHeaders headers) {
         String bearerRefreshToken = headers.getOrEmpty("Refresh")
                 .stream().findFirst().orElse("");
 

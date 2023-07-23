@@ -38,13 +38,15 @@ import static org.mockito.Mockito.verify;
 @DisplayName("단위: 풀이 관련 테스트")
 class GradingServiceImplTest {
     @InjectMocks
-    private GradingServiceImpl solveService;
+    private GradingServiceImpl gradingService;
     @Mock
     private GradingWorkbookClient gradingWorkbookClient;
     @Mock
     private WorkbookResultRepository workbookResultRepository;
     @Mock
     private WorkbookEventsPublisher workbookEventsPublisher;
+    @Mock
+    private ResultRecord resultRecord;
 
     @Test
     @DisplayName("풀이한 문제를 채점할 수 있다.")
@@ -65,7 +67,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(getCorrectAnswerMap());
 
-        List<Boolean> results = solveService.gradeWorkbook(param);
+        List<Boolean> results = gradingService.gradeWorkbook(param);
         assertThat(results).hasSize(4);
         assertThat(results).containsExactly(true, true, true, false);
     }
@@ -89,7 +91,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(getCorrectAnswerMap());
 
-        List<Boolean> results = solveService.gradeWorkbook(param);
+        List<Boolean> results = gradingService.gradeWorkbook(param);
         assertThat(results).hasSize(4);
         assertThat(results).containsExactly(true, true, true, false);
     }
@@ -113,7 +115,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(getCorrectAnswerMap());
 
-        List<Boolean> results = solveService.gradeWorkbook(param);
+        List<Boolean> results = gradingService.gradeWorkbook(param);
         assertThat(results).hasSize(4);
         assertThat(results).containsExactly(true, true, true, true);
     }
@@ -136,7 +138,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(map);
 
-        List<Boolean> results = solveService.gradeWorkbook(param);
+        List<Boolean> results = gradingService.gradeWorkbook(param);
         assertThat(results).hasSize(1);
         assertThat(results).containsExactly(true);
     }
@@ -160,7 +162,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(map);
 
-        List<Boolean> results = solveService.gradeWorkbook(param);
+        List<Boolean> results = gradingService.gradeWorkbook(param);
         assertThat(results).hasSize(1);
         assertThat(results).containsExactly(false);
     }
@@ -183,7 +185,7 @@ class GradingServiceImplTest {
                 )
         );
 
-        assertThatThrownBy(() -> solveService.gradeWorkbook(param))
+        assertThatThrownBy(() -> gradingService.gradeWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class)
                 .hasMessage("풀이자 별명이 존재하지않아 채점할 수 없습니다.");
     }
@@ -201,7 +203,7 @@ class GradingServiceImplTest {
                 problems
         );
 
-        assertThatThrownBy(() -> solveService.gradeWorkbook(param))
+        assertThatThrownBy(() -> gradingService.gradeWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class)
                 .hasMessage("풀이가 존재하지 않아 채점할 수 없습니다.");
     }
@@ -225,7 +227,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(getCorrectAnswerMap());
 
-        solveService.gradeWorkbook(param);
+        gradingService.gradeWorkbook(param);
         verify(workbookResultRepository, times(1)).save(any());
     }
 
@@ -248,7 +250,7 @@ class GradingServiceImplTest {
         given(gradingWorkbookClient.getCorrectAnswers(workbookId))
                 .willReturn(getCorrectAnswerMap());
 
-        solveService.gradeWorkbook(param);
+        gradingService.gradeWorkbook(param);
         verify(workbookEventsPublisher, times(1)).publish(any(EventsPublisherWorkbookEvent.SolvedCountAddEvent.class));
     }
 
