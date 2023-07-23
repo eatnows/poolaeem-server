@@ -34,7 +34,7 @@ public class WorkbookController {
     @PutMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<?> updateWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable(name = "workbookId") String workbookId,
-                                            @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
+                                            @Valid @RequestBody WorkbookRequest.WorkbookUpdateDto dto) {
         WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription());
         workbookService.updateWorkbook(param);
         return ApiResponseDto.OK();

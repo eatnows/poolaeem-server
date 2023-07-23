@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.user.domain.service.profile;
 
+import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
@@ -99,7 +100,7 @@ class ProfileInfoServiceImplTest {
         String newUserName = TextGenerator.generate(31);
 
         assertThatThrownBy(() -> profileInfoService.updateUserName(userId, newUserName))
-                .isInstanceOf(AssertionError.class);
+                .isInstanceOf(BadRequestDataException.class);
     }
 
     @Test
@@ -109,6 +110,6 @@ class ProfileInfoServiceImplTest {
         String newUserName = TextGenerator.generate(0);
 
         assertThatThrownBy(() -> profileInfoService.updateUserName(userId, newUserName))
-                .isInstanceOf(AssertionError.class);
+                .isInstanceOf(BadRequestDataException.class);
     }
 }

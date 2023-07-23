@@ -119,7 +119,7 @@ class SignControllerTest extends BaseIntegrationTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(ApiResponseCode.REQUEST_VALIDATION.getCode())));
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.BAD_REQUEST_DATA.getCode())));
     }
 
     @Test

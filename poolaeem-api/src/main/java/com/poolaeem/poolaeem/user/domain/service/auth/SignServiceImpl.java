@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.auth.DuplicateSignUpException;
 import com.poolaeem.poolaeem.common.exception.auth.UserNotSignedUpException;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
@@ -48,7 +49,7 @@ public class SignServiceImpl implements SignService {
         OAuth2AccessToken accessToken = client.getAccessToken();
 
         if (isExpired(Objects.requireNonNull(accessToken.getExpiresAt()))) {
-            throw new UserNotSignedUpException();
+            throw new UserNotSignedUpException(ApiResponseCode.USER_NOT_SIGNED_UP.getMessage());
         }
 
         OAuth2User oAuth2User = signUpOAuth2UserService.loadUser(new OAuth2UserRequest(client.getClientRegistration(), accessToken));
@@ -80,8 +81,9 @@ public class SignServiceImpl implements SignService {
         Optional<User> optional = userRepository.findByOauthProviderAndOauthIdAndIsDeletedFalse(
                 OauthProvider.valueOf(providerUser.getProvider().toUpperCase()),
                 providerUser.getId());
+
         if (optional.isPresent()) {
-            throw new DuplicateSignUpException();
+            throw new DuplicateSignUpException(ApiResponseCode.DUPLICATE_SIGNED_UP.getMessage());
         }
 
         return userRepository.save(new User(providerUser.getEmail(),
