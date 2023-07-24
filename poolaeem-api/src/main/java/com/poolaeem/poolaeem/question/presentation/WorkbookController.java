@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.question.presentation;
 
 import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
+import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
@@ -20,6 +21,7 @@ public class WorkbookController {
         this.workbookService = workbookService;
     }
 
+    @LoggedInUserOnly
     @PostMapping("/api/workbook")
     public ApiResponseDto<WorkbookResponse.WorkbookCreate> createWorkbook(@LoggedInUser UserVo user,
                                                                           @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
@@ -31,6 +33,7 @@ public class WorkbookController {
         return ApiResponseDto.OK(response);
     }
 
+    @LoggedInUserOnly
     @PutMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<?> updateWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable(name = "workbookId") String workbookId,
@@ -40,6 +43,7 @@ public class WorkbookController {
         return ApiResponseDto.OK();
     }
 
+    @LoggedInUserOnly
     @GetMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<WorkbookResponse.WorkbookInfoRead> readWorkbookInfo(@LoggedInUser UserVo user,
                                               @PathVariable String workbookId) {

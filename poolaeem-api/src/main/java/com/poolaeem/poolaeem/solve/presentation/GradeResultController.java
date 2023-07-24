@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.solve.presentation;
 
 import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
+import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.solve.application.GradeResultService;
 import com.poolaeem.poolaeem.solve.domain.dto.GradeResultDto;
@@ -22,6 +23,7 @@ public class GradeResultController {
         this.gradeResultService = gradeResultService;
     }
 
+    @LoggedInUserOnly
     @GetMapping("/api/results/workbooks/{workbookId}/solved/histories")
     public ApiResponseDto<GradeResultResponse.SolvedUsersRead> readSolvedHistoryOfWorkbook(@LoggedInUser UserVo user,
                                                                                            @PathVariable String workbookId,

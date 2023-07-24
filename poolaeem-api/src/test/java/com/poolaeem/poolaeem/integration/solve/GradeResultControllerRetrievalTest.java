@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.integration.solve;
 
+import com.poolaeem.poolaeem.common.exception.auth.UnAuthorizationException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
@@ -131,5 +132,19 @@ class GradeResultControllerRetrievalTest extends BaseIntegrationTest {
                 ).andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code", is(ApiResponseCode.FORBIDDEN.getCode())))
                 .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(ForbiddenRequestException.class));
+    }
+
+    @Test
+    @DisplayName("로그인하지 않으면 문제집의 풀이내역을 조회할 수 없다.")
+    void testReadSolvedHistoryOfWorkbookByNotLoggedIn() throws Exception {
+        String workbookId = "workbook-2";
+
+        this.mockMvc.perform(
+                        get(READ_SOLVED_HISTORY_OF_WORKBOOK, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.UNAUTHORIZED.getCode())))
+                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(UnAuthorizationException.class));
     }
 }
