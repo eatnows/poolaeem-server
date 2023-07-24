@@ -22,7 +22,7 @@ public class GradeResultController {
         this.gradeResultService = gradeResultService;
     }
 
-    @GetMapping("/api/results/workbooks/{workbookId}/solved/history")
+    @GetMapping("/api/results/workbooks/{workbookId}/solved/histories")
     public ApiResponseDto<GradeResultResponse.SolvedUsersRead> readSolvedHistoryOfWorkbook(@LoggedInUser UserVo user,
                                                                                            @PathVariable String workbookId,
                                                                                            @RequestParam(required = false) String lastId,
