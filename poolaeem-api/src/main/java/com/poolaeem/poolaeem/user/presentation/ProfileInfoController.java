@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.user.presentation;
 
 import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
+import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.domain.dto.ProfileDto;
@@ -19,6 +20,7 @@ public class ProfileInfoController {
         this.profileInfoService = profileInfoService;
     }
 
+    @LoggedInUserOnly
     @GetMapping("/api/profile/info")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> readProfileInfo(@LoggedInUser UserVo user) {
         ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
@@ -26,6 +28,7 @@ public class ProfileInfoController {
         return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
     }
 
+    @LoggedInUserOnly
     @PatchMapping("/api/profile/name")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> updateUserName(@LoggedInUser UserVo user,
                                                                              @Valid @RequestBody ProfileInfoRequest.UserNameUpdateDto dto) {
@@ -35,6 +38,7 @@ public class ProfileInfoController {
         return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
     }
 
+    @LoggedInUserOnly
     @PostMapping("/api/profile/image")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> updateProfileImage(@LoggedInUser UserVo user,
                                                                                  @Valid ProfileInfoRequest.ProfileImageUpdateDto dto) {
