@@ -70,6 +70,18 @@ WARNING: 문제집이 존재하지 않음
 include::{snippets}/question/workbook/test-read-workbook-solve-introduction-for-not-found/http-response.adoc[]
 
 
+== 문제집 삭제
+=== -- Request
+include::{snippets}/question/workbook/test-delete-workbook/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-delete-workbook/request-headers.adoc[]
+include::{snippets}/question/workbook/test-delete-workbook/http-request.adoc[]
+=== -- Response
+NOTE: 성공
+include::{snippets}/question/workbook/test-delete-workbook/http-response.adoc[]
+WARNING: 권한없음
+include::{snippets}/question/workbook/test-delete-workbook-for-not-creator/http-response.adoc[]
+
+
 
 = 문항
 == 문항 추가
