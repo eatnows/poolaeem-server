@@ -16,5 +16,6 @@ public final class WorkbookValidation {
         public static final String WORKBOOK_NAME_LENGTH = "문제집의 이름을 확인해주세요.";
         public static final String DESCRIPTION_LENGTH = "문제집의 설명글을 확인해주세요.";
         public static final String WORKBOOK_THEME = "문제집의 테마를 확인해주세요.";
+        public static final String WORKBOOK_FORBIDDEN = "권한이 없는 문제집입니다.";
     }
 }

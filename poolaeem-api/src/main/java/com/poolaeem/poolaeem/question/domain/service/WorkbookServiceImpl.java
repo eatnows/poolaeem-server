@@ -55,11 +55,15 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional(readOnly = true)
     @Override
     public WorkbookVo readWorkbookInfo(String workbookId, String reqUserId) {
-        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
+        WorkbookVo workbook = getWorkbookVo(workbookId);
         validManage(workbook.getUserId(), reqUserId);
 
         return workbook;
+    }
+
+    private WorkbookVo getWorkbookVo(String workbookId) {
+        return workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
     }
 
     @Transactional
@@ -77,8 +81,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional(readOnly = true)
     @Override
     public WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId) {
-        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
+        WorkbookVo workbook = getWorkbookVo(workbookId);
         WorkbookCreator creator = workbookUserClient.readWorkbookCreator(workbook.getUserId());
 
         return new WorkbookDto.SolveIntroductionRead (
@@ -97,6 +100,17 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Override
     public void increaseSolvedCount(String workbookId) {
         workbookRepository.updateIncreaseSolvedCountByWorkbookId(workbookId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public void validWorkbookManage(String workbookId, String reqUserId) {
+        WorkbookVo workbookVo = getWorkbookVo(workbookId);
+
+        String creator = workbookVo.getUserId();
+        if (!creator.equals(reqUserId)) {
+            throw new ForbiddenRequestException(WorkbookValidation.Message.WORKBOOK_FORBIDDEN);
+        }
     }
 
     private Workbook getWorkbookEntity(String workbookId) {

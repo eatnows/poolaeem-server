@@ -19,4 +19,6 @@ public interface WorkbookService {
     WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId);
 
     void increaseSolvedCount(String workbookId);
+
+    void validWorkbookManage(String workbookId, String reqUserId);
 }
