@@ -139,6 +139,21 @@ public class ProblemServiceImpl implements ProblemService {
         return problems;
     }
 
+    @Transactional
+    @Override
+    public void softDeleteAllProblemsAndOptions(Workbook workbook) {
+        softDeleteAllProblemOptions(workbook);
+        softDeleteAllProblems(workbook);
+    }
+
+    private void softDeleteAllProblems(Workbook workbook) {
+        problemRepository.softDeleteAllByWorkbook(workbook);
+    }
+
+    private void softDeleteAllProblemOptions(Workbook workbook) {
+        problemOptionRepository.softDeleteAllByWorkbook(workbook);
+    }
+
     private void addOptionsInProblem(List<ProblemVo> problems) {
         List<String> problemIds = problems.stream().map(ProblemVo::getProblemId).toList();
 

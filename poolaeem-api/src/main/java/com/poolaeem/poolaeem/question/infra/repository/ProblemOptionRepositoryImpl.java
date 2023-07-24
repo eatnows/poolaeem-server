@@ -7,6 +7,7 @@ import com.poolaeem.poolaeem.question.domain.entity.ProblemOption;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.vo.ProblemOptionVo;
 import com.poolaeem.poolaeem.question.domain.entity.vo.QProblemOptionVo;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.util.List;
@@ -94,5 +95,20 @@ public class ProblemOptionRepositoryImpl implements ProblemOptionRepositoryCusto
                 .on(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
                 .where(problemOption.isCorrect.isTrue(), problemOption.isDeleted.isFalse())
                 .fetch();
+    }
+
+    @Override
+    public void softDeleteAllByWorkbook(Workbook workbook) {
+        queryFactory
+                .update(problemOption)
+                .set(problemOption.isDeleted, true)
+                .set(problemOption.updatedBy, LoggedInUser.getUserId())
+                .set(problemOption.updatedAt, TimeComponent.nowUtc())
+                .where(problemOption.problem.id.in(
+                        JPAExpressions.select(problem.id)
+                                .from(problem)
+                                .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
+                ))
+                .execute();
     }
 }

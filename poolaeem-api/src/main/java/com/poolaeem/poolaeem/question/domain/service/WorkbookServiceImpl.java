@@ -3,6 +3,7 @@ package com.poolaeem.poolaeem.question.domain.service;
 import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
+import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
@@ -18,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class WorkbookServiceImpl implements WorkbookService {
     private final WorkbookRepository workbookRepository;
     private final WorkbookUserClient workbookUserClient;
+    private final ProblemService problemService;
 
-    public WorkbookServiceImpl(WorkbookRepository workbookRepository, WorkbookUserClient workbookUserClient) {
+    public WorkbookServiceImpl(WorkbookRepository workbookRepository, WorkbookUserClient workbookUserClient, ProblemService problemService) {
         this.workbookRepository = workbookRepository;
         this.workbookUserClient = workbookUserClient;
+        this.problemService = problemService;
     }
 
     @Transactional
@@ -108,9 +111,17 @@ public class WorkbookServiceImpl implements WorkbookService {
         WorkbookVo workbookVo = getWorkbookVo(workbookId);
 
         String creator = workbookVo.getUserId();
-        if (!creator.equals(reqUserId)) {
-            throw new ForbiddenRequestException(WorkbookValidation.Message.WORKBOOK_FORBIDDEN);
-        }
+        validManage(creator, reqUserId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteWorkbook(String reqUserId, String workbookId) {
+        Workbook workbook = getWorkbookEntity(workbookId);
+        validManage(workbook.getUserId(), reqUserId);
+
+        problemService.softDeleteAllProblemsAndOptions(workbook);
+        workbook.delete();
     }
 
     private Workbook getWorkbookEntity(String workbookId) {
@@ -120,7 +131,7 @@ public class WorkbookServiceImpl implements WorkbookService {
 
     private void validManage(String ownerUserId, String reqUserId) {
         if (!ownerUserId.equals(reqUserId)) {
-            throw new ForbiddenRequestException();
+            throw new ForbiddenRequestException(WorkbookValidation.Message.WORKBOOK_FORBIDDEN);
         }
     }
 

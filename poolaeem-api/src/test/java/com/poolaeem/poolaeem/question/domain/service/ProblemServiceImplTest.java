@@ -470,6 +470,16 @@ class ProblemServiceImplTest {
         assertThat(correctAnswers.get(1).getOptions().get(0).getOptionId()).isEqualTo("option-3");
     }
 
+    @Test
+    @DisplayName("모든 문항과 모든 선택지를 삭제할 수 있다.")
+    void testDeleteAllProblemsAndOptions() {
+        Workbook mockWorkbook = new Workbook("workbook-id", "user-id", "title", "description", 0, 0, WorkbookTheme.PINK);
+        problemService.softDeleteAllProblemsAndOptions(mockWorkbook);
+
+        verify(optionRepository, times(1)).softDeleteAllByWorkbook(mockWorkbook);
+        verify(problemRepository, times(1)).softDeleteAllByWorkbook(mockWorkbook);
+    }
+
     private List<ProblemOptionDto> getOptions(int size) {
         List<ProblemOptionDto> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {

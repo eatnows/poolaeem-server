@@ -59,4 +59,12 @@ public class WorkbookController {
         WorkbookResponse.SolveIntroductionRead response = new WorkbookResponse.SolveIntroductionRead(info);
         return ApiResponseDto.OK(response);
     }
+
+    @LoggedInUserOnly
+    @DeleteMapping("/api/workbooks/{workbookId}")
+    public ApiResponseDto<?> deleteWorkbook(@LoggedInUser UserVo user,
+                                            @PathVariable String workbookId) {
+        workbookService.deleteWorkbook(user.getId(), workbookId);
+        return ApiResponseDto.OK();
+    }
 }

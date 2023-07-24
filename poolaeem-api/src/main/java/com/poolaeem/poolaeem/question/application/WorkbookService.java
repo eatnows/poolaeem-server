@@ -21,4 +21,6 @@ public interface WorkbookService {
     void increaseSolvedCount(String workbookId);
 
     void validWorkbookManage(String workbookId, String reqUserId);
+
+    void deleteWorkbook(String userId, String workbookId);
 }
