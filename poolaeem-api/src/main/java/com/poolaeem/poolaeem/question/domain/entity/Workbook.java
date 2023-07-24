@@ -83,4 +83,8 @@ public class Workbook extends BaseEntity {
     public void addProblem(Problem problem) {
         problems.add(problem);
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

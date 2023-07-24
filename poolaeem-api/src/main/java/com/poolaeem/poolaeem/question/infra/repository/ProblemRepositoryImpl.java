@@ -97,4 +97,15 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
                 .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
                 .fetch();
     }
+
+    @Override
+    public void softDeleteAllByWorkbook(Workbook workbook) {
+        queryFactory
+                .update(problem)
+                .set(problem.isDeleted, true)
+                .set(problem.updatedBy, LoggedInUser.getUserId())
+                .set(problem.updatedAt, TimeComponent.nowUtc())
+                .where(problem.workbook.eq(workbook), problem.isDeleted.isFalse())
+                .execute();
+    }
 }
