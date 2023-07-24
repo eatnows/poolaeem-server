@@ -27,7 +27,7 @@ endif::[]
 |반환 데이터 값
 |===
 
-= -
+= 채점
 
 == 문제 채점
 === -- Request
@@ -43,4 +43,20 @@ include::{snippets}/solve/test-grade-workbook-for-not-exist-name/http-response.a
 WARNING: 풀이가 존재하지 않는다
 include::{snippets}/solve/test-grade-workbook-for-not-exist-answer/http-response.adoc[]
 
-
+= 결과
+== 문제집의 풀이내역 조회
+=== -- Request
+include::{snippets}/solve/test-read-solved-history-of-workbook/path-parameters.adoc[]
+include::{snippets}/solve/test-read-solved-history-of-workbook/request-headers.adoc[]
+include::{snippets}/solve/test-read-solved-history-of-workbook/query-parameters.adoc[]
+include::{snippets}/solve/test-read-solved-history-of-workbook/http-request.adoc[]
+=== -- Response
+include::{snippets}/solve/test-read-solved-history-of-workbook/response-fields-beneath-data.adoc[]
+NOTE: 성공
+include::{snippets}/solve/test-read-solved-history-of-workbook/http-response.adoc[]
+NOTE: 풀이내역이 존재하지 않음
+include::{snippets}/solve/test-read-solved-history-of-workbook-for-empty-case/http-response.adoc[]
+WARNING: 문제집이 존재하지 않음
+include::{snippets}/solve/test-read-solved-history-of-workbook-for-not-exists/http-response.adoc[]
+WARNING: 문제집 권한이 없음
+include::{snippets}/solve/test-read-solved-history-of-workbook-for-not-creator/http-response.adoc[]

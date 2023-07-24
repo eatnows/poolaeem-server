@@ -7,4 +7,6 @@ import java.util.Map;
 public interface GradingWorkbookClient {
 
     Map<String, ProblemGrading> getCorrectAnswers(String workbookId);
+
+    void validWorkbookManage(String workbookId, String reqUserId);
 }
