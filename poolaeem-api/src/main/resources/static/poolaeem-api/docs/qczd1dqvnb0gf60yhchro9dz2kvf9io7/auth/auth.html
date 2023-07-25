@@ -453,6 +453,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_구글_oauth2_로그인_요청">구글 OAuth2 로그인 요청</a></li>
 <li><a href="#_회원가입_이용약관_동의">회원가입 이용약관 동의</a></li>
 <li><a href="#_로그아웃">로그아웃</a></li>
+<li><a href="#_유저_탈퇴">유저 탈퇴</a></li>
 <li><a href="#_리프레시_토큰으로_액세스_토큰_재발급">리프레시 토큰으로 액세스 토큰 재발급</a></li>
 </ul>
 </li>
@@ -539,8 +540,8 @@ Host: poolaeem.com</code></pre>
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: oauth2_auth_request=rO0ABXNyAExvcmcuc3ByaW5nZnJhbWV3b3JrLnNlY3VyaXR5Lm9hdXRoMi5jb3JlLmVuZHBvaW50Lk9BdXRoMkF1dGhvcml6YXRpb25SZXF1ZXN0AAAAAAAAAmICAApMABRhZGRpdGlvbmFsUGFyYW1ldGVyc3QAD0xqYXZhL3V0aWwvTWFwO0wACmF0dHJpYnV0ZXNxAH4AAUwAFmF1dGhvcml6YXRpb25HcmFudFR5cGV0AEFMb3JnL3NwcmluZ2ZyYW1ld29yay9zZWN1cml0eS9vYXV0aDIvY29yZS9BdXRob3JpemF0aW9uR3JhbnRUeXBlO0wAF2F1dGhvcml6YXRpb25SZXF1ZXN0VXJpdAASTGphdmEvbGFuZy9TdHJpbmc7TAAQYXV0aG9yaXphdGlvblVyaXEAfgADTAAIY2xpZW50SWRxAH4AA0wAC3JlZGlyZWN0VXJpcQB-AANMAAxyZXNwb25zZVR5cGV0AFNMb3JnL3NwcmluZ2ZyYW1ld29yay9zZWN1cml0eS9vYXV0aDIvY29yZS9lbmRwb2ludC9PQXV0aDJBdXRob3JpemF0aW9uUmVzcG9uc2VUeXBlO0wABnNjb3Blc3QAD0xqYXZhL3V0aWwvU2V0O0wABXN0YXRlcQB-AAN4cHNyACVqYXZhLnV0aWwuQ29sbGVjdGlvbnMkVW5tb2RpZmlhYmxlTWFw8aWo_nT1B0ICAAFMAAFtcQB-AAF4cHNyABdqYXZhLnV0aWwuTGlua2VkSGFzaE1hcDTATlwQbMD7AgABWgALYWNjZXNzT3JkZXJ4cgARamF2YS51dGlsLkhhc2hNYXAFB9rBwxZg0QMAAkYACmxvYWRGYWN0b3JJAAl0aHJlc2hvbGR4cD9AAAAAAAAAdwgAAAAQAAAAAHgAc3EAfgAHc3EAfgAJP0AAAAAAAAx3CAAAABAAAAABdAAPcmVnaXN0cmF0aW9uX2lkdAAGZ29vZ2xleABzcgA_b3JnLnNwcmluZ2ZyYW1ld29yay5zZWN1cml0eS5vYXV0aDIuY29yZS5BdXRob3JpemF0aW9uR3JhbnRUeXBlAAAAAAAAAmICAAFMAAV2YWx1ZXEAfgADeHB0ABJhdXRob3JpemF0aW9uX2NvZGV0AN5odHRwOi8vMC4wLjAuMDo4MDkwL29hdXRoL2F1dGhvcml6ZT9yZXNwb25zZV90eXBlPWNvZGUmY2xpZW50X2lkPSQlN0JPQVVUSF9HT09HTEVfSUQlN0Qmc2NvcGU9cHJvZmlsZSUyMGVtYWlsJnN0YXRlPW9TdnF0WDJDUTd1bmZ1em0yOV9MZG96NFlvOC10b0JvZHh3Q2xUYlE5bTglM0QmcmVkaXJlY3RfdXJpPWh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbi9vYXV0aDIvY29kZS9nb29nbGV0ACNodHRwOi8vMC4wLjAuMDo4MDkwL29hdXRoL2F1dGhvcml6ZXQAEiR7T0FVVEhfR09PR0xFX0lEfXQALmh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbi9vYXV0aDIvY29kZS9nb29nbGVzcgBRb3JnLnNwcmluZ2ZyYW1ld29yay5zZWN1cml0eS5vYXV0aDIuY29yZS5lbmRwb2ludC5PQXV0aDJBdXRob3JpemF0aW9uUmVzcG9uc2VUeXBlAAAAAAAAAmICAAFMAAV2YWx1ZXEAfgADeHB0AARjb2Rlc3IAJWphdmEudXRpbC5Db2xsZWN0aW9ucyRVbm1vZGlmaWFibGVTZXSAHZLRj5uAVQIAAHhyACxqYXZhLnV0aWwuQ29sbGVjdGlvbnMkVW5tb2RpZmlhYmxlQ29sbGVjdGlvbhlCAIDLXvceAgABTAABY3QAFkxqYXZhL3V0aWwvQ29sbGVjdGlvbjt4cHNyABdqYXZhLnV0aWwuTGlua2VkSGFzaFNldNhs11qV3SoeAgAAeHIAEWphdmEudXRpbC5IYXNoU2V0ukSFlZa4tzQDAAB4cHcMAAAAED9AAAAAAAACdAAHcHJvZmlsZXQABWVtYWlseHQALG9TdnF0WDJDUTd1bmZ1em0yOV9MZG96NFlvOC10b0JvZHh3Q2xUYlE5bTg9; Path=/; Max-Age=180; Expires=Mon, 24 Jul 2023 15:47:53 GMT; Secure; HttpOnly; SameSite=None
-Location: http://0.0.0.0:8090/oauth/authorize?response_type=code&amp;client_id=$%7BOAUTH_GOOGLE_ID%7D&amp;scope=profile%20email&amp;state=oSvqtX2CQ7unfuzm29_Ldoz4Yo8-toBodxwClTbQ9m8%3D&amp;redirect_uri=http://localhost:8080/login/oauth2/code/google</code></pre>
+Set-Cookie: oauth2_auth_request=rO0ABXNyAExvcmcuc3ByaW5nZnJhbWV3b3JrLnNlY3VyaXR5Lm9hdXRoMi5jb3JlLmVuZHBvaW50Lk9BdXRoMkF1dGhvcml6YXRpb25SZXF1ZXN0AAAAAAAAAmICAApMABRhZGRpdGlvbmFsUGFyYW1ldGVyc3QAD0xqYXZhL3V0aWwvTWFwO0wACmF0dHJpYnV0ZXNxAH4AAUwAFmF1dGhvcml6YXRpb25HcmFudFR5cGV0AEFMb3JnL3NwcmluZ2ZyYW1ld29yay9zZWN1cml0eS9vYXV0aDIvY29yZS9BdXRob3JpemF0aW9uR3JhbnRUeXBlO0wAF2F1dGhvcml6YXRpb25SZXF1ZXN0VXJpdAASTGphdmEvbGFuZy9TdHJpbmc7TAAQYXV0aG9yaXphdGlvblVyaXEAfgADTAAIY2xpZW50SWRxAH4AA0wAC3JlZGlyZWN0VXJpcQB-AANMAAxyZXNwb25zZVR5cGV0AFNMb3JnL3NwcmluZ2ZyYW1ld29yay9zZWN1cml0eS9vYXV0aDIvY29yZS9lbmRwb2ludC9PQXV0aDJBdXRob3JpemF0aW9uUmVzcG9uc2VUeXBlO0wABnNjb3Blc3QAD0xqYXZhL3V0aWwvU2V0O0wABXN0YXRlcQB-AAN4cHNyACVqYXZhLnV0aWwuQ29sbGVjdGlvbnMkVW5tb2RpZmlhYmxlTWFw8aWo_nT1B0ICAAFMAAFtcQB-AAF4cHNyABdqYXZhLnV0aWwuTGlua2VkSGFzaE1hcDTATlwQbMD7AgABWgALYWNjZXNzT3JkZXJ4cgARamF2YS51dGlsLkhhc2hNYXAFB9rBwxZg0QMAAkYACmxvYWRGYWN0b3JJAAl0aHJlc2hvbGR4cD9AAAAAAAAAdwgAAAAQAAAAAHgAc3EAfgAHc3EAfgAJP0AAAAAAAAx3CAAAABAAAAABdAAPcmVnaXN0cmF0aW9uX2lkdAAGZ29vZ2xleABzcgA_b3JnLnNwcmluZ2ZyYW1ld29yay5zZWN1cml0eS5vYXV0aDIuY29yZS5BdXRob3JpemF0aW9uR3JhbnRUeXBlAAAAAAAAAmICAAFMAAV2YWx1ZXEAfgADeHB0ABJhdXRob3JpemF0aW9uX2NvZGV0AN5odHRwOi8vMC4wLjAuMDo4MDkwL29hdXRoL2F1dGhvcml6ZT9yZXNwb25zZV90eXBlPWNvZGUmY2xpZW50X2lkPSQlN0JPQVVUSF9HT09HTEVfSUQlN0Qmc2NvcGU9cHJvZmlsZSUyMGVtYWlsJnN0YXRlPWk5Z01kSGFwY1k5NExBRDIxY2lPd2xsYzBHZFFaQVRKT2VXR3h5M3Z5RFElM0QmcmVkaXJlY3RfdXJpPWh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbi9vYXV0aDIvY29kZS9nb29nbGV0ACNodHRwOi8vMC4wLjAuMDo4MDkwL29hdXRoL2F1dGhvcml6ZXQAEiR7T0FVVEhfR09PR0xFX0lEfXQALmh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbi9vYXV0aDIvY29kZS9nb29nbGVzcgBRb3JnLnNwcmluZ2ZyYW1ld29yay5zZWN1cml0eS5vYXV0aDIuY29yZS5lbmRwb2ludC5PQXV0aDJBdXRob3JpemF0aW9uUmVzcG9uc2VUeXBlAAAAAAAAAmICAAFMAAV2YWx1ZXEAfgADeHB0AARjb2Rlc3IAJWphdmEudXRpbC5Db2xsZWN0aW9ucyRVbm1vZGlmaWFibGVTZXSAHZLRj5uAVQIAAHhyACxqYXZhLnV0aWwuQ29sbGVjdGlvbnMkVW5tb2RpZmlhYmxlQ29sbGVjdGlvbhlCAIDLXvceAgABTAABY3QAFkxqYXZhL3V0aWwvQ29sbGVjdGlvbjt4cHNyABdqYXZhLnV0aWwuTGlua2VkSGFzaFNldNhs11qV3SoeAgAAeHIAEWphdmEudXRpbC5IYXNoU2V0ukSFlZa4tzQDAAB4cHcMAAAAED9AAAAAAAACdAAHcHJvZmlsZXQABWVtYWlseHQALGk5Z01kSGFwY1k5NExBRDIxY2lPd2xsYzBHZFFaQVRKT2VXR3h5M3Z5RFE9; Path=/; Max-Age=180; Expires=Tue, 25 Jul 2023 09:13:16 GMT; Secure; HttpOnly; SameSite=None
+Location: http://0.0.0.0:8090/oauth/authorize?response_type=code&amp;client_id=$%7BOAUTH_GOOGLE_ID%7D&amp;scope=profile%20email&amp;state=i9gMdHapcY94LAD21ciOwllc0GdQZATJOeWGxy3vyDQ%3D&amp;redirect_uri=http://localhost:8080/login/oauth2/code/google</code></pre>
 </div>
 </div>
 </div>
@@ -673,8 +674,8 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Access-Control-Expose-Headers: access-token, refresh-token
-access-token: eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6bnVsbCwiaWF0IjoxNjkwMjEzNDkzLCJleHAiOjE2OTAyMTUyOTN9.BpgZFRXvuj3D8hda01BnSPm9dYHBekoh8WAaX4e3DFO8DzNHCJjtV6bUndJG-OcsFbfrjhx-g-5oGvzDnTnNulayvZQUTYSVc_pW3Lm373oMLNuEcmWpus8tH1qVhYkLeWErZQEqXK0LjG2EE67wQaw9Pre2kWxoMRQIcN2IfwijU7d0YQCxZoTEAJMcmDwfmtGqPvhsRGE0ThOEhVUL0QNVhcivIpSkzfBiA6bnJRPO2zNjEFhJQtViOA5Y_wALOpSib4ch-8ANgNWiQYJM9yoWAfcMunkrzDnqpKO9rTQRCzBHLqp6Mpuu7p5wgb0x-ifNRWtQJzzpB4CE9T8DIA
-refresh-token: eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjpudWxsLCJpYXQiOjE2OTAyMTM0OTMsImV4cCI6MTY5MTUwOTQ5M30.n0_2Tdg9579evUO6nULmRklsd1C8lZrGQhuaKZipLFgGA9J4pyJrX1i7noYLRQc8yo62p-M6cIh1qRNITfKl73cEy1u3nD3Fzgz1UG4rx4lK6dPb-kzZhH_efU8R7mabB_zmvNCG38RLgdXdrJM0kBUSxjRwTgl4HQ-HP3IxDohOCnsBeLY8i_bH_pk5E-9MfpPE3QqAboEylH9uAxEdPFQAs7aUPFA-XZPGgYc9HzMh4uOvp9FZaBwgRmMPCWzxWFqsheYbfPWp_IMHUKKHt5xpPk2Nq63r6Rq9mY_cDjPAocAMieexD5qtfiQ6mSdb_gngzpiqCwT78imkM2llGA</code></pre>
+access-token: eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6bnVsbCwiaWF0IjoxNjkwMjc2MjE2LCJleHAiOjE2OTAyNzgwMTZ9.mcBL4vxB0AIwEoE2yRMztRXbL6ZH8u4lykRT_yX_T1xBs2fTXjoEY2UeBnBlYaxzNYdeomEiUjAXqyDo_OJYaL7S-rAWHa19JAe40Eu5q72PQlC5SRUWbVDo_gpd17QlcOQkDsiRR67NjEexfgdSh77-p-4SMVP5QwnZ1rqHmiwwROvst9zw9sOsY6VbRuIzEvVh42AQGSww5bEN_93xDlq4yIQ88fhrTDckt4OUYdYdJBTnbmY6IpZy-AuLZKXQyBfX3MGi1lS23rsj7whnkMKZLX_6MBKeZ2EoSDlu9PlcdvsoiiCHwrPQr60qIpPoiEemKxYwMoJzbNDXAN3wzw
+refresh-token: eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjpudWxsLCJpYXQiOjE2OTAyNzYyMTYsImV4cCI6MTY5MTU3MjIxNn0.80f2IhJ3r5zQc1DiSfGyn_WlUJV7dK--B-1-hfWkrqLODfnCjeWuOE9YxZZrccIl-qzk_R_GRG9ibSzz57y-aPQSEhf1GINTWZaUh4SCamGd8U6ngnbIyfeXVOF4fQXoFB9q5QQnz4zyJQES7xykLI-ds_LeUlJkzl8qSDiJz3gq8ATmwjIBDvhEedoerQXpHWsSyEMRA42k3Ursm312Er699bmgfGswmGU-GfobNdFZYub9DSb7Khtlf83bF9QcWj0hJ2qCk4jGrK7gGx9_fo3P-ei3u66TaS2dMZeQ1DmLkOerHqAFRSoHpNfGgDQPPzZpWvIjGbN_E3GGfiEybg</code></pre>
 </div>
 </div>
 </div>
@@ -685,23 +686,10 @@ refresh-token: eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_request_3"><a class="link" href="#_request_3">&#8201;&#8212;&#8201;Request</a></h3>
-
-</div>
-<div class="sect2">
-<h3 id="_response_3"><a class="link" href="#_response_3">&#8201;&#8212;&#8201;Response</a></h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_리프레시_토큰으로_액세스_토큰_재발급"><a class="link" href="#_리프레시_토큰으로_액세스_토큰_재발급">리프레시 토큰으로 액세스 토큰 재발급</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_request_4"><a class="link" href="#_request_4">&#8201;&#8212;&#8201;Request</a></h3>
 <div class="sect4">
 <h5 id="_end_point_3"><a class="link" href="#_end_point_3">End Point</a></h5>
 <div class="paragraph">
-<p>/api/access-token/refresh</p>
+<p>/api/sign-out</p>
 </div>
 </div>
 <div class="sect4">
@@ -738,6 +726,216 @@ refresh-token: eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bearer token</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/sign-out HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItMSIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3OTUyMTE4LCJleHAiOjM2ODc5NTM5MTh9.QHwZ4Jppb5Bgp-oain43voHX5J4bkzt-7zTWKQOjFI77_H4k0HXYe79RjJopmvrOHX3YEFECfDJuTOgoMUqBQGFRmqSdEmUF-vFXOcjezvxw4NQzFTFkq430sNxrhK_RMsSbKTMnByZuN7Opj_RNGmGlDygX1dyqqqwxFZPn3fivl5TUM9VNhGACbCEGzxIYi7ACGNR2Kj61Qf343Dxyw37bXQ0D3a63Izxq8ThAzOtIyICnnF_ZYvn-3Y1nx9cpcxMdqwIGVFYBYSOOaCKnLJ7BUxEvy8l9tqwmGd2jCJWAAeSKNfcGmo4jpPrj5jJFvBoV2ynygZHHvkIXP0v_LQ
+Accept: application/json
+Host: poolaeem.com</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_3"><a class="link" href="#_response_3">&#8201;&#8212;&#8201;Response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 40
+
+{
+  "code" : 0,
+  "message" : "완료"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_유저_탈퇴"><a class="link" href="#_유저_탈퇴">유저 탈퇴</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_4"><a class="link" href="#_request_4">&#8201;&#8212;&#8201;Request</a></h3>
+<div class="sect4">
+<h5 id="_end_point_4"><a class="link" href="#_end_point_4">End Point</a></h5>
+<div class="paragraph">
+<p>/api/users/{userId}</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_path_parameters_4"><a class="link" href="#_path_parameters_4">Path Parameters</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">양식</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_request_headers_2"><a class="link" href="#_request_headers_2">Request Headers</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더명</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bearer token</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/users/user-id HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItMSIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3OTUyMTE4LCJleHAiOjM2ODc5NTM5MTh9.QHwZ4Jppb5Bgp-oain43voHX5J4bkzt-7zTWKQOjFI77_H4k0HXYe79RjJopmvrOHX3YEFECfDJuTOgoMUqBQGFRmqSdEmUF-vFXOcjezvxw4NQzFTFkq430sNxrhK_RMsSbKTMnByZuN7Opj_RNGmGlDygX1dyqqqwxFZPn3fivl5TUM9VNhGACbCEGzxIYi7ACGNR2Kj61Qf343Dxyw37bXQ0D3a63Izxq8ThAzOtIyICnnF_ZYvn-3Y1nx9cpcxMdqwIGVFYBYSOOaCKnLJ7BUxEvy8l9tqwmGd2jCJWAAeSKNfcGmo4jpPrj5jJFvBoV2ynygZHHvkIXP0v_LQ
+Accept: application/json
+Host: poolaeem.com</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_4"><a class="link" href="#_response_4">&#8201;&#8212;&#8201;Response</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+성공
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 40
+
+{
+  "code" : 0,
+  "message" : "완료"
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+요청 id와 토큰의 값이 일치하지 않음
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 68
+
+{
+  "code" : 10003,
+  "message" : "요청 권한이 없습니다."
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_리프레시_토큰으로_액세스_토큰_재발급"><a class="link" href="#_리프레시_토큰으로_액세스_토큰_재발급">리프레시 토큰으로 액세스 토큰 재발급</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_request_5"><a class="link" href="#_request_5">&#8201;&#8212;&#8201;Request</a></h3>
+<div class="sect4">
+<h5 id="_end_point_5"><a class="link" href="#_end_point_5">End Point</a></h5>
+<div class="paragraph">
+<p>/api/access-token/refresh</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_path_parameters_5"><a class="link" href="#_path_parameters_5">Path Parameters</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">파라미터</th>
+<th class="tableblock halign-left valign-top">양식</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_request_headers_3"><a class="link" href="#_request_headers_3">Request Headers</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">헤더명</th>
+<th class="tableblock halign-left valign-top">필수값</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Refresh</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">리프레시 토큰</p></td>
@@ -756,7 +954,7 @@ Host: poolaeem.com</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_response_4"><a class="link" href="#_response_4">&#8201;&#8212;&#8201;Response</a></h3>
+<h3 id="_response_5"><a class="link" href="#_response_5">&#8201;&#8212;&#8201;Response</a></h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -784,10 +982,11 @@ Vary: Access-Control-Request-Headers
 Access-Control-Expose-Headers: access-token
 access-token: access-token
 Content-Type: application/json;charset=UTF-8
-Content-Length: 16
+Content-Length: 40
 
 {
-  "code" : 0
+  "code" : 0,
+  "message" : "완료"
 }</code></pre>
 </div>
 </div>
@@ -798,7 +997,7 @@ Content-Length: 16
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-13 00:43:56 +0900
+Last updated 2023-07-25 18:08:57 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

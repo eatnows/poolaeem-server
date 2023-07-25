@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface WorkbookRepository extends JpaRepository<Workbook, String>, WorkbookRepositoryCustom {
 
     Optional<Workbook> findByIdAndIsDeletedFalse(String workbookId);
-    @Query("select w from Workbook w join fetch w.problems where w.id = :workbookId")
+    @Query("select w from Workbook w join fetch w.problems p where w.id = :workbookId and p.isDeleted = false")
     Optional<Workbook> findByIdAndIsDeletedFalseFetchJoinProblems(String workbookId);
 }

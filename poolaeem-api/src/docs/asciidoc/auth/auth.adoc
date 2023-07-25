@@ -49,8 +49,23 @@ include::{snippets}/auth/agree-sign-up-terms/http-response.adoc[]
 
 == 로그아웃
 === -- Request
-
+include::{snippets}/auth/test-sign-out/path-parameters.adoc[]
+include::{snippets}/auth/test-sign-out/request-headers.adoc[]
+include::{snippets}/auth/test-sign-out/http-request.adoc[]
 === -- Response
+include::{snippets}/auth/test-sign-out/http-response.adoc[]
+
+
+== 유저 탈퇴
+=== -- Request
+include::{snippets}/auth/test-delete-user/path-parameters.adoc[]
+include::{snippets}/auth/test-delete-user/request-headers.adoc[]
+include::{snippets}/auth/test-delete-user/http-request.adoc[]
+=== -- Response
+NOTE: 성공
+include::{snippets}/auth/test-delete-user/http-response.adoc[]
+WARNING: 요청 id와 토큰의 값이 일치하지 않음
+include::{snippets}/auth/test-delete-user-for-other-user-id/http-response.adoc[]
 
 
 == 리프레시 토큰으로 액세스 토큰 재발급

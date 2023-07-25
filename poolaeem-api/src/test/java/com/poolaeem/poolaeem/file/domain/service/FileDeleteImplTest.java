@@ -26,6 +26,7 @@ class FileDeleteImplTest {
     private S3Client s3Client;
 
     @Test
+    @DisplayName("업로드된 파일을 S3에 삭제 요청할 수 있다.")
     void testDeleteUploadedFile() {
         String key = "images/profile/poolaeem_logo.png";
         fileDelete.deleteUploadedFile(key);

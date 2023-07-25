@@ -1,11 +1,14 @@
 package com.poolaeem.poolaeem.user.presentation;
 
+import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
+import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.jwt.HeaderTokenExtractor;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.security.oauth2.handler.LoginSuccessToken;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.User;
+import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.user.presentation.dto.auth.SignRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -45,6 +48,21 @@ public class SignController {
         String accessToken = signService.generateAccessTokenByRefreshToken(refreshToken);
         loginSuccessToken.addOnlyAccessTokenInResponse(response, accessToken);
 
+        return ApiResponseDto.OK();
+    }
+
+    @LoggedInUserOnly
+    @DeleteMapping("/api/users/{userId}")
+    public ApiResponseDto<?> deleteUser(@LoggedInUser UserVo user,
+                                        @PathVariable String userId) {
+        signService.deleteUser(user.getId(), userId);
+        return ApiResponseDto.OK();
+    }
+
+    @LoggedInUserOnly
+    @PostMapping("/api/sign-out")
+    public ApiResponseDto<?> signOut(@LoggedInUser UserVo user) {
+        signService.signOut(user.getId());
         return ApiResponseDto.OK();
     }
 }

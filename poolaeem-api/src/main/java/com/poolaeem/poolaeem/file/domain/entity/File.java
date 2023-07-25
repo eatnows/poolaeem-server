@@ -54,4 +54,8 @@ public class File extends BaseEntity {
         this.path = path.getPath();
         this.isDeleted = false;
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }
