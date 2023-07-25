@@ -4,9 +4,7 @@ import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
 import com.poolaeem.poolaeem.common.encrypto.TextEncryptConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.ZoneId;
@@ -87,7 +85,7 @@ public class User {
 
     @PrePersist
     private void prePersist() {
-        id = UUIDGenerator.generateV4();
+        id = UUIDGenerator.generate();
         isDeleted = false;
         updatedBy = id;
         createdAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
@@ -114,5 +112,12 @@ public class User {
 
     public void deleteProfileImage() {
         this.profileImage = null;
+    }
+
+    public void delete() {
+        this.email = UUIDGenerator.generateV4();
+        this.name = UUIDGenerator.generateV4();
+        this.oauthId = UUIDGenerator.generateV4();
+        this.isDeleted = true;
     }
 }

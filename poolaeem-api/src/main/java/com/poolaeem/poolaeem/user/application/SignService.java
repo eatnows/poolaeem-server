@@ -8,4 +8,6 @@ public interface SignService {
     User signUpOAuth2User(OauthProvider oauthProvider, String oauthId, String email);
 
     String generateAccessTokenByRefreshToken(String refreshToken);
+
+    void deleteUser(String tokenUserId, String pathUserId);
 }

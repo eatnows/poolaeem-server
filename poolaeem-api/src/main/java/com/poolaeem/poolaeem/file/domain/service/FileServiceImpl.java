@@ -41,8 +41,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteUploadedFile(String fileId, FilePath path) {
         // TODO 추후에 소프트 삭제 후 배치를 돌려 실제 삭제할 수 있도록 개선
+        softDeleteFileEntity(fileId);
         fileDelete.deleteUploadedFile(path.getPath() + fileId);
-        hardDeleteFileEntity(fileId);
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +69,14 @@ public class FileServiceImpl implements FileService {
         return path.replace("images", "");
     }
 
-    private void hardDeleteFileEntity(String fileId) {
-        fileRepository.deleteById(fileId);
+    private void softDeleteFileEntity(String fileId) {
+        Optional<File> optional = fileRepository.findByIdAndIsDeletedFalse(fileId);
+
+        if (optional.isEmpty()) {
+            return;
+        }
+
+        File file = optional.get();
+        file.delete();
     }
 }
