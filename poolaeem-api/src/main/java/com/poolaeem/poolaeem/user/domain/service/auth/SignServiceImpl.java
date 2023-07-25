@@ -86,6 +86,12 @@ public class SignServiceImpl implements SignService {
         deleteUserProfileImage(user.getProfileImage());
     }
 
+    @Transactional
+    @Override
+    public void signOut(String userId) {
+        // TODO redis로 관리하는 리프레쉬 토큰 제거
+    }
+
     private void deleteUserProfileImage(String profileImage) {
         if (!StringUtils.hasText(profileImage)) return;
 

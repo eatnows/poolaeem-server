@@ -49,8 +49,11 @@ include::{snippets}/auth/agree-sign-up-terms/http-response.adoc[]
 
 == 로그아웃
 === -- Request
-
+include::{snippets}/auth/test-sign-out/path-parameters.adoc[]
+include::{snippets}/auth/test-sign-out/request-headers.adoc[]
+include::{snippets}/auth/test-sign-out/http-request.adoc[]
 === -- Response
+include::{snippets}/auth/test-sign-out/http-response.adoc[]
 
 
 == 유저 탈퇴

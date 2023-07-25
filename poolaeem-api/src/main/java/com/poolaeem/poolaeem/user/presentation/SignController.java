@@ -58,4 +58,11 @@ public class SignController {
         signService.deleteUser(user.getId(), userId);
         return ApiResponseDto.OK();
     }
+
+    @LoggedInUserOnly
+    @PostMapping("/api/sign-out")
+    public ApiResponseDto<?> signOut(@LoggedInUser UserVo user) {
+        signService.signOut(user.getId());
+        return ApiResponseDto.OK();
+    }
 }

@@ -34,6 +34,7 @@ class SignControllerTest extends ApiDocumentationTest {
     private final String SIGN_UP_TERMS = "/api/signup/terms";
     private final String GENERATE_ACCESS_TOKEN = "/api/access-token/refresh";
     private final String DELETE_USER = "/api/users/{userId}";
+    private final String SIGN_OUT = "/api/sign-out";
     private final String BEARER_REFRESH_TOKEN = "Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.kt98uhYRuZsA7-N2g44qhp3fXTVRnvAivauB_DoJRVu91_G5GQZjzfocYbfpS7Jd05QpcNitRxQuKZgo0B9yqwo2thKpHevkatghwhESzsYqA2hfTXaR9jdDXuTXAMlFciLyErxrnNTfMtPhaeFq_dZg9YPCaT-36rsqEXg-yf2cGGl9iz0oCXB3pHZgqmADip5huRiHISvTOdt-Z2IOAfJ5B-cUaz89JNneSGoQl1G-es9NP2b_GWg1k5FZjMBXxE_ZHpOL8lo4le85CbcZCMbOoGHmKoNqh81eXRv3itgqqRAWBtbDf9oqpUUIS5Ygk1y5RZF4cNpapmfAS89MVA";
 
     @Test
@@ -165,6 +166,25 @@ class SignControllerTest extends ApiDocumentationTest {
                 .andDo(document("auth/{method-name}",
                         getDocumentRequest(),
                         getDocumentResponse()
+                ));
+    }
+
+    @Test
+    @DisplayName("로그아웃을 할 수 있다.")
+    void testSignOut() throws Exception {
+        mockMvc.perform(
+                        post(SIGN_OUT)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", BEARER_ACCESS_TOKEN)
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(document("auth/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer token")
+                        )
                 ));
     }
 }

@@ -10,4 +10,6 @@ public interface SignService {
     String generateAccessTokenByRefreshToken(String refreshToken);
 
     void deleteUser(String tokenUserId, String pathUserId);
+
+    void signOut(String userId);
 }
