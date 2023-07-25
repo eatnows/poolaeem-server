@@ -8,4 +8,8 @@ public class UserNotSignedUpException extends AuthenticationException {
     public UserNotSignedUpException() {
         super(ApiResponseCode.USER_NOT_SIGNED_UP.getMessage());
     }
+
+    public UserNotSignedUpException(String msg) {
+        super(msg);
+    }
 }

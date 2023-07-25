@@ -1,8 +1,11 @@
 package com.poolaeem.poolaeem.question.presentation;
 
-import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
+import com.poolaeem.poolaeem.common.exception.auth.UnAuthorizationException;
+import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
+import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookCreator;
+import com.poolaeem.poolaeem.question.domain.validation.WorkbookValidation;
 import com.poolaeem.poolaeem.test_config.restdocs.ApiDocumentationTest;
 import com.poolaeem.poolaeem.test_config.restdocs.DocumentFormatGenerator;
 import com.poolaeem.poolaeem.test_config.restdocs.DocumentLinkGenerator;
@@ -25,6 +28,7 @@ import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDo
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -40,6 +44,7 @@ class WorkbookControllerTest extends ApiDocumentationTest {
     private final String UPDATE_WORKBOOK = "/api/workbooks/{workbookId}";
     private final String READ_WORKBOOK_INFO = "/api/workbooks/{workbookId}";
     private final String READ_WORKBOOK_SOLVE_INTRODUCTION = "/api/workbooks/{workbookId}/solve/introduction";
+    private final String DELETE_WORKBOOK = "/api/workbooks/{workbookId}";
 
 
     @Test
@@ -215,7 +220,7 @@ class WorkbookControllerTest extends ApiDocumentationTest {
         String workbookId = "not-exist-workbook";
 
         given(workbookService.readSolveIntroduction(workbookId))
-                .willThrow(new WorkbookNotFoundException());
+                .willThrow(new EntityNotFoundException());
 
         ResultActions result = this.mockMvc.perform(
                 get(READ_WORKBOOK_SOLVE_INTRODUCTION, workbookId)
@@ -224,6 +229,49 @@ class WorkbookControllerTest extends ApiDocumentationTest {
         );
 
         result.andExpect(status().isNotFound())
+                .andDo(document("question/workbook/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse()
+                ));
+    }
+
+    @Test
+    @DisplayName("문제집을 삭제할 수 있다.")
+    void testDeleteWorkbook() throws Exception {
+        String workbookId = "workbook-id";
+
+        this.mockMvc.perform(
+                        delete(DELETE_WORKBOOK, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", BEARER_ACCESS_TOKEN)
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(document("question/workbook/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(
+                                parameterWithName("workbookId").description("문제집 id")
+                        ),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer token")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("다른 유저의 문제집은 삭제할 수 없다.")
+    void testDeleteWorkbookForNotCreator() throws Exception {
+        String workbookId = "workbook-id";
+
+        doThrow(new ForbiddenRequestException(WorkbookValidation.Message.WORKBOOK_FORBIDDEN))
+                .when(workbookService).deleteWorkbook(anyString(), anyString());
+
+        mockMvc.perform(
+                        delete(DELETE_WORKBOOK, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", BEARER_ACCESS_TOKEN)
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isForbidden())
                 .andDo(document("question/workbook/{method-name}",
                         getDocumentRequest(),
                         getDocumentResponse()

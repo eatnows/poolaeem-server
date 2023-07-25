@@ -3,6 +3,7 @@ package com.poolaeem.poolaeem.question.domain.service;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.component.TextGenerator;
+import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
 import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
@@ -40,6 +41,8 @@ class WorkbookServiceImplTest {
     private WorkbookRepository workbookRepository;
     @Mock
     private WorkbookUserClient workbookUserClient;
+    @Mock
+    private ProblemService problemService;
 
     @Test
     @DisplayName("문제집을 생성할 수 있다.")
@@ -247,5 +250,42 @@ class WorkbookServiceImplTest {
 
         assertThat(info.getWorkbookId()).isEqualTo(workbookId);
         assertThat(info.getCreator().getName()).isEqualTo("만든이");
+    }
+
+    @Test
+    @DisplayName("문제집을 삭제하고 문항 삭제 요청을 할 수 있다.")
+    void testDeleteWorkbook() {
+        String workbookId = "workbook-id";
+        String reqUserId = "user-id";
+
+        Workbook mockWorkbook = new Workbook(workbookId, reqUserId, "문제집", "", 0, 0, WorkbookTheme.PINK);
+        given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(mockWorkbook));
+
+        assertThat(mockWorkbook.getIsDeleted()).isNull();
+
+        workbookService.deleteWorkbook(reqUserId, workbookId);
+
+        assertThat(mockWorkbook.getIsDeleted()).isTrue();
+        verify(problemService, times(1)).softDeleteAllProblemsAndOptions(mockWorkbook);
+    }
+
+    @Test
+    @DisplayName("문제집 생성자가 아니면 문제집을 삭제할 수 없다.")
+    void testDeleteWorkbookForNotCreator() {
+        String workbookId = "workbook-id";
+        String reqUserId = "user-id";
+
+        Workbook mockWorkbook = new Workbook(workbookId, "other-user-id", "문제집", "", 0, 0, WorkbookTheme.PINK);
+        given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
+                .willReturn(Optional.of(mockWorkbook));
+
+        assertThat(mockWorkbook.getIsDeleted()).isNull();
+
+        assertThatThrownBy(() -> workbookService.deleteWorkbook(reqUserId, workbookId))
+                .isInstanceOf(ForbiddenRequestException.class);
+
+        assertThat(mockWorkbook.getIsDeleted()).isNull();
+        verify(problemService, times(0)).softDeleteAllProblemsAndOptions(mockWorkbook);
     }
 }

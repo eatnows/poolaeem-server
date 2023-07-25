@@ -3,6 +3,7 @@ package com.poolaeem.poolaeem.user.domain.service.profile;
 import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
 import com.poolaeem.poolaeem.common.event.FileEventsPublisher;
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
+import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
 import com.poolaeem.poolaeem.common.file.FilePath;
 import com.poolaeem.poolaeem.file.application.FileService;
@@ -81,8 +82,12 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
     }
 
     private void validationUserName(String reqUserName) {
-        assert reqUserName.length() <= UserValidation.USER_NAME_MAX_LENGTH: "유저 이름 최대 길이보다 짧아야 합니다..";
-        assert reqUserName.length() >= UserValidation.USER_NAME_MIN_LENGTH : "유저 이름 최소 길이보다 길어야 합니다.";
+        if (reqUserName.length() > UserValidation.USER_NAME_MAX_LENGTH) {
+            throw new BadRequestDataException(UserValidation.Message.USER_NAME_MAX_LENGTH);
+        }
+        if (reqUserName.length() < UserValidation.USER_NAME_MIN_LENGTH) {
+            throw new BadRequestDataException(UserValidation.Message.USER_NAME_MIN_LENGTH);
+        }
     }
 
     private User getUserEntity(String userId) {

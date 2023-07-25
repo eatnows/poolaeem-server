@@ -256,6 +256,6 @@ class ProblemControllerRetrievalTest extends BaseIntegrationTest {
                                 .param("size", "3")
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code", is(ApiResponseCode.WORKBOOK_NOT_FOUND.getCode())));
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.ENTITY_NOT_FOUND.getCode())));
     }
 }

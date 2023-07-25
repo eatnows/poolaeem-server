@@ -19,11 +19,8 @@ public class ExceptionHandlerAdvice {
     private ResponseEntity<ApiResponseDto<String>> handleServiceException(ServiceException e) {
         try {
             ApiResponseCode responseCode = e.getApiResponseCode();
-            String message = responseCode.getMessage();
-            if (StringUtils.hasText(e.getMessage())) {
-                message = e.getMessage();
-            }
-            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, message);
+
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(responseCode, e.getMessage());
 
             log.info("> service exception: ", e);
 

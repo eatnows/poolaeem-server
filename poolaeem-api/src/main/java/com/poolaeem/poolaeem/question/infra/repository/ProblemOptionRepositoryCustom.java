@@ -19,4 +19,6 @@ public interface ProblemOptionRepositoryCustom {
     List<ProblemOptionVo> findAllCorrectAnswerByProblemIdIn(List<String> problemIds);
 
     List<ProblemOptionVo> findAllCorrectAnswerByWorkbook(Workbook workbook);
+    void softDeleteAllByWorkbook(Workbook workbook);
+
 }

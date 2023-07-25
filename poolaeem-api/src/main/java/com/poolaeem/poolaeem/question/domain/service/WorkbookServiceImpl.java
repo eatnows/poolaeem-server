@@ -1,8 +1,9 @@
 package com.poolaeem.poolaeem.question.domain.service;
 
+import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
-import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
+import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
@@ -18,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class WorkbookServiceImpl implements WorkbookService {
     private final WorkbookRepository workbookRepository;
     private final WorkbookUserClient workbookUserClient;
+    private final ProblemService problemService;
 
-    public WorkbookServiceImpl(WorkbookRepository workbookRepository, WorkbookUserClient workbookUserClient) {
+    public WorkbookServiceImpl(WorkbookRepository workbookRepository, WorkbookUserClient workbookUserClient, ProblemService problemService) {
         this.workbookRepository = workbookRepository;
         this.workbookUserClient = workbookUserClient;
+        this.problemService = problemService;
     }
 
     @Transactional
@@ -55,11 +58,15 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional(readOnly = true)
     @Override
     public WorkbookVo readWorkbookInfo(String workbookId, String reqUserId) {
-        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
+        WorkbookVo workbook = getWorkbookVo(workbookId);
         validManage(workbook.getUserId(), reqUserId);
 
         return workbook;
+    }
+
+    private WorkbookVo getWorkbookVo(String workbookId) {
+        return workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
     }
 
     @Transactional
@@ -77,8 +84,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional(readOnly = true)
     @Override
     public WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId) {
-        WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
+        WorkbookVo workbook = getWorkbookVo(workbookId);
         WorkbookCreator creator = workbookUserClient.readWorkbookCreator(workbook.getUserId());
 
         return new WorkbookDto.SolveIntroductionRead (
@@ -99,14 +105,33 @@ public class WorkbookServiceImpl implements WorkbookService {
         workbookRepository.updateIncreaseSolvedCountByWorkbookId(workbookId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public void validWorkbookManage(String workbookId, String reqUserId) {
+        WorkbookVo workbookVo = getWorkbookVo(workbookId);
+
+        String creator = workbookVo.getUserId();
+        validManage(creator, reqUserId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteWorkbook(String reqUserId, String workbookId) {
+        Workbook workbook = getWorkbookEntity(workbookId);
+        validManage(workbook.getUserId(), reqUserId);
+
+        problemService.softDeleteAllProblemsAndOptions(workbook);
+        workbook.delete();
+    }
+
     private Workbook getWorkbookEntity(String workbookId) {
         return workbookRepository.findByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(WorkbookNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
     }
 
     private void validManage(String ownerUserId, String reqUserId) {
         if (!ownerUserId.equals(reqUserId)) {
-            throw new ForbiddenRequestException();
+            throw new ForbiddenRequestException(WorkbookValidation.Message.WORKBOOK_FORBIDDEN);
         }
     }
 
@@ -115,10 +140,10 @@ public class WorkbookServiceImpl implements WorkbookService {
             throw new BadRequestDataException();
         }
         if (name.length() < WorkbookValidation.NAME_MIN_LENGTH || name.length() > WorkbookValidation.NAME_MAX_LENGTH) {
-            throw new BadRequestDataException();
+            throw new BadRequestDataException(WorkbookValidation.Message.WORKBOOK_NAME_LENGTH);
         }
         if (description.length() < WorkbookValidation.DESCRIPTION_MIN_LENGTH || description.length() > WorkbookValidation.DESCRIPTION_MAX_LENGTH) {
-            throw new BadRequestDataException();
+            throw new BadRequestDataException(WorkbookValidation.Message.DESCRIPTION_LENGTH);
         }
     }
 

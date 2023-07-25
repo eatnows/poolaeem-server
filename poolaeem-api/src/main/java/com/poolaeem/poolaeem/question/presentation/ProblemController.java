@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.question.presentation;
 
 import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
+import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.domain.dto.ProblemDto;
@@ -23,6 +24,7 @@ public class ProblemController {
         this.problemService = problemService;
     }
 
+    @LoggedInUserOnly
     @PostMapping("/api/workbooks/{workbookId}/problem")
     public ApiResponseDto<?> createProblem(@LoggedInUser UserVo user,
                                            @PathVariable String workbookId,
@@ -34,6 +36,7 @@ public class ProblemController {
         return ApiResponseDto.OK();
     }
 
+    @LoggedInUserOnly
     @GetMapping("/api/problems/{problemId}")
     public ApiResponseDto<ProblemResponse.ProblemRead> readProblemInfo(@LoggedInUser UserVo user,
                                                                        @PathVariable String problemId) {
@@ -43,6 +46,7 @@ public class ProblemController {
         return ApiResponseDto.OK(response);
     }
 
+    @LoggedInUserOnly
     @PutMapping("/api/problems/{problemId}")
     public ApiResponseDto<?> updateProblem(@LoggedInUser UserVo user,
                                            @PathVariable String problemId,
@@ -54,6 +58,7 @@ public class ProblemController {
         return ApiResponseDto.OK();
     }
 
+    @LoggedInUserOnly
     @DeleteMapping("/api/problems/{problemId}")
     public ApiResponseDto<?> deleteProblem(@LoggedInUser UserVo user,
                                            @PathVariable String problemId) {
@@ -61,6 +66,7 @@ public class ProblemController {
         return ApiResponseDto.OK();
     }
 
+    @LoggedInUserOnly
     @GetMapping("/api/workbooks/{workbookId}/problems")
     public ApiResponseDto<ProblemResponse.ProblemListRead> readProblemList(@LoggedInUser UserVo user,
                                                                            @PathVariable String workbookId,

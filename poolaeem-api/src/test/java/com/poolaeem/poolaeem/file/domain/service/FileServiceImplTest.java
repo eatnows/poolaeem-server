@@ -3,6 +3,7 @@ package com.poolaeem.poolaeem.file.domain.service;
 import com.poolaeem.poolaeem.common.file.FilePath;
 import com.poolaeem.poolaeem.file.application.FileDelete;
 import com.poolaeem.poolaeem.file.application.FileUpload;
+import com.poolaeem.poolaeem.file.domain.entity.File;
 import com.poolaeem.poolaeem.file.infra.repository.FileRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -53,9 +57,15 @@ class FileServiceImplTest {
         String fileId = "file-id";
         FilePath filePath = FilePath.PROFILE_IMAGE;
 
+        File mockFile = new File(fileId, "filename", 100, filePath.getPath());
+
+        given(fileRepository.findByIdAndIsDeletedFalse(fileId))
+                .willReturn(Optional.of(mockFile));
+
+        assertThat(mockFile.getIsDeleted()).isFalse();
         fileService.deleteUploadedFile(fileId, filePath);
 
-        verify(fileRepository, times(1)).deleteById(fileId);
+        assertThat(mockFile.getIsDeleted()).isTrue();
         verify(fileDelete, times(1)).deleteUploadedFile(anyString());
         verify(fileUpload, times(0)).upload(any(), any());
     }

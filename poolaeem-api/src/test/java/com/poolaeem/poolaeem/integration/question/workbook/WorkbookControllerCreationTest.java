@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.integration.question.workbook;
 
+import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
@@ -78,7 +79,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(MethodArgumentNotValidException.class));
+                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class));
     }
 
     @ParameterizedTest
@@ -102,7 +103,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
         );
 
         result.andExpect(status().isBadRequest())
-                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(MethodArgumentNotValidException.class));
+                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class));
     }
 
     @Test

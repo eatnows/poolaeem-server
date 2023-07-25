@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.question.presentation;
 
 import com.poolaeem.poolaeem.common.annotation.LoggedInUser;
+import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
@@ -20,6 +21,7 @@ public class WorkbookController {
         this.workbookService = workbookService;
     }
 
+    @LoggedInUserOnly
     @PostMapping("/api/workbook")
     public ApiResponseDto<WorkbookResponse.WorkbookCreate> createWorkbook(@LoggedInUser UserVo user,
                                                                           @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
@@ -31,15 +33,17 @@ public class WorkbookController {
         return ApiResponseDto.OK(response);
     }
 
+    @LoggedInUserOnly
     @PutMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<?> updateWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable(name = "workbookId") String workbookId,
-                                            @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
+                                            @Valid @RequestBody WorkbookRequest.WorkbookUpdateDto dto) {
         WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription());
         workbookService.updateWorkbook(param);
         return ApiResponseDto.OK();
     }
 
+    @LoggedInUserOnly
     @GetMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<WorkbookResponse.WorkbookInfoRead> readWorkbookInfo(@LoggedInUser UserVo user,
                                               @PathVariable String workbookId) {
@@ -54,5 +58,13 @@ public class WorkbookController {
         WorkbookDto.SolveIntroductionRead info = workbookService.readSolveIntroduction(workbookId);
         WorkbookResponse.SolveIntroductionRead response = new WorkbookResponse.SolveIntroductionRead(info);
         return ApiResponseDto.OK(response);
+    }
+
+    @LoggedInUserOnly
+    @DeleteMapping("/api/workbooks/{workbookId}")
+    public ApiResponseDto<?> deleteWorkbook(@LoggedInUser UserVo user,
+                                            @PathVariable String workbookId) {
+        workbookService.deleteWorkbook(user.getId(), workbookId);
+        return ApiResponseDto.OK();
     }
 }

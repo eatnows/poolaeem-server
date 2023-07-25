@@ -19,4 +19,6 @@ public interface ProblemRepositoryCustom {
     Slice<ProblemVo> findAllDtoByWorkbookIdAndIsDeletedFalse(String workbookId, int order, Pageable pageable);
 
     List<ProblemVo> findAllProblemIdAndTypeByWorkbook(Workbook workbook);
+
+    void softDeleteAllByWorkbook(Workbook workbook);
 }

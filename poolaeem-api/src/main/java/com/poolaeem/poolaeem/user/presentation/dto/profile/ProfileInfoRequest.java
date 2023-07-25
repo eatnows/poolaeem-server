@@ -14,8 +14,8 @@ public class ProfileInfoRequest {
     @Getter
     @NoArgsConstructor
     public static class UserNameUpdateDto {
-        @NotBlank
-        @Length(min = UserValidation.USER_NAME_MIN_LENGTH, max = UserValidation.USER_NAME_MAX_LENGTH)
+        @NotBlank(message = UserValidation.Message.USER_NAME_VALID)
+        @Length(min = UserValidation.USER_NAME_MIN_LENGTH, max = UserValidation.USER_NAME_MAX_LENGTH, message = UserValidation.Message.USER_NAME_VALID)
         private String userName;
 
         public UserNameUpdateDto(String userName) {

@@ -17,6 +17,7 @@ public class ApiResponseDto<T> {
 
     public ApiResponseDto(ApiResponseCode responseCode) {
         this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
     }
 
     private ApiResponseDto(int code) {

@@ -28,7 +28,7 @@ public class WorkbookResult {
     private String userName;
 
     @Column(name = "total_questions", nullable = false)
-    private Integer totalQuestion;
+    private Integer totalQuestions;
 
     @Column(name = "correct_count", nullable = false)
     private Integer correctCount;
@@ -37,11 +37,11 @@ public class WorkbookResult {
     @CreatedDate
     private ZonedDateTime createdAt;
 
-    public WorkbookResult(String workbookId, String userId, String userName, Integer totalQuestion, Integer correctCount) {
+    public WorkbookResult(String workbookId, String userId, String userName, Integer totalQuestions, Integer correctCount) {
         this.workbookId = workbookId;
         this.userId = userId;
         this.userName = userName;
-        this.totalQuestion = totalQuestion;
+        this.totalQuestions = totalQuestions;
         this.correctCount = correctCount;
     }
 

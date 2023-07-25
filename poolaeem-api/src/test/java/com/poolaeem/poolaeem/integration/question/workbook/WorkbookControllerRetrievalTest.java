@@ -1,7 +1,7 @@
 package com.poolaeem.poolaeem.integration.question.workbook;
 
+import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
-import com.poolaeem.poolaeem.common.exception.workbook.WorkbookNotFoundException;
 import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
@@ -96,8 +96,8 @@ class WorkbookControllerRetrievalTest extends BaseIntegrationTest {
         );
 
         result.andExpect(status().isNotFound())
-                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(WorkbookNotFoundException.class))
-                .andExpect(jsonPath("$.code", is(ApiResponseCode.WORKBOOK_NOT_FOUND.getCode())));
+                .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(EntityNotFoundException.class))
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.ENTITY_NOT_FOUND.getCode())));
     }
 
     @Test
@@ -131,6 +131,6 @@ class WorkbookControllerRetrievalTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code", is(ApiResponseCode.WORKBOOK_NOT_FOUND.getCode())));
+                .andExpect(jsonPath("$.code", is(ApiResponseCode.ENTITY_NOT_FOUND.getCode())));
     }
 }

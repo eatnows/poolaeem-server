@@ -1,10 +1,16 @@
 package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.poolaeem.poolaeem.common.event.FileEventsPublisher;
+import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.common.exception.auth.DuplicateSignUpException;
 import com.poolaeem.poolaeem.common.exception.auth.UserNotSignedUpException;
+import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
+import com.poolaeem.poolaeem.common.exception.user.UserNotFoundException;
+import com.poolaeem.poolaeem.common.file.FilePath;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
+import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
@@ -21,6 +27,7 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -33,12 +40,14 @@ public class SignServiceImpl implements SignService {
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
     private final SignUpOAuth2UserService signUpOAuth2UserService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final FileEventsPublisher fileEventsPublisher;
 
-    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil) {
+    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher) {
         this.userRepository = userRepository;
         this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
         this.signUpOAuth2UserService = signUpOAuth2UserService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.fileEventsPublisher = fileEventsPublisher;
     }
 
     @Transactional
@@ -48,7 +57,7 @@ public class SignServiceImpl implements SignService {
         OAuth2AccessToken accessToken = client.getAccessToken();
 
         if (isExpired(Objects.requireNonNull(accessToken.getExpiresAt()))) {
-            throw new UserNotSignedUpException();
+            throw new UserNotSignedUpException(ApiResponseCode.USER_NOT_SIGNED_UP.getMessage());
         }
 
         OAuth2User oAuth2User = signUpOAuth2UserService.loadUser(new OAuth2UserRequest(client.getClientRegistration(), accessToken));
@@ -66,6 +75,35 @@ public class SignServiceImpl implements SignService {
         return jwtTokenUtil.generateAccessToken(generateTokenUser);
     }
 
+    @Transactional
+    @Override
+    public void deleteUser(String tokenUserId, String pathUserId) {
+        validUserId(tokenUserId, pathUserId);
+
+        User user = userRepository.findByIdAndIsDeletedFalse(tokenUserId)
+                .orElseThrow(UserNotFoundException::new);
+        user.delete();
+        deleteUserProfileImage(user.getProfileImage());
+    }
+
+    @Transactional
+    @Override
+    public void signOut(String userId) {
+        // TODO redis로 관리하는 리프레쉬 토큰 제거
+    }
+
+    private void deleteUserProfileImage(String profileImage) {
+        if (!StringUtils.hasText(profileImage)) return;
+
+        fileEventsPublisher.publish(new EventsPublisherFileEvent.FileDeleteEvent(profileImage, FilePath.PROFILE_IMAGE));
+    }
+
+    private void validUserId(String tokenUserId, String pathUserId) {
+        if (!tokenUserId.equals(pathUserId)) {
+            throw new ForbiddenRequestException();
+        }
+    }
+
     private void matchRequestEmailAndUserEmail(String requestEmail, String userEmail) {
         if (!requestEmail.equals(userEmail)) {
             throw new BadRequestDataException();
@@ -80,8 +118,9 @@ public class SignServiceImpl implements SignService {
         Optional<User> optional = userRepository.findByOauthProviderAndOauthIdAndIsDeletedFalse(
                 OauthProvider.valueOf(providerUser.getProvider().toUpperCase()),
                 providerUser.getId());
+
         if (optional.isPresent()) {
-            throw new DuplicateSignUpException();
+            throw new DuplicateSignUpException(ApiResponseCode.DUPLICATE_SIGNED_UP.getMessage());
         }
 
         return userRepository.save(new User(providerUser.getEmail(),

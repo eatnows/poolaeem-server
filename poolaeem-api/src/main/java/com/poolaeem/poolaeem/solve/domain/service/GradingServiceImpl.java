@@ -6,6 +6,7 @@ import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
 import com.poolaeem.poolaeem.solve.application.GradingService;
 import com.poolaeem.poolaeem.solve.domain.entity.AnswerResult;
 import com.poolaeem.poolaeem.solve.domain.entity.ProblemResult;
+import com.poolaeem.poolaeem.solve.domain.validation.GradeValidation;
 import com.poolaeem.poolaeem.solve.domain.vo.problem.ProblemGrading;
 import com.poolaeem.poolaeem.solve.domain.dto.UserAnswer;
 import com.poolaeem.poolaeem.solve.domain.dto.SolveDto;
@@ -71,7 +72,7 @@ public class GradingServiceImpl implements GradingService {
 
     private void validProblemEmpty(List<UserAnswer> problems) {
         if (CollectionUtils.isEmpty(problems)) {
-            throw new BadRequestDataException("풀이가 존재하지 않아 채점할 수 없습니다.");
+            throw new BadRequestDataException(GradeValidation.Message.EMPTY_PROBLEMS);
         }
     }
 
@@ -81,7 +82,10 @@ public class GradingServiceImpl implements GradingService {
 
     private void validUserName(String name) {
         if (!StringUtils.hasText(name)) {
-            throw new BadRequestDataException("풀이자 별명이 존재하지않아 채점할 수 없습니다.");
+            throw new BadRequestDataException(GradeValidation.Message.SOLVED_USER_NAME_NOT_FOUND);
+        }
+        if (name.length() > GradeValidation.SOLVED_USER_NAME_MAX_LENGTH) {
+            throw new BadRequestDataException(GradeValidation.Message.USER_NAME_LENGTH);
         }
     }
 
