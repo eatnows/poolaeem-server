@@ -4,11 +4,11 @@ import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
 import com.poolaeem.poolaeem.common.encrypto.TextEncryptConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -53,10 +53,12 @@ public class User {
     @LastModifiedBy
     private String updatedBy;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
     private ZonedDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @LastModifiedDate
     private ZonedDateTime updatedAt;
 
     public User() {
@@ -88,14 +90,7 @@ public class User {
         id = UUIDGenerator.generate();
         isDeleted = false;
         updatedBy = id;
-        createdAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
-        updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
         termsVersion = termsVersion == null ? TermsVersion.V1 : termsVersion;
-    }
-
-    @PreUpdate
-    private void preUpdate() {
-        updatedAt = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.getId()));
     }
 
     public void updateName(String newUserName) {
