@@ -20,8 +20,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -132,5 +131,19 @@ class WorkbookControllerRetrievalTest extends BaseIntegrationTest {
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code", is(ApiResponseCode.ENTITY_NOT_FOUND.getCode())));
+    }
+
+    @Test
+    @DisplayName("탈퇴한 유저의 문제집 풀이 소개는 출제가 알 수 없음으로 조회할 수 있다.")
+    void testReadWorkbookSolveIntroductionForDeletedCreator() throws Exception{
+        String workbookId = "workbook-2";
+
+        mockMvc.perform(
+                        get(READ_WORKBOOK_SOLVE_INTRODUCTION, workbookId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.creator", nullValue()));
     }
 }

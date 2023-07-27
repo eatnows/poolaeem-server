@@ -1,5 +1,6 @@
 package com.poolaeem.poolaeem.user.domain.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.TermsVersion;
 import com.poolaeem.poolaeem.user.domain.entity.UserRole;
@@ -16,10 +17,11 @@ public class UserVo {
     private String oauthId;
     private String profileImage;
     private TermsVersion termsVersion;
+    @JsonIgnore
     private Boolean isDeleted;
 
     @QueryProjection
-    public UserVo(String id, String email, String name, UserRole role, OauthProvider oauthProvider, String oauthId, String profileImage, TermsVersion termsVersion) {
+    public UserVo(String id, String email, String name, UserRole role, OauthProvider oauthProvider, String oauthId, String profileImage, TermsVersion termsVersion, Boolean isDeleted) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -28,5 +30,6 @@ public class UserVo {
         this.oauthId = oauthId;
         this.profileImage = profileImage;
         this.termsVersion = termsVersion;
+        this.isDeleted = isDeleted;
     }
 }

@@ -8,10 +8,8 @@ import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.TermsVersion;
-import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.domain.entity.UserRole;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
-import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("통합: DateTimeProvider 테스트")
 class DateTimeAuditingProviderTest extends BaseIntegrationTest {
@@ -42,8 +39,8 @@ class DateTimeAuditingProviderTest extends BaseIntegrationTest {
                         OauthProvider.GOOGLE,
                         "1234",
                         null,
-                        TermsVersion.V1
-                )))
+                        TermsVersion.V1,
+                        false)))
         );
         File entity = new File(
                 "file-id",

@@ -42,9 +42,9 @@ class ProfileInfoServiceImplTest {
                 null,
                 null,
                 null,
-                null
-        );
-        given(userRepository.findDtoByUserIdAndIsDeletedFalse(userId))
+                null,
+                false);
+        given(userRepository.findDtoByUserIdAndIsDeleted(userId, false))
                 .willReturn(Optional.of(mockUser));
 
         ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(userId);
@@ -60,7 +60,7 @@ class ProfileInfoServiceImplTest {
     void testUserProfileRetrievalForNonExistentUser() {
         String otherUserId = "user-unit";
 
-        given(userRepository.findDtoByUserIdAndIsDeletedFalse(otherUserId))
+        given(userRepository.findDtoByUserIdAndIsDeleted(otherUserId, false))
                 .willReturn(Optional.empty());
 
         assertThatThrownBy(() -> profileInfoService.readProfileInfo(otherUserId))

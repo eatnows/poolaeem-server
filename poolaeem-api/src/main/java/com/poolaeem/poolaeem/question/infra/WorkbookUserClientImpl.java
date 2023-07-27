@@ -18,7 +18,12 @@ public class WorkbookUserClientImpl implements WorkbookUserClient {
     @Transactional(readOnly = true)
     @Override
     public WorkbookCreator readWorkbookCreator(String userId) {
-        ProfileDto.ProfileInfo info = profileInfoService.readProfileInfo(userId);
+        ProfileDto.WorkbookCreatorRead info = profileInfoService.readWorkbookCreator(userId);
+
+        if (info.isDeleted()) {
+            return null;
+        }
+
         return new WorkbookCreator(info.getName(), info.getProfileImageUrl());
     }
 }

@@ -2,7 +2,6 @@ package com.poolaeem.poolaeem.security.jwt.provider;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
-import com.poolaeem.poolaeem.security.jwt.service.CustomUserDetailsService;
 import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.NonLoggedInUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.PostAuthenticationToken;
@@ -17,11 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final JwtTokenUtil jwtTokenUtil;
-    private final CustomUserDetailsService userDetailsService;
 
-    public JwtAuthenticationProvider(JwtTokenUtil jwtTokenUtil, CustomUserDetailsService userDetailsService) {
+    public JwtAuthenticationProvider(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
-        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -44,10 +41,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                 null,
                 null,
                 null,
-                null
-        ));
-
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(decodedJWT.getClaim("code").asString());
+                null,
+                false));
 
         return new PostAuthenticationToken(userDetails);
     }

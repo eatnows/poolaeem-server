@@ -59,7 +59,7 @@ class ProblemServiceImplTest {
     @DisplayName("문제집에 문항을 추가할 수 있다.")
     void testCreateProblem() throws Exception {
         String workbookId = "workbook-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
                 userVo.getId(),
@@ -92,7 +92,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항에 문제는 1자 이상 100자 이하여야 한다.")
     void testCreateProblemForQuestionLength(int length) throws Exception {
         String workbookId = "workbookd-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
                 userVo.getId(),
@@ -119,7 +119,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항 선택지는 최소 2개, 최대 10개까지 추가할 수 있다.")
     void testCreateProblemForOptionSize(int size) throws Exception {
         String workbookId = "workbook-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
                 userVo.getId(),
@@ -137,7 +137,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항 선택지의 값은 1자 이상 100자 이하로만 추가할 수 있다.")
     void testCreateProblemForOptionValueLength(int length) throws Exception {
         String workbookId = "workbook-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
                 userVo.getId(),
@@ -156,7 +156,7 @@ class ProblemServiceImplTest {
     @DisplayName("선택지는 최소 오답1개 정답1개를 가지고 있어야 한다.")
     void testCreateProblemForRequiredCorrectOption(boolean isCorrect) throws Exception {
         String workbookId = "workbook-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
                 userVo.getId(),
@@ -174,7 +174,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항을 추가하면 문제집 문항수를 1 증가 시키는 이벤트를 발행한다.")
     void testAddProblemCount() throws Exception {
         String workbookId = "workbook-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
                 userVo.getId(),
@@ -250,7 +250,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항에 문제는 1자 이상 100자로만 수정할 수 있다.")
     void testUpdateProblemForQuestionLength(int length) throws Exception {
         String problemId = "problem-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
                 userVo.getId(),
@@ -276,7 +276,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항 선택지는 최소 2개, 최대 10개까지 수정할 수 있다.")
     void testUpdateProblemForOptionSize(int size) throws Exception {
         String problemId = "problem-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
                 userVo.getId(),
@@ -293,7 +293,7 @@ class ProblemServiceImplTest {
     @DisplayName("문항 선택지의 값은 1자 이상 100자 이하로만 수정할 수 있다")
     void testUpdateProblemForOptionValueLength(int length) throws Exception {
         String problemId = "problem-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
                 userVo.getId(),
@@ -311,7 +311,7 @@ class ProblemServiceImplTest {
     @DisplayName("선택지는 최소 오답1개 정답1개를 가지고 있어야 수정할 수 있다.")
     void testUpdateProblemForRequiredCorrectOption(boolean isCorrect) throws Exception {
         String problemId = "problem-id";
-        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null);
+        UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
                 userVo.getId(),
