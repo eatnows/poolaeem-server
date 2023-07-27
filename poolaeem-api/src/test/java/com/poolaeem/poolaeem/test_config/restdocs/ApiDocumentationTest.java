@@ -47,6 +47,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -72,7 +73,7 @@ public abstract class ApiDocumentationTest {
 
     @BeforeEach
     protected void beforeEach() {
-        given(userRepository.findDtoByUserIdAndIsDeletedFalse(anyString()))
+        given(userRepository.findDtoByUserIdAndIsDeleted(anyString(), anyBoolean()))
                 .willReturn(Optional.of(new UserVo(
                         "user-1",
                         "test@poolaee.com",
@@ -81,8 +82,8 @@ public abstract class ApiDocumentationTest {
                         OauthProvider.GOOGLE,
                         "1234567890",
                         null,
-                        TermsVersion.V1
-                )));
+                        TermsVersion.V1,
+                        false)));
     }
 
     @Autowired

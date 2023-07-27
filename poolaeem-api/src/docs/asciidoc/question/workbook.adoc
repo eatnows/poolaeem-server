@@ -66,6 +66,8 @@ include::{snippets}/question/workbook/test-read-workbook-solve-introduction/http
 include::{snippets}/question/workbook/test-read-workbook-solve-introduction/response-fields-beneath-data.adoc[]
 NOTE: 성공
 include::{snippets}/question/workbook/test-read-workbook-solve-introduction/http-response.adoc[]
+NOTE: 탈퇴한 출제자
+include::{snippets}/question/workbook/test-read-workbook-solve-introduction-for-deleted-creator/http-response.adoc[]
 WARNING: 문제집이 존재하지 않음
 include::{snippets}/question/workbook/test-read-workbook-solve-introduction-for-not-found/http-response.adoc[]
 

@@ -215,6 +215,36 @@ class WorkbookControllerTest extends ApiDocumentationTest {
     }
 
     @Test
+    @DisplayName("문제집 풀이 정보를 조회할 수 있다.")
+    void testReadWorkbookSolveIntroductionForDeletedCreator() throws Exception {
+        String workbookId = "workbook-id";
+
+        given(workbookService.readSolveIntroduction(workbookId))
+                .willReturn(new WorkbookDto.SolveIntroductionRead(
+                        workbookId,
+                        "문제집1",
+                        "기초 영단어 문제 모음",
+                        WorkbookTheme.PINK,
+                        null,
+                        ZonedDateTime.of(LocalDateTime.of(2023, 7, 16, 16, 16, 30), ZoneId.of(ZoneOffset.UTC.getId())),
+                        30,
+                        12
+                ));
+
+        ResultActions result = this.mockMvc.perform(
+                get(READ_WORKBOOK_SOLVE_INTRODUCTION, workbookId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(document("question/workbook/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse()
+                ));
+    }
+
+    @Test
     @DisplayName("존재하지 않는 문제집 소개는 조회할 수 없다.")
     void testReadWorkbookSolveIntroductionForNotFound() throws Exception {
         String workbookId = "not-exist-workbook";

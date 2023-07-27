@@ -34,7 +34,7 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
     @Transactional(readOnly = true)
     @Override
     public ProfileDto.ProfileInfo readProfileInfo(String userId) {
-        UserVo user = getUserVo(userId);
+        UserVo user = getUserVo(userId, false);
 
         String profileImageUrl = getProfileImageUrl(user);
 
@@ -66,6 +66,16 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
         }
     }
 
+    @Override
+    public ProfileDto.WorkbookCreatorRead readWorkbookCreator(String userId) {
+        UserVo user = getUserVo(userId, null);
+        if (user == null || user.getIsDeleted()) {
+            return new ProfileDto.WorkbookCreatorRead(user);
+        }
+
+        return new ProfileDto.WorkbookCreatorRead(user, getProfileImageUrl(user));
+    }
+
     private EventsPublisherFileEvent.FileDeleteEvent generateFileDeleteEvent(String fileId) {
         return new EventsPublisherFileEvent.FileDeleteEvent(
                 fileId,
@@ -95,8 +105,12 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    private UserVo getUserVo(String userId) {
-        return userRepository.findDtoByUserIdAndIsDeletedFalse(userId)
+    private UserVo getUserVo(String userId, Boolean isDeleted) {
+        if (isDeleted == null) {
+            return userRepository.findDtoByUserIdAndIsDeleted(userId, null)
+                    .orElse(null);
+        }
+        return userRepository.findDtoByUserIdAndIsDeleted(userId, isDeleted)
                 .orElseThrow(UserNotFoundException::new);
     }
 
