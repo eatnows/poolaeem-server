@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/word/abc--ㄱ/complete
+Content-Type: application/json
