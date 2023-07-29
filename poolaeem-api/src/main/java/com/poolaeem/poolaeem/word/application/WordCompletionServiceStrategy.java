@@ -15,10 +15,6 @@ public class WordCompletionServiceStrategy {
         this.wordCompletionServices = wordCompletionServices;
     }
 
-    public WordCompletionService findService(WordLang lang) {
-        return getWordCompletionService(lang);
-    }
-
     public WordCompletionService findService(String word, WordLang reqLang) {
         if (reqLang == null) {
             return getWordCompletionService(getWordLang(word));

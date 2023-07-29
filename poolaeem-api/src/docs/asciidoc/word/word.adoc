@@ -1,0 +1,54 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+= 단어 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 1
+:sectlinks:
+:docinfo: shared-head
+:linkattrs:
+
+=== _link:https://poolaeem.com/poolaeem-api/docs/qczd1dqvnb0gf60yhchro9dz2kvf9io7/main/list.html[목록으로 가기]_
+
+== 공통 코드
+[cols=2*]
+|===
+|코드
+|설명
+
+|code
+|내부 코드 - 0 : SUCCESS
+|message
+|성공 및 에러 메시지
+|data
+|반환 데이터 값
+|===
+
+= --
+
+== 내 정보 조회
+=== -- Request
+include::{snippets}/user/profile/read-profile-info/path-parameters.adoc[]
+include::{snippets}/user/profile/read-profile-info/request-headers.adoc[]
+include::{snippets}/user/profile/read-profile-info/http-request.adoc[]
+=== -- Response
+include::{snippets}/user/profile/read-profile-info/response-fields-beneath-data.adoc[]
+include::{snippets}/user/profile/read-profile-info/http-response.adoc[]
+
+
+
+== 단어 완성 목록 조회
+NOTE: `lang` 파라미터는 검색할 단어의 **언어를 강제**할 때 사용,
+`lang` 이 존재하지 않으면 `word` 문자열에 한글이 포함되어 있으면 **한국어 단어를 검색**,
+포함되어 있지 않으면 **영어 단어를 검색**하여 결과를 반환한다.
+
+=== -- Request
+include::{snippets}/word/test-complete-word/path-parameters.adoc[]
+include::{snippets}/word/test-complete-word/query-parameters.adoc[]
+include::{snippets}/word/test-complete-word/http-request.adoc[]
+=== -- Response
+include::{snippets}/word/test-complete-word/response-fields-beneath-data.adoc[]
+include::{snippets}/word/test-complete-word/http-response.adoc[]
