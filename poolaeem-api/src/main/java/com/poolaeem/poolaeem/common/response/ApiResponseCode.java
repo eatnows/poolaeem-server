@@ -13,6 +13,7 @@ public enum ApiResponseCode {
     USER_NOT_FOUND(10004, "유저가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     ENTITY_NOT_FOUND(10005, "데이터가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     BAD_REQUEST_DATA(10008, "잘못된 요청 데이터입니다.", HttpStatus.BAD_REQUEST),
+    NOT_SUPPORT(10009, "지원하지 않는 요청입니다.", HttpStatus.BAD_REQUEST),
     USER_NOT_SIGNED_UP(10023, "회원가입 하지 않은 유저입니다.", HttpStatus.UNAUTHORIZED),
     DUPLICATE_SIGNED_UP(10024, "이미 회원가입한 유저입니다.", HttpStatus.BAD_REQUEST),
     EXPIRED_TOKEN(10050, "토큰 유효시간이 만료 되었습니다.", HttpStatus.BAD_REQUEST),

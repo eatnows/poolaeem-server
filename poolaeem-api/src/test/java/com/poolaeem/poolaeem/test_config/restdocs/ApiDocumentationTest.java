@@ -32,6 +32,9 @@ import com.poolaeem.poolaeem.user.presentation.ProfileInfoController;
 import com.poolaeem.poolaeem.user.presentation.SignController;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.presentation.WorkbookController;
+import com.poolaeem.poolaeem.word.application.WordCompletionService;
+import com.poolaeem.poolaeem.word.application.WordCompletionServiceStrategy;
+import com.poolaeem.poolaeem.word.presentation.WordCompletionController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +61,8 @@ import static org.mockito.BDDMockito.given;
             WorkbookController.class,
             ProblemController.class,
             GradingController.class,
-            GradeResultController.class
+            GradeResultController.class,
+            WordCompletionController.class
     },
     properties = "spring.config.location=classpath:/application.yml"
 )
@@ -134,4 +138,8 @@ public abstract class ApiDocumentationTest {
     protected GradingService gradingService;
     @MockBean
     protected GradeResultService gradeResultService;
+    @MockBean
+    protected WordCompletionService wordCompletionService;
+    @MockBean
+    protected WordCompletionServiceStrategy wordCompletionServiceStrategy;
 }
