@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        UserVo userVo = userRepository.findDtoByUserIdAndIsDeletedFalse(userId)
+        UserVo userVo = userRepository.findDtoByUserIdAndIsDeleted(userId, false)
                 .orElseThrow(UserNotFoundException::new);
 
         return new CustomUserDetail(userVo);

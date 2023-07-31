@@ -9,4 +9,6 @@ public interface ProfileInfoService {
     void updateUserName(String userId, String userName);
 
     void updateProfileImage(String userId, MultipartFile file);
+
+    ProfileDto.WorkbookCreatorRead readWorkbookCreator(String userId);
 }

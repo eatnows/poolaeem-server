@@ -18,7 +18,11 @@ public class ValidationExceptionHandler {
     private ResponseEntity<ApiResponseDto<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         try {
             ApiResponseCode apiResponseCode = ApiResponseCode.BAD_REQUEST_DATA;
-            ApiResponseDto<String> responseDto = new ApiResponseDto<>(apiResponseCode, e.getMessage());
+            String errorMessage = e.getBindingResult()
+                    .getAllErrors()
+                    .get(0)
+                    .getDefaultMessage();
+            ApiResponseDto<String> responseDto = new ApiResponseDto<>(apiResponseCode, errorMessage);
 
             log.info("> method argument not valid exception: ", e);
 

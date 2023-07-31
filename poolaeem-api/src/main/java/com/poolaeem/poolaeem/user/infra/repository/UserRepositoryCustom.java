@@ -5,5 +5,5 @@ import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import java.util.Optional;
 
 public interface UserRepositoryCustom {
-    Optional<UserVo> findDtoByUserIdAndIsDeletedFalse(String userId);
+    Optional<UserVo> findDtoByUserIdAndIsDeleted(String userId, Boolean isDeleted);
 }

@@ -4,10 +4,8 @@ import com.poolaeem.poolaeem.common.annotation.LoggedInUserOnly;
 import com.poolaeem.poolaeem.common.exception.auth.UnAuthorizationException;
 import com.poolaeem.poolaeem.security.jwt.token.CustomUserDetail;
 import com.poolaeem.poolaeem.security.jwt.token.NonLoggedInUserDetail;
-import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.UserRole;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +50,7 @@ class LoggedInOnlyValidAspectTest {
     void testLoggedInUserOnly() {
         SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken(
                 "key",
-                new CustomUserDetail(new UserVo("user-id", "email", "name", UserRole.ROLE_USER, null, null, null, null)),
+                new CustomUserDetail(new UserVo("user-id", "email", "name", UserRole.ROLE_USER, null, null, null, null, false)),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))));
 
         assertThat(testController.loggedInUserOnlyMethod()).isTrue();
