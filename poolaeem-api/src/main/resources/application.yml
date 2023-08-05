@@ -53,9 +53,15 @@ poolaeem:
   encrypt:
    secretKey: ${AES_ENCRYPT_SECRET_KEY}
 
-grafana:
-  otlp:
-    on-prem:
-      endpoint: http://localhost:4317
-      protocol: grpc
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+
+#grafana:
+#  otlp:
+#    on-prem:
+#      endpoint: http://localhost:4317
+#      protocol: grpc
 
