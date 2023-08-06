@@ -13,17 +13,19 @@
     </appender>
 
     <appender name="loki" class="com.github.loki4j.logback.Loki4jAppender">
+        <batchMaxBytes>65536</batchMaxBytes>
         <http>
             <url>${LOKI_URL}</url>
             <auth>
                 <username>${LOKI_USER}</username>
                 <password>${LOKI_PASSWORD}</password>
             </auth>
+            <requestTimeoutMs>15000</requestTimeoutMs>
         </http>
 
         <format>
             <label>
-                <pattern>app=poolaeem-api,host=${HOSTNAME}-poolaeem-api,level=%level</pattern>
+                <pattern>app=poolaeem-api,host=${HOSTNAME},level=%level</pattern>
             </label>
             <message>
                 <pattern>${LOG_PATTERN}</pattern>
