@@ -54,14 +54,26 @@ poolaeem:
    secretKey: ${AES_ENCRYPT_SECRET_KEY}
 
 management:
+  server:
+    port: ${ACTUATOR_PORT}
+  endpoint:
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
   endpoints:
     web:
+      base-path: ${ACTUATOR_BASE_PATH}
       exposure:
         include: health,prometheus
+    enabled-by-default: false
+    jmx:
+      exposure:
+        exclude: "*"
+
 
 #grafana:
 #  otlp:
 #    on-prem:
 #      endpoint: http://localhost:4317
 #      protocol: grpc
-
