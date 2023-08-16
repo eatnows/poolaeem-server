@@ -26,4 +26,3 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew -Pprofile=prod clean jib -x test
 
-
