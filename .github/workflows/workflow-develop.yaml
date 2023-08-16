@@ -26,5 +26,5 @@ jobs:
       - name: Build with Gradle
         env:
           ECR_SERVER_URI: ${{ secrets.ECR_SERVER_URI }}
-        run: ./gradlew -Pprofile=prod -PECR_SERVER_URL=$ECR_SERVER_URI jib -x test
+        run: ECR_SERVER_URI=$ECR_SERVER_URI ./gradlew -Pprofile=prod clean jib -x test
 

@@ -84,6 +84,7 @@ jar {
 
 ext {
     set('active', (!project.hasProperty('profile') || !profile) ? 'local' : profile)
+    set('ecr_uri', System.getenv('ECR_SERVER_URI') ?: 'not exists ecr uri')
 }
 
 jib {
@@ -91,7 +92,7 @@ jib {
         image = "eclipse-temurin:17"
     }
     to {
-        image = ECR_URI
+        image = ecr_uri
         tags = [active+"-${project.name}-latest", active+"-${project.name}-${project.version}-"+System.currentTimeMillis()]
     }
     container {
