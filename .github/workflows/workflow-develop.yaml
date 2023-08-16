@@ -24,5 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
+        env:
+          ECR_SERVER_URI = ${{ secrets.ECR_SERVER_URI }}
         run: ./gradlew -Pprofile=prod clean jib -x test
 
