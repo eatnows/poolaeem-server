@@ -1,5 +1,7 @@
 package com.poolaeem.poolaeem.question.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.poolaeem.poolaeem.common.component.time.TimeComponent;
 import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookCreator;
 import lombok.AccessLevel;
@@ -58,6 +60,28 @@ public class WorkbookDto {
             this.description = description;
             this.theme = theme;
             this.creator = creator;
+            this.createdAt = createdAt;
+            this.problemCount = problemCount;
+            this.solvedCount = solvedCount;
+        }
+    }
+
+    @Getter
+    public static class WorkbookListRead {
+        private String workbookId;
+        private String name;
+        private String description;
+        private WorkbookTheme theme;
+        @JsonFormat(pattern = TimeComponent.DATETIME_PATTERN, timezone = TimeComponent.DEFAULT_TIMEZONE)
+        private ZonedDateTime createdAt;
+        private int problemCount;
+        private int solvedCount;
+
+        public WorkbookListRead(String workbookId, String name, String description, WorkbookTheme theme, ZonedDateTime createdAt, int problemCount, int solvedCount) {
+            this.workbookId = workbookId;
+            this.name = name;
+            this.description = description;
+            this.theme = theme;
             this.createdAt = createdAt;
             this.problemCount = problemCount;
             this.solvedCount = solvedCount;
