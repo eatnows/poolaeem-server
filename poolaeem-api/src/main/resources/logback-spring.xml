@@ -2,7 +2,7 @@
 <configuration>
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <property name="LOG_PATTERN"
-            value="[%d{yyyy-MM-dd HH:mm:ss.SSSXXX}] [%clr(%-5level)] %clr(${PID:-}){magenta} [%thread] %clr(%logger{30}){cyan} %clr(:){faint} %msg%n"/>
+            value="[%d{yyyy-MM-dd HH:mm:ss.SSSXXX, ${logback.timezone:-Asia/Seoul}}] [%clr(%-5level)] %clr(${PID:-}){magenta} [%thread] %clr(%logger{30}){cyan} %clr(:){faint} %msg%n"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
