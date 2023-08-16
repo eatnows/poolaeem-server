@@ -12,8 +12,13 @@ import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.domain.validation.WorkbookValidation;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
 import com.poolaeem.poolaeem.question.infra.WorkbookUserClient;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class WorkbookServiceImpl implements WorkbookService {
@@ -122,6 +127,22 @@ public class WorkbookServiceImpl implements WorkbookService {
 
         problemService.softDeleteAllProblemsAndOptions(workbook);
         workbook.delete();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Slice<WorkbookDto.WorkbookListRead> readMyWorkbooks(String userId, Pageable pageable, String lastId) {
+        Slice<WorkbookVo> result = workbookRepository.findAllUserIdAndDbStateFalseAndIdLessThan(userId, pageable, lastId);
+        List<WorkbookDto.WorkbookListRead> workbooks = result.getContent().stream().map(vo -> new WorkbookDto.WorkbookListRead(
+                vo.getId(),
+                vo.getName(),
+                vo.getDescription(),
+                vo.getTheme(),
+                vo.getCreatedAt(),
+                vo.getProblemCount(),
+                vo.getSolvedCount()
+        )).toList();
+        return new SliceImpl<>(workbooks, pageable, result.hasNext());
     }
 
     private Workbook getWorkbookEntity(String workbookId) {
