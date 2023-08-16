@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <property name="LOG_PATTERN"
+            value="[%d{yyyy-MM-dd HH:mm:ss.SSSXXX, ${logback.timezone:-Asia/Seoul}}] [%clr(%-5level)] %clr(${PID:-}){magenta} [%thread] %clr(%logger{30}){cyan} %clr(:){faint} %msg%n"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                ${LOG_PATTERN}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="loki" class="com.github.loki4j.logback.Loki4jAppender">
+        <batchMaxBytes>65536</batchMaxBytes>
+        <http>
+            <url>${LOKI_URL}</url>
+            <auth>
+                <username>${LOKI_USER}</username>
+                <password>${LOKI_PASSWORD}</password>
+            </auth>
+            <requestTimeoutMs>15000</requestTimeoutMs>
+        </http>
+
+        <format>
+            <label>
+                <pattern>app=poolaeem-api,host=${HOSTNAME},level=%level</pattern>
+            </label>
+            <message>
+                <pattern>${LOG_PATTERN}</pattern>
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <springProfile name="prod">
+            <appender-ref ref="loki" />
+        </springProfile>
+    </root>
+</configuration>

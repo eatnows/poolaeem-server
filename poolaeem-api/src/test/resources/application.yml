@@ -96,3 +96,6 @@ jwt:
             zDgfejlwgp8w2fUTUaiUUFLUhLCiwl3KB+FFjOV8303ed/pcohdmg5GC/wDdIVaO
             PQIDAQAB
             -----END PUBLIC KEY-----
+
+logging:
+  config: classpath:logback-spring.xml
