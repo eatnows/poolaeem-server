@@ -1,5 +1,6 @@
 plugins {
     id 'jacoco'
+    id 'com.google.cloud.tools.jib' version '3.3.2'
 }
 
 ext {
@@ -79,4 +80,26 @@ bootJar {
 }
 jar {
     enabled = false
+}
+
+ext {
+    set('active', (!project.hasProperty('profile') || !profile) ? 'local' : profile)
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:17"
+    }
+    to {
+        image = ECR_URI
+        tags = [active+"-${project.name}-latest", active+"-${project.name}-${project.version}-"+System.currentTimeMillis()]
+    }
+    container {
+        // Set JVM options.
+//        jvmFlags = ['-Dspring.profiles.active='+active, '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8', '-XX:+HeapDumpOnOutOfMemoryError', '-XX:HeapDumpPath=/var/log', '-XX:MaxRAMPercentage=60.0']
+//        jvmFlags = ['$JAVA_TOOL_OPTIONS']
+        // Expose different port.
+        ports = ['8181']
+        // Add labels.
+    }
 }
