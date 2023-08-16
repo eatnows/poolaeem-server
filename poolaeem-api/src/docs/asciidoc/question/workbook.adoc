@@ -84,6 +84,16 @@ WARNING: 권한없음
 include::{snippets}/question/workbook/test-delete-workbook-for-not-creator/http-response.adoc[]
 
 
+== 내 문제집 목록 조회
+=== -- Request
+include::{snippets}/question/workbook/test-read-my-workbooks/path-parameters.adoc[]
+include::{snippets}/question/workbook/test-read-my-workbooks/request-headers.adoc[]
+include::{snippets}/question/workbook/test-read-my-workbooks/query-parameters.adoc[]
+include::{snippets}/question/workbook/test-read-my-workbooks/http-request.adoc[]
+=== -- Response
+include::{snippets}/question/workbook/test-read-my-workbooks/response-fields-beneath-data.adoc[]
+include::{snippets}/question/workbook/test-read-my-workbooks/http-response.adoc[]
+
 
 = 문항
 == 문항 추가

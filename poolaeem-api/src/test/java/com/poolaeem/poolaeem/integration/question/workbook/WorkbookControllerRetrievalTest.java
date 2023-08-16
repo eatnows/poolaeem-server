@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class WorkbookControllerRetrievalTest extends BaseIntegrationTest {
     private final String READ_WORKBOOK_INFO = "/api/workbooks/{workbookId}";
     private final String READ_WORKBOOK_SOLVE_INTRODUCTION = "/api/workbooks/{workbookId}/solve/introduction";
+    private final String READ_MY_WORKBOOKS = "/api/workbooks";
 
 
     @Autowired
@@ -145,5 +146,64 @@ class WorkbookControllerRetrievalTest extends BaseIntegrationTest {
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)))
                 .andExpect(jsonPath("$.data.creator", nullValue()));
+    }
+
+    @Test
+    @DisplayName("내 문제집의 목록을 생성일 내림차순으로 조회할 수 있다.")
+    void testReadMyWorkbooksOrder() throws Exception {
+        ResultActions result = this.mockMvc.perform(
+                get(READ_MY_WORKBOOKS)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        // size 파라미터가 없으면 기본값 10개 조회
+                        // lastId가 없으면 전체 조회
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(false)))
+                .andExpect(jsonPath("$.data.workbooks.size()", is(2)))
+                .andExpect(jsonPath("$.data.workbooks[0].workbookId", is("workbook-3")))
+                .andExpect(jsonPath("$.data.workbooks[0].name", is("신생영어 - 상")))
+                .andExpect(jsonPath("$.data.workbooks[0].description", is("새롭게 나온 영어 단어 암기 시스템")))
+                .andExpect(jsonPath("$.data.workbooks[0].theme", is(WorkbookTheme.PINK.name())))
+                .andExpect(jsonPath("$.data.workbooks[0].problemCount", is(0)))
+                .andExpect(jsonPath("$.data.workbooks[0].solvedCount", is(0)))
+                .andExpect(jsonPath("$.data.workbooks[0].createdAt", is("2023-08-17T00:15+09:00")))
+                .andExpect(jsonPath("$.data.workbooks[1].workbookId", is("workbook-1")))
+                .andExpect(jsonPath("$.data.workbooks[1].name", is("고등영어1")))
+                .andExpect(jsonPath("$.data.workbooks[1].description", is("고등학교에서 사용하는 영단어 문제입니다.")))
+                .andExpect(jsonPath("$.data.workbooks[1].theme", is(WorkbookTheme.PINK.name())))
+                .andExpect(jsonPath("$.data.workbooks[1].problemCount", is(3)))
+                .andExpect(jsonPath("$.data.workbooks[1].solvedCount", is(2)))
+                .andExpect(jsonPath("$.data.workbooks[1].createdAt", is("2023-07-04T23:36+09:00")));
+    }
+
+    @Test
+    @DisplayName("내 문제집의 목록을 size와 lastId로 필터링하여 조회할 수 있다.")
+    void testReadMyWorkbooksForSizeAndLastId() throws Exception {
+        ResultActions result = this.mockMvc.perform(
+                get(READ_MY_WORKBOOKS)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", BEARER_ACCESS_TOKEN)
+                        .param("size", "1")
+                        .param("lastId", "workbook-3")
+                        // size 파라미터가 없으면 기본값 10개 조회
+                        // lastId가 없으면 전체 조회
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.hasNext", is(false)))
+                .andExpect(jsonPath("$.data.workbooks.size()", is(1)))
+                .andExpect(jsonPath("$.data.workbooks[0].workbookId", is("workbook-1")))
+                .andExpect(jsonPath("$.data.workbooks[0].name", is("고등영어1")))
+                .andExpect(jsonPath("$.data.workbooks[0].description", is("고등학교에서 사용하는 영단어 문제입니다.")))
+                .andExpect(jsonPath("$.data.workbooks[0].theme", is(WorkbookTheme.PINK.name())))
+                .andExpect(jsonPath("$.data.workbooks[0].problemCount", is(3)))
+                .andExpect(jsonPath("$.data.workbooks[0].solvedCount", is(2)))
+                .andExpect(jsonPath("$.data.workbooks[0].createdAt", is("2023-07-04T23:36+09:00")));
     }
 }

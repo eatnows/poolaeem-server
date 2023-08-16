@@ -14,6 +14,8 @@ import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.presentation.dto.WorkbookRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
@@ -34,8 +37,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("단위: 문제집 컨트롤러 테스트")
@@ -45,6 +47,7 @@ class WorkbookControllerTest extends ApiDocumentationTest {
     private final String READ_WORKBOOK_INFO = "/api/workbooks/{workbookId}";
     private final String READ_WORKBOOK_SOLVE_INTRODUCTION = "/api/workbooks/{workbookId}/solve/introduction";
     private final String DELETE_WORKBOOK = "/api/workbooks/{workbookId}";
+    private final String READ_MY_WORKBOOKS = "/api/workbooks";
 
 
     @Test
@@ -305,6 +308,65 @@ class WorkbookControllerTest extends ApiDocumentationTest {
                 .andDo(document("question/workbook/{method-name}",
                         getDocumentRequest(),
                         getDocumentResponse()
+                ));
+    }
+
+    @Test
+    @DisplayName("내 문제집 목록을 조회할 수 있다.")
+    void testReadMyWorkbooks() throws Exception {
+        Pageable pageable = Pageable.ofSize(10);
+        given(workbookService.readMyWorkbooks(anyString(), any(), anyString()))
+                .willReturn(new SliceImpl<>(List.of(
+                        new WorkbookDto.WorkbookListRead(
+                                "workbook-2",
+                                "문제집 이름2",
+                                "문제집 설명2",
+                                WorkbookTheme.PINK,
+                                ZonedDateTime.of(LocalDateTime.of(2023, 8, 16, 14, 57), ZoneOffset.UTC),
+                                20,
+                                2
+                        ),
+                        new WorkbookDto.WorkbookListRead(
+                                "workbook-1",
+                                "문제집 이름1",
+                                "문제집 설명1",
+                                WorkbookTheme.PINK,
+                                ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 10, 56), ZoneOffset.UTC),
+                                50,
+                                7
+                        )
+                ), pageable, true));
+
+        this.mockMvc.perform(
+                        get(READ_MY_WORKBOOKS)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", BEARER_ACCESS_TOKEN)
+                                .param("size", "10")
+                                .param("lastId", "1234678989")
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(document("question/workbook/{method-name}",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        pathParameters(),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer token")
+                        ),
+                        queryParameters(
+                                parameterWithName("size").optional().description("반환될 데이터 크기 기본값:10, 최대값:100"),
+                                parameterWithName("lastId").optional().description("반환된 마지막 문제집의 id")
+                        ),
+                        responseFields(
+                                beneathPath("data"),
+                                fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("데이터가 더 남아있는지"),
+                                fieldWithPath("workbooks[].workbookId").type(JsonFieldType.STRING).description("문제집 id"),
+                                fieldWithPath("workbooks[].name").type(JsonFieldType.STRING).description("문제집 이름"),
+                                fieldWithPath("workbooks[].description").type(JsonFieldType.STRING).description("문제집 설명"),
+                                fieldWithPath("workbooks[].theme").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.WORKBOOK_THEME)),
+                                fieldWithPath("workbooks[].problemCount").type(JsonFieldType.NUMBER).description("문항 수"),
+                                fieldWithPath("workbooks[].solvedCount").type(JsonFieldType.NUMBER).description("풀이된 수"),
+                                fieldWithPath("workbooks[].createdAt").type(JsonFieldType.STRING).attributes(DocumentFormatGenerator.getDateTimeFormat()).description("문제집 생성일")
+                        )
                 ));
     }
 }

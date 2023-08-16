@@ -20,8 +20,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -287,5 +293,45 @@ class WorkbookServiceImplTest {
 
         assertThat(mockWorkbook.getIsDeleted()).isNull();
         verify(problemService, times(0)).softDeleteAllProblemsAndOptions(mockWorkbook);
+    }
+
+    @Test
+    @DisplayName("내 문제집의 목록을 조회할 수 있다.")
+    void testReadMyWorkbooks() {
+        String userId = "user-1";
+        Pageable pageable = Pageable.ofSize(10);
+        String lastId = "123456789";
+
+        SliceImpl<WorkbookVo> mockResult = new SliceImpl<>(List.of(
+                new WorkbookVo(
+                        "workbook-2",
+                        null,
+                        "문제집 이름2",
+                        "문제집 설명2",
+                        20,
+                        2,
+                        WorkbookTheme.PINK,
+                        ZonedDateTime.of(LocalDateTime.of(2023, 8, 16, 14, 57), ZoneOffset.UTC)
+                ),
+                new WorkbookVo(
+                        "workbook-1",
+                        null,
+                        "문제집 이름1",
+                        "문제집 설명1",
+                        50,
+                        7,
+                        WorkbookTheme.PINK,
+                        ZonedDateTime.of(LocalDateTime.of(2023, 8, 15, 10, 56), ZoneOffset.UTC)
+                )
+        ), pageable, true);
+        given(workbookRepository.findAllUserIdAndDbStateFalseAndIdLessThan(userId, pageable, lastId))
+                .willReturn(mockResult);
+
+        Slice<WorkbookDto.WorkbookListRead> result = workbookService.readMyWorkbooks(userId, pageable, lastId);
+
+        assertThat(result.hasNext()).isEqualTo(mockResult.hasNext());
+        assertThat(result.getContent().get(0).getWorkbookId()).isEqualTo(mockResult.getContent().get(0).getId());
+        assertThat(result.getContent().get(1).getWorkbookId()).isEqualTo(mockResult.getContent().get(1).getId());
+        assertThat(result.getContent().get(0)).isNotInstanceOf(mockResult.getContent().get(0).getClass());
     }
 }
