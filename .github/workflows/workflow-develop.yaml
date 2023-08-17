@@ -57,5 +57,5 @@ jobs:
         env:
           ECR_SERVER_URI: ${{ secrets.ECR_SERVER_URI }}
         run: |
-          docker run -p 8080:8080 -d --name poolaeem-server $ECR_SERVER_URI:latest
+          docker run --env-file=~/poolaeem-server-docker.env -p 8080:8080 -d --name poolaeem-server $ECR_SERVER_URI:latest
 
