@@ -32,30 +32,45 @@ jobs:
       - name: Build with Gradle
         env:
           ECR_SERVER_URI: ${{ secrets.ECR_SERVER_URI }}
-        run: ECR_SERVER_URI=$ECR_SERVER_URI ./gradlew -Pprofile=prod clean jib -x test
+          LOKI_URL: ${{ secrets.LOKI_URL }}
+          LOKI_USER: ${{ secrets.LOKI_USER }}
+          LOKI_PASSWORD: ${{ secrets.LOKI_PASSWORD }}
+        run: ECR_SERVER_URI=$ECR_SERVER_URI LOKI_URL=$LOKI_URL LOKI_USER=$LOKI_USER LOKI_PASSWORD=$LOKI_PASSWORD ./gradlew -Pprofile=prod clean jib -x test
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v2
-#        with:
-#          aws-access-key-id: ${{ needs.build.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ${{ secrets.AWS_REGION }}
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
 #
-#      - name: Login to Amazon ECR
-#        id: login-ecr
-#        uses: aws-actions/amazon-ecr-login@v1
+#      - name: Connect AWS EC2
+#        uses: appleboy/ssh-action@v1.0.0
 #        with:
-#          mask-password: 'true'
-
-      - name: Deploy Application
-        env:
-          ECR_SERVER_URI: ${{ secrets.ECR_SERVER_URI }}
-        run: |
-          docker run --env-file=~/poolaeem-server-docker.env -p 8080:8080 -d --name poolaeem-server $ECR_SERVER_URI:latest
+#          host: ${{ secrets.EC2_HOST }}
+#          username: ${{ secrets.EC2_USER }}
+#          key: ${{ secrets.EC2_SECRET_KEY }}
+#          script: |
+#            sudo docker stop boot-prac-ci
+#            sudo docker rm boot-prac-ci
+#            sudo docker run -it -d -p 8080:8080 --name boot-prac-ci lucaskang134/boot-
+#
+#
+##      - name: Configure AWS credentials
+##        uses: aws-actions/configure-aws-credentials@v2
+##        with:
+##          aws-access-key-id: ${{ needs.build.AWS_ACCESS_KEY_ID }}
+##          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+##          aws-region: ${{ secrets.AWS_REGION }}
+##
+##      - name: Login to Amazon ECR
+##        id: login-ecr
+##        uses: aws-actions/amazon-ecr-login@v1
+##        with:
+##          mask-password: 'true'
+#
+#      - name: Deploy Application
+#        env:
+#          ECR_SERVER_URI: ${{ secrets.ECR_SERVER_URI }}
+#        run: |
+#          docker run --env-file=~/poolaeem-server-docker.env -p 8080:8080 -d --name poolaeem-server $ECR_SERVER_URI:latest
 

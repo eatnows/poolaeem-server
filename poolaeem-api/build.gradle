@@ -85,6 +85,9 @@ jar {
 ext {
     set('active', (!project.hasProperty('profile') || !profile) ? 'local' : profile)
     set('ecr_uri', System.getenv('ECR_SERVER_URI') ?: 'not exists ecr uri')
+    set('loki_url', System.getenv('LOKI_URL') ?: 'not exists loki url')
+    set('loki_password', System.getenv('LOKI_PASSWORD') ?: 'not exists loki password')
+    set('loki_user', System.getenv('LOKI_USER') ?: 'not exists loki password')
 }
 
 jib {
@@ -97,7 +100,7 @@ jib {
     }
     container {
         // Set JVM options.
-        jvmFlags = ['-Dspring.profiles.active='+active]
+        jvmFlags = ['-Dspring.profiles.active='+active, '-DLOKI_URL='+loki_url, '-DLOKI_PASSWORD='+loki_password, '-DLOKI_USER='+loki_user]
 //        jvmFlags = ['-Dspring.profiles.active='+active, '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8', '-XX:+HeapDumpOnOutOfMemoryError', '-XX:HeapDumpPath=/var/log', '-XX:MaxRAMPercentage=60.0']
 //        jvmFlags = ['$JAVA_TOOL_OPTIONS']
         // Expose different port.
