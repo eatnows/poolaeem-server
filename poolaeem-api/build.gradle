@@ -92,7 +92,7 @@ ext {
 
 jib {
     from {
-        image = "eclipse-temurin:17"
+        image = "eclipse-temurin:17-alpine"
     }
     to {
         image = ecr_uri
