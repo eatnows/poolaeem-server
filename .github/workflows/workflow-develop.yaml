@@ -42,7 +42,9 @@ jobs:
           DEPLOY_APPLICATION_NAME: ${{ secrets.DEPLOY_APPLICATION_NAME }}
           DEPLOYMENT_GROUP_NAME: ${{ secrets.DEPLOYMENT_GROUP_NAME }}
           IMAGE_TAG: ${{ github.sha }}
-        run: aws deploy create-deployment --application-name $DEPLOY_APPLICATION_NAME --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=code-deploy-test,bundleType=zip,key=deploy-$IMAGE_TAG.zip
+          DEPLOY_S3_BUCKET: ${{ secrets.DEPLOY_S3_BUCKET }}
+          DEPLOY_S3_KEY: ${{ secrets.DEPLOY_S3_KEY }}
+        run: aws deploy create-deployment --application-name $DEPLOY_APPLICATION_NAME --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$DEPLOY_S3_BUCKET,bundleType=zip,key=$DEPLOY_S3_KEY.zip
 
 #  deploy:
 #    needs: build
