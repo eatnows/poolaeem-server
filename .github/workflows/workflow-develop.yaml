@@ -3,7 +3,7 @@ name: Api Server Deploy
 on:
   push:
     branches:
-      - feat/#53-basic-ci-cd-by-githubaction
+      - api-main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,13 +29,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Test with Gradle
+        run: ./gradlew -Pprofile=test clean test
+
       - name: Build with Gradle
         env:
           ECR_SERVER_URI: ${{ secrets.ECR_SERVER_URI }}
           LOKI_URL: ${{ secrets.LOKI_URL }}
           LOKI_USER: ${{ secrets.LOKI_USER }}
           LOKI_PASSWORD: ${{ secrets.LOKI_PASSWORD }}
-        run: ECR_SERVER_URI=$ECR_SERVER_URI ./gradlew -Pprofile=prod clean test jib
+        run: ECR_SERVER_URI=$ECR_SERVER_URI ./gradlew -Pprofile=prod clean jib -x test
 
       - name: Create Deployment on AWS CodeDeploy
         env:
