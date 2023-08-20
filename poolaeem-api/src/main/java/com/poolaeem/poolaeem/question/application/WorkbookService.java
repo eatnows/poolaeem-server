@@ -2,6 +2,8 @@ package com.poolaeem.poolaeem.question.application;
 
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface WorkbookService {
@@ -23,4 +25,6 @@ public interface WorkbookService {
     void validWorkbookManage(String workbookId, String reqUserId);
 
     void deleteWorkbook(String userId, String workbookId);
+
+    Slice<WorkbookDto.WorkbookListRead> readMyWorkbooks(String userId, Pageable pageRequest, String lastId);
 }

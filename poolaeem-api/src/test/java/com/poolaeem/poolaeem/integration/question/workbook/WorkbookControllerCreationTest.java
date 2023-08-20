@@ -115,7 +115,7 @@ class WorkbookControllerCreationTest extends BaseIntegrationTest {
 
         Integer lastOrder = workbookRepository.findAll().stream()
                 .filter(workbook -> workbook.getUserId().equals("user-1"))
-                .sorted((o1, o2) -> o1.getCreatedAt().compareTo(o2.getCreatedAt()))
+                .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
                 .map(Workbook::getOrder)
                 .findFirst().orElse(0);
 

@@ -9,8 +9,10 @@ import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Slice;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WorkbookResponse {
@@ -60,6 +62,17 @@ public class WorkbookResponse {
             this.createdAt = info.getCreatedAt();
             this.problemCount = info.getProblemCount();
             this.solvedCount = info.getSolvedCount();
+        }
+    }
+
+    @Getter
+    public static class WorkbookListRead {
+        private List<WorkbookDto.WorkbookListRead> workbooks;
+        private Boolean hasNext;
+
+        public WorkbookListRead(Slice<WorkbookDto.WorkbookListRead> result) {
+            this.workbooks = result.getContent();
+            hasNext = result.hasNext();
         }
     }
 }

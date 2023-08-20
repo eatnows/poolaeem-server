@@ -10,6 +10,9 @@ import com.poolaeem.poolaeem.question.presentation.dto.WorkbookResponse;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -66,5 +69,17 @@ public class WorkbookController {
                                             @PathVariable String workbookId) {
         workbookService.deleteWorkbook(user.getId(), workbookId);
         return ApiResponseDto.OK();
+    }
+
+    @LoggedInUserOnly
+    @GetMapping("/api/workbooks")
+    public ApiResponseDto<WorkbookResponse.WorkbookListRead> readMyWorkbooks(@LoggedInUser UserVo user,
+                                                                             @RequestParam(defaultValue = "10") @Max(100) int size,
+                                                                             @RequestParam(required = false) String lastId) {
+        Slice<WorkbookDto.WorkbookListRead> results =
+                workbookService.readMyWorkbooks(user.getId(), PageRequest.of(0, size), lastId);
+
+        WorkbookResponse.WorkbookListRead response = new WorkbookResponse.WorkbookListRead(results);
+        return ApiResponseDto.OK(response);
     }
 }
