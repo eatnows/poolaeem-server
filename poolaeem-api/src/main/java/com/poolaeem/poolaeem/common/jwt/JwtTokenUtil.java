@@ -34,6 +34,10 @@ public class JwtTokenUtil {
 
     public JwtTokenUtil(@Value("${jwt.rsa.private}") String privateKey,
                         @Value("${jwt.rsa.public}") String publicKey) {
+        Base64.Decoder decoder = Base64.getDecoder();
+        privateKey = new String(decoder.decode(privateKey));
+        publicKey = new String(decoder.decode(publicKey));
+
         Base64.Decoder base64Encoder = Base64.getMimeDecoder();
         this.PRIVATE_KEY = base64Encoder.decode(privateKey.replace("\\n", "").replaceAll("-{5}[ a-zA-Z]*-{5}", ""));
         this.PUBLIC_KEY = base64Encoder.decode(publicKey.replace("\\n", "").replaceAll("-{5}[ a-zA-Z]*-{5}", ""));
