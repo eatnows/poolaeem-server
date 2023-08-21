@@ -3,9 +3,7 @@
   
   [https://poolaeem.com](https://poolaeem.com, "단어퀴즈 내고 풀고, 풀내임")
 
-  <a href="https://poolaeem.com" target="_blank">
-    <img width="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/e549b007-a35c-44c8-8b49-2ec5fb8fe2e1">
-  </a>
+  <img width="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/e549b007-a35c-44c8-8b49-2ec5fb8fe2e1">
   <br> 
   단어퀴즈 내고 풀고, 풀내임
 </div>
