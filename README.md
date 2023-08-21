@@ -1,7 +1,7 @@
 # 풀내임 (Poolaeem)
 <div align="center">
   
-  [https://poolaeem.com](https://poolaeem.com, "단어퀴즈 내고 풀고, 풀내임")
+  [https://poolaeem.com](https://poolaeem.com "단어퀴즈 내고 풀고, 풀내임")
 
   <img width="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/e549b007-a35c-44c8-8b49-2ec5fb8fe2e1">
   <br> 
