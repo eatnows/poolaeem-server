@@ -1,16 +1,16 @@
 # 풀내임 (Poolaeem)
 <div align="center">
-  
+
   [https://poolaeem.com](https://poolaeem.com "단어퀴즈 내고 풀고, 풀내임")
 
-  <img width="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/e549b007-a35c-44c8-8b49-2ec5fb8fe2e1">
+  <img width="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/82a500b9-2f5a-4a8a-812b-5a6e3ec6bf45">
   <br> 
   단어퀴즈 내고 풀고, 풀내임
 </div>
 
 ## 서비스 소개
 
-|<img height="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/2d10b986-1ae3-4522-9221-2e1e5c8573ca"> |  <img height="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/54f04b03-c4d4-4d43-981d-63c62d089b66"> | <img height="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/4afa9e7b-4b71-4457-911a-3431eeec0aaa"> | <img height="300" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/208ffc66-df8e-4600-a53f-dc0107d3cca1"> |
+|<img height="300" alt="poolaeem_list" src="https://github.com/eatnows/poolaeem-server/assets/59526368/085a5cde-9f5c-4ad5-9b29-778d3043e10e"> |  <img height="300" alt="poolaeem_problem" src="https://github.com/eatnows/poolaeem-server/assets/59526368/2a9f043c-a3e6-4918-b1c1-8b8e24dcd74c"> | <img height="300" alt="poolaeem_solve" src="https://github.com/eatnows/poolaeem-server/assets/59526368/6ccd70e8-199e-46f3-a7b1-ee26435de12f"> | <img height="300" alt="poolaeem_result" src="https://github.com/eatnows/poolaeem-server/assets/59526368/d2a87409-a722-46fa-8341-39e0ca433940"> |
 |:----------:|:----------:|:---------:|:--------:|
 |문제 목록|문제 만들기|문제 풀이|풀이 결과|
 <br>
@@ -36,7 +36,7 @@ UX/UI, FrontEnd, BackEnd 각각 포지션 별 한 명씩 맡고있는 팀으로 
 
 ## 개발 정보
 <p align="center">
-<img width="600" alt="poolaeem_image" src="https://github.com/eatnows/poolaeem-server/assets/59526368/bee5c5f2-c1ef-49dd-a8d7-265ee74ec053">
+<img width="600" alt="poolaeem_architecture" src="https://github.com/eatnows/poolaeem-server/assets/59526368/6007c7b3-fd55-4d52-983c-3cf6eb64253c">
 </p>
 
 ### 기술 스택
