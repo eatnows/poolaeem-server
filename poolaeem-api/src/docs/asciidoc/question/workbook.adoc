@@ -123,6 +123,7 @@ include::{snippets}/question/problem/test-update-problem/request-headers.adoc[]
 include::{snippets}/question/problem/test-update-problem/request-fields.adoc[]
 include::{snippets}/question/problem/test-update-problem/http-request.adoc[]
 === -- Response
+include::{snippets}/question/problem/test-update-problem/response-fields-beneath-data.adoc[]
 include::{snippets}/question/problem/test-update-problem/http-response.adoc[]
 
 

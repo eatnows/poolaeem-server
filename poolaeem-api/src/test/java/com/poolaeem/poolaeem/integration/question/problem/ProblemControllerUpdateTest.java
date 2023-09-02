@@ -71,7 +71,18 @@ class ProblemControllerUpdateTest extends BaseIntegrationTest {
         assertThat(afterOptions).hasSameSizeAs(param.getOptions());
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", is(0)));
+                .andExpect(jsonPath("$.code", is(0)))
+                .andExpect(jsonPath("$.data.problemId", is("problem-1")))
+                .andExpect(jsonPath("$.data.question", is("New")))
+                .andExpect(jsonPath("$.data.type", is(ProblemType.CHECKBOX.name())))
+                .andExpect(jsonPath("$.data.timeout", is(30)))
+                .andExpect(jsonPath("$.data.options[0].optionId", is("option-2")))
+                .andExpect(jsonPath("$.data.options[0].value", is("세계")))
+                .andExpect(jsonPath("$.data.options[0].isCorrect", is(false)))
+                .andExpect(jsonPath("$.data.options[1].value", is("새로운")))
+                .andExpect(jsonPath("$.data.options[1].isCorrect", is(true)))
+                .andExpect(jsonPath("$.data.options[2].value", is("뉴스")))
+                .andExpect(jsonPath("$.data.options[2].isCorrect", is(false)));
     }
 
     @Test
