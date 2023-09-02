@@ -34,10 +34,35 @@
         </format>
     </appender>
 
+    <appender name="loki-dev" class="com.github.loki4j.logback.Loki4jAppender">
+        <batchMaxBytes>65536</batchMaxBytes>
+        <http>
+            <url>${LOKI_URL}</url>
+            <auth>
+                <username>${LOKI_USER}</username>
+                <password>${LOKI_PASSWORD}</password>
+            </auth>
+            <requestTimeoutMs>15000</requestTimeoutMs>
+        </http>
+
+        <format>
+            <label>
+                <pattern>app=dev-poolaeem-api,host=${HOSTNAME},level=%level</pattern>
+            </label>
+            <message>
+                <pattern>${LOG_PATTERN}</pattern>
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+    </appender>
+
     <root level="INFO">
         <appender-ref ref="console" />
         <springProfile name="prod">
             <appender-ref ref="loki" />
+        </springProfile>
+        <springProfile name="dev">
+            <appender-ref ref="loki-dev" />
         </springProfile>
     </root>
 </configuration>
