@@ -48,14 +48,16 @@ public class ProblemController {
 
     @LoggedInUserOnly
     @PutMapping("/api/problems/{problemId}")
-    public ApiResponseDto<?> updateProblem(@LoggedInUser UserVo user,
+    public ApiResponseDto<ProblemResponse.ProblemRead> updateProblem(@LoggedInUser UserVo user,
                                            @PathVariable String problemId,
                                            @Valid @RequestBody ProblemRequest.ProblemUpdate dto) {
         ProblemDto.ProblemUpdateParam param =
                 new ProblemDto.ProblemUpdateParam(problemId, user.getId(), dto.getQuestion(), dto.getOptions());
         problemService.updateProblem(param);
+        ProblemVo problem = problemService.readProblem(user.getId(), problemId);
 
-        return ApiResponseDto.OK();
+        ProblemResponse.ProblemRead response = new ProblemResponse.ProblemRead(problem);
+        return ApiResponseDto.OK(response);
     }
 
     @LoggedInUserOnly
