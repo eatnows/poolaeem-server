@@ -24,6 +24,7 @@ spring:
           plan_parameter_metadata_max_size: 4
     hibernate:
       ddl-auto: none
+    open-in-view: false
 
   security:
     oauth2:
