@@ -16,6 +16,7 @@ import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -127,8 +128,12 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod(HttpMethod.GET);
+        configuration.addAllowedMethod(HttpMethod.POST);
+        configuration.addAllowedMethod(HttpMethod.PUT);
+        configuration.addAllowedMethod(HttpMethod.PATCH);
+        configuration.addAllowedMethod(HttpMethod.DELETE);
+        configuration.addAllowedHeader(CorsConfiguration.ALL);
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
