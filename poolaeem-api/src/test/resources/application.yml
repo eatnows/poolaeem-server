@@ -1,3 +1,10 @@
+server:
+  shutdown: graceful
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 100
+
 spring:
   test:
     mockmvc:
@@ -13,6 +20,8 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
+    open-in-view: false
+
   sql:
     init:
       schema-locations: classpath:sql/common/schema.sql
@@ -35,12 +44,12 @@ spring:
             user-info-uri: http://0.0.0.0:8090/userinfo
 
   flyway:
-          enabled: false
-          baseline-on-migrate: false
-          url: ${DB_URL}
-          user: ${DB_USERNAME}
-          password: ${DB_PASSWORD}
-          clean-disabled: true
+    enabled: false
+    baseline-on-migrate: false
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    clean-disabled: true
   cloud:
     aws:
       region:
@@ -48,12 +57,12 @@ spring:
 
 poolaeem:
   aws:
-    region: ${AWS_REGION}
     s3:
       bucket-name: test-bucket
       access-key: test_access_key
       secret-key: test_secret_key
-
+  image:
+    domain: https://image-domain.poolaeem.com
   encrypt:
     secretKey: ST0IxeU6g1Tbzrqw7k380saqOMaxmUEP
 
