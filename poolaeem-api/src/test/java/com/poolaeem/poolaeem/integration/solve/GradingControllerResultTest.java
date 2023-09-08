@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("통합: 채점 결과 수집 테스트")
 @Sql(scripts = {
+        "classpath:/sql/common/schema.sql",
         "classpath:/sql/question/workbook.sql",
         "classpath:/sql/question/problem.sql",
         "classpath:/sql/question/option.sql",

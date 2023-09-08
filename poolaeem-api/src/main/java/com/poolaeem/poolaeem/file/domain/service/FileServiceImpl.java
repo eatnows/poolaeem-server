@@ -6,6 +6,7 @@ import com.poolaeem.poolaeem.file.application.FileUpload;
 import com.poolaeem.poolaeem.file.domain.entity.File;
 import com.poolaeem.poolaeem.common.file.FilePath;
 import com.poolaeem.poolaeem.file.infra.repository.FileRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,12 +15,13 @@ import java.util.Optional;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private static final String IMAGE_DOMAIN = "https://image.poolaeem.com";
+    private final String IMAGE_DOMAIN;
     private final FileRepository fileRepository;
     private final FileUpload fileUpload;
     private final FileDelete fileDelete;
 
-    public FileServiceImpl(FileRepository fileRepository, FileUpload fileUpload, FileDelete fileDelete) {
+    public FileServiceImpl(@Value("${poolaeem.image.domain}") String imageDomain, FileRepository fileRepository, FileUpload fileUpload, FileDelete fileDelete) {
+        this.IMAGE_DOMAIN = imageDomain;
         this.fileRepository = fileRepository;
         this.fileUpload = fileUpload;
         this.fileDelete = fileDelete;

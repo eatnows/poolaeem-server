@@ -1,3 +1,10 @@
+server:
+  shutdown: graceful
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 100
+
 spring:
   application:
     name: poolaeem-api
@@ -17,6 +24,7 @@ spring:
           plan_parameter_metadata_max_size: 4
     hibernate:
       ddl-auto: none
+    open-in-view: false
 
   security:
     oauth2:
@@ -49,9 +57,10 @@ poolaeem:
       bucket-name: ${S3_BUCKET_NAME}
       access-key: ${S3_ACCESS_KEY}
       secret-key: ${S3_SECRET_KEY}
-
+  image:
+    domain: ${POOLAEEM_IMAGE_DOMAIN}
   encrypt:
-   secretKey: ${AES_ENCRYPT_SECRET_KEY}
+    secretKey: ${AES_ENCRYPT_SECRET_KEY}
 
 management:
   server:
