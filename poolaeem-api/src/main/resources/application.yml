@@ -1,5 +1,9 @@
 server:
   shutdown: graceful
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 100
 
 spring:
   application:
