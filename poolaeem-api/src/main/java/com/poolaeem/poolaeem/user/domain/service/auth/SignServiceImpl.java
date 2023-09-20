@@ -14,11 +14,13 @@ import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
+import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.TermsVersion;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -41,18 +43,20 @@ public class SignServiceImpl implements SignService {
     private final SignUpOAuth2UserService signUpOAuth2UserService;
     private final JwtTokenUtil jwtTokenUtil;
     private final FileEventsPublisher fileEventsPublisher;
+    private final LoggedInHistoryRecord loggedInHistoryRecord;
 
-    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher) {
+    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher, LoggedInHistoryRecord loggedInHistoryRecord) {
         this.userRepository = userRepository;
         this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
         this.signUpOAuth2UserService = signUpOAuth2UserService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.fileEventsPublisher = fileEventsPublisher;
+        this.loggedInHistoryRecord = loggedInHistoryRecord;
     }
 
     @Transactional
     @Override
-    public User signUpOAuth2User(OauthProvider oauthProvider, String oauthId, String email) {
+    public User signUpOAuth2User(HttpServletRequest request, OauthProvider oauthProvider, String oauthId, String email) {
         OAuth2AuthorizedClient client = oAuth2AuthorizedClientService.loadAuthorizedClient(oauthProvider.getId(), oauthId);
         OAuth2AccessToken accessToken = client.getAccessToken();
 
@@ -64,7 +68,10 @@ public class SignServiceImpl implements SignService {
         ProviderUser providerUser = getProviderUser(oAuth2User, client.getClientRegistration());
         matchRequestEmailAndUserEmail(email, providerUser.getEmail());
 
-        return saveUser(providerUser);
+        User user = saveUser(providerUser);
+        loggedInHistoryRecord.saveLoggedAt(user.getId(), request);
+
+        return user;
     }
 
     @Override

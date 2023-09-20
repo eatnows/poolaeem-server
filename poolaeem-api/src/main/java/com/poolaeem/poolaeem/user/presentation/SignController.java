@@ -10,6 +10,7 @@ import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.domain.entity.vo.UserVo;
 import com.poolaeem.poolaeem.user.presentation.dto.auth.SignRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +28,11 @@ public class SignController {
     }
 
     @PostMapping("/api/signup/terms")
-    public void signUp(HttpServletResponse response,
+    public void signUp(HttpServletRequest request,
+                       HttpServletResponse response,
                        @Valid @RequestBody SignRequest.SignUpTermsDto dto) {
-
-        User user = signService.signUpOAuth2User(dto.getOauthProvider(), dto.getOauthId(), dto.getEmail());
-        loginSuccessToken.addTokenInResponse(
-                response,
-                new GenerateTokenUser(user.getId())
-        );
+        User user = signService.signUpOAuth2User(request, dto.getOauthProvider(), dto.getOauthId(), dto.getEmail());
+        loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId()));
     }
 
     @PostMapping("/api/access-token/refresh")

@@ -2,6 +2,7 @@ package com.poolaeem.poolaeem.security.oauth2.handler;
 
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
+import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

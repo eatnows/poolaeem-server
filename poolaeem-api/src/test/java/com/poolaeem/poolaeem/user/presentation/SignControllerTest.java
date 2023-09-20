@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentRequest;
 import static com.poolaeem.poolaeem.test_config.restdocs.RestDocumentUtils.getDocumentResponse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -60,7 +61,7 @@ class SignControllerTest extends ApiDocumentationTest {
     void agreeSignUpTerms() throws Exception {
         String email = "test@poolaeem.com";
 
-        given(signService.signUpOAuth2User(OauthProvider.GOOGLE, "oauthId", email))
+        given(signService.signUpOAuth2User(any(), any(), anyString(), anyString()))
                 .willReturn(new User(
                         email,
                         "풀내임",

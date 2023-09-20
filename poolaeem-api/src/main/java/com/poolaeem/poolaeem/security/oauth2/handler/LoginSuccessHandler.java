@@ -6,6 +6,7 @@ import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.common.response.ApiResponseDto;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
@@ -37,12 +38,14 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final LoginSuccessToken loginSuccessToken;
     private final ObjectMapper objectMapper;
+    private final LoggedInHistoryRecord loggedInHistoryRecord;
 
-    public LoginSuccessHandler(UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper) {
+    public LoginSuccessHandler(UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper, LoggedInHistoryRecord loggedInHistoryRecord) {
         this.userRepository = userRepository;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.loginSuccessToken = loginSuccessToken;
         this.objectMapper = objectMapper;
+        this.loggedInHistoryRecord = loggedInHistoryRecord;
     }
 
     @Override
@@ -66,6 +69,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         User user = userOptional.get();
         loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId()));
+
+        loggedInHistoryRecord.saveLoggedAt(user.getId(), request);
 
         try (OutputStream os = response.getOutputStream()){
             objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.SUCCESS));
