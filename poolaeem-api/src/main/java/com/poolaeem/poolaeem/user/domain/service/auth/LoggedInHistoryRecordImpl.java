@@ -2,6 +2,7 @@ package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import com.poolaeem.poolaeem.common.component.time.TimeComponent;
 import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
+import com.poolaeem.poolaeem.user.domain.dto.RequestClient;
 import com.poolaeem.poolaeem.user.domain.entity.LoggedInHistory;
 import com.poolaeem.poolaeem.user.infra.repository.LoggedInHistoryRepository;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
@@ -26,19 +27,9 @@ public class LoggedInHistoryRecordImpl implements LoggedInHistoryRecord {
     @Override
     public void saveLoggedAt(String userId, HttpServletRequest request) {
         ZonedDateTime loggedAt = TimeComponent.nowUtc();
+        RequestClient requestClient = new RequestClient(request);
 
         userRepository.updateLastLoggedAtByIdAndIsDeletedFalse(userId, loggedAt);
-        loggedInHistoryRepository.save(new LoggedInHistory(userId, loggedAt, getClientIp(request), getUserAgent(request)));
-    }
-
-    private String getUserAgent(HttpServletRequest request) {
-        String agent = request.getHeader("user-agent");
-        return agent == null ? "" : agent;
-    }
-
-    private String getClientIp(HttpServletRequest request) {
-        String clientIp = request.getHeader("x-forwarded-for");
-
-        return clientIp == null ? "" : clientIp;
+        loggedInHistoryRepository.save(new LoggedInHistory(userId, loggedAt, requestClient.clientIp(), requestClient.userAgent()));
     }
 }

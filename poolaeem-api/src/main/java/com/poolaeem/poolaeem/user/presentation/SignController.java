@@ -32,7 +32,7 @@ public class SignController {
                        HttpServletResponse response,
                        @Valid @RequestBody SignRequest.SignUpTermsDto dto) {
         User user = signService.signUpOAuth2User(request, dto.getOauthProvider(), dto.getOauthId(), dto.getEmail());
-        loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId()));
+        loginSuccessToken.addTokenInResponse(request, response, new GenerateTokenUser(user.getId()));
     }
 
     @PostMapping("/api/access-token/refresh")
