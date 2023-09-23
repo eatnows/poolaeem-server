@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -39,19 +40,22 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final LoginSuccessToken loginSuccessToken;
     private final ObjectMapper objectMapper;
     private final LoggedInHistoryRecord loggedInHistoryRecord;
+    private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
-    public LoginSuccessHandler(UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper, LoggedInHistoryRecord loggedInHistoryRecord) {
+    public LoginSuccessHandler(UserRepository userRepository, HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository, LoginSuccessToken loginSuccessToken, ObjectMapper objectMapper, LoggedInHistoryRecord loggedInHistoryRecord, OAuth2AuthorizedClientService oAuth2AuthorizedClientService) {
         this.userRepository = userRepository;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.loginSuccessToken = loginSuccessToken;
         this.objectMapper = objectMapper;
         this.loggedInHistoryRecord = loggedInHistoryRecord;
+        this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
         clearAuthenticationAttributes(request, response);
+
         String oauthId = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("sub");
         String email = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
         String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
@@ -64,18 +68,23 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             return;
         }
 
+        removeAuthorizedClient((OAuth2AuthenticationToken) authentication);
+
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.OK.value());
 
         User user = userOptional.get();
         loginSuccessToken.addTokenInResponse(response, new GenerateTokenUser(user.getId()));
-
         loggedInHistoryRecord.saveLoggedAt(user.getId(), request);
 
         try (OutputStream os = response.getOutputStream()){
             objectMapper.writeValue(os, new ApiResponseDto<>(ApiResponseCode.SUCCESS));
             os.flush();
         }
+    }
+
+    private void removeAuthorizedClient(OAuth2AuthenticationToken authentication) {
+        oAuth2AuthorizedClientService.removeAuthorizedClient(authentication.getAuthorizedClientRegistrationId(), authentication.getPrincipal().getName());
     }
 
     private void requestAgreementForSignUpTerms(HttpServletResponse response, String oauthId, String email, String provider) throws IOException {

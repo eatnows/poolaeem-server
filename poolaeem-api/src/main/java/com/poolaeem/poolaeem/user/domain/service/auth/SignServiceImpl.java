@@ -69,6 +69,7 @@ public class SignServiceImpl implements SignService {
         matchRequestEmailAndUserEmail(email, providerUser.getEmail());
 
         User user = saveUser(providerUser);
+        oAuth2AuthorizedClientService.removeAuthorizedClient(client.getClientRegistration().getRegistrationId(), client.getPrincipalName());
         loggedInHistoryRecord.saveLoggedAt(user.getId(), request);
 
         return user;
