@@ -10,6 +10,7 @@ import com.poolaeem.poolaeem.user.presentation.dto.auth.SignRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -104,7 +105,7 @@ class SignControllerTest extends ApiDocumentationTest {
     @Test
     @DisplayName("리프레시 토큰으로 액세스 토큰 발급")
     void testGenerateAccessTokenByRefreshToken() throws Exception {
-        given(signService.generateAccessTokenByRefreshToken(anyString()))
+        given(signService.generateAccessTokenByRefreshToken(any(), anyString()))
                 .willReturn("access-token");
 
         ResultActions result = this.mockMvc.perform(

@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface SignService {
     User signUpOAuth2User(HttpServletRequest request, OauthProvider oauthProvider, String oauthId, String email);
 
-    String generateAccessTokenByRefreshToken(String refreshToken);
+    String generateAccessTokenByRefreshToken(HttpServletRequest request, String refreshToken);
 
     void deleteUser(String tokenUserId, String pathUserId);
 

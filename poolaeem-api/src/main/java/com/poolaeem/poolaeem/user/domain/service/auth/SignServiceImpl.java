@@ -14,6 +14,7 @@ import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
+import com.poolaeem.poolaeem.user.application.JwtRefreshTokenService;
 import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
@@ -44,14 +45,16 @@ public class SignServiceImpl implements SignService {
     private final JwtTokenUtil jwtTokenUtil;
     private final FileEventsPublisher fileEventsPublisher;
     private final LoggedInHistoryRecord loggedInHistoryRecord;
+    private final JwtRefreshTokenService jwtRefreshTokenService;
 
-    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher, LoggedInHistoryRecord loggedInHistoryRecord) {
+    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher, LoggedInHistoryRecord loggedInHistoryRecord, JwtRefreshTokenService jwtRefreshTokenService) {
         this.userRepository = userRepository;
         this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
         this.signUpOAuth2UserService = signUpOAuth2UserService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.fileEventsPublisher = fileEventsPublisher;
         this.loggedInHistoryRecord = loggedInHistoryRecord;
+        this.jwtRefreshTokenService = jwtRefreshTokenService;
     }
 
     @Transactional
@@ -76,8 +79,12 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public String generateAccessTokenByRefreshToken(String refreshToken) {
-        DecodedJWT decodedJWT = jwtTokenUtil.validRefreshToken(refreshToken);
+    public String generateAccessTokenByRefreshToken(HttpServletRequest request, String refreshToken) {
+        DecodedJWT decodedJWT = jwtRefreshTokenService.validRefreshToken(refreshToken, request);
+        return getNewRefreshToken(decodedJWT);
+    }
+
+    private String getNewRefreshToken(DecodedJWT decodedJWT) {
         String userId = decodedJWT.getClaim("code").asString();
         GenerateTokenUser generateTokenUser = new GenerateTokenUser(userId);
         return jwtTokenUtil.generateAccessToken(generateTokenUser);

@@ -1,9 +1,12 @@
 package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import com.auth0.jwt.JWT;
+import com.poolaeem.poolaeem.common.exception.jwt.ExpiredTokenException;
+import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.user.domain.entity.LoggedInUserJwt;
 import com.poolaeem.poolaeem.user.infra.repository.LoggedInUserJwtRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +17,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,5 +52,31 @@ class JwtRefreshTokenServiceImplTest {
 
         verify(loggedInUserJwtRepository, times(1)).deleteAll(any());
         verify(loggedInUserJwtRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("로그인한 유저의 리프레시 토큰와 일치하지 않으면 InvalidTokenException 이 발생한다.")
+    void testValidRefreshTokenForNotMatched() {
+        String refreshToken = "refresh-token";
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        given(loggedInUserJwtRepository.findByTokenAndClientIpAndUserAgent(anyString(), anyString(), anyString()))
+                .willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> jwtRefreshTokenService.validRefreshToken(refreshToken, request))
+                .isInstanceOf(InvalidTokenException.class);
+    }
+
+    @Test
+    @DisplayName("로그인한 유저의 리프레시 토큰이 만료된 상태라면 ExpiredTokenException 이 발생한다.")
+    void testValidRefreshTokenForExpiresToken() {
+        String refreshToken = "refresh-token";
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        given(loggedInUserJwtRepository.findByTokenAndClientIpAndUserAgent(anyString(), anyString(), anyString()))
+                .willReturn(Optional.of(new LoggedInUserJwt("user-id", "refresh-token", "0.0.0.0", "iPhone", ZonedDateTime.now().minusDays(2), ZonedDateTime.now().minusDays(1))));
+
+        assertThatThrownBy(() -> jwtRefreshTokenService.validRefreshToken(refreshToken, request))
+                .isInstanceOf(ExpiredTokenException.class);
     }
 }

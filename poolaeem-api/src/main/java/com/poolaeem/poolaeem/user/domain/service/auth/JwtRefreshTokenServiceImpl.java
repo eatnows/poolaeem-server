@@ -1,6 +1,9 @@
 package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.poolaeem.poolaeem.common.component.time.TimeComponent;
+import com.poolaeem.poolaeem.common.exception.jwt.ExpiredTokenException;
+import com.poolaeem.poolaeem.common.exception.jwt.InvalidTokenException;
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.user.application.JwtRefreshTokenService;
 import com.poolaeem.poolaeem.user.domain.dto.RequestClient;
@@ -42,6 +45,32 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
                 convertToZonedDateTime(issuedAt),
                 convertToZonedDateTime(expiresAt)));
     }
+
+    /**
+     * 유저의 refreshToken 과 로그인 당시 clientIp, userAgent 가 맞는지 비교
+     */
+    @Override
+    public DecodedJWT validRefreshToken(String refreshToken, HttpServletRequest request) {
+        DecodedJWT decodedJWT = jwtTokenUtil.validRefreshToken(refreshToken);
+
+        LoggedInUserJwt loggedInUser = getAlreadyLoggedInRefreshToken(refreshToken, request);
+        checkExpiresToken(loggedInUser);
+
+        return decodedJWT;
+    }
+
+    private static void checkExpiresToken(LoggedInUserJwt loggedInUser) {
+        if (loggedInUser.getExpiresAt().isBefore(TimeComponent.nowUtc())) {
+            throw new ExpiredTokenException();
+        }
+    }
+
+    private LoggedInUserJwt getAlreadyLoggedInRefreshToken(String refreshToken, HttpServletRequest request) {
+        RequestClient requestClient = new RequestClient(request);
+        return loggedInUserJwtRepository.findByTokenAndClientIpAndUserAgent(refreshToken, requestClient.clientIp(), requestClient.userAgent())
+                .orElseThrow(InvalidTokenException::new);
+    }
+
 
     private void removeLoginSession(String userId) {
         List<LoggedInUserJwt> jwts = loggedInUserJwtRepository.findAllByUserId(userId);
