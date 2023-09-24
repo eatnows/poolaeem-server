@@ -1,6 +1,7 @@
 package com.poolaeem.poolaeem.user.domain.service.auth;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.poolaeem.poolaeem.common.component.time.TimeComponent;
 import com.poolaeem.poolaeem.common.event.FileEventsPublisher;
 import com.poolaeem.poolaeem.common.event.obj.EventsPublisherFileEvent;
 import com.poolaeem.poolaeem.common.exception.request.BadRequestDataException;
@@ -14,11 +15,20 @@ import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
 import com.poolaeem.poolaeem.security.oauth2.model.GoogleUser;
 import com.poolaeem.poolaeem.security.oauth2.model.ProviderUser;
+import com.poolaeem.poolaeem.user.application.JwtRefreshTokenService;
+import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
 import com.poolaeem.poolaeem.user.domain.entity.TermsVersion;
 import com.poolaeem.poolaeem.user.domain.entity.User;
 import com.poolaeem.poolaeem.user.infra.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameterValue;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -29,10 +39,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.sql.Types;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class SignServiceImpl implements SignService {
 
@@ -41,18 +53,24 @@ public class SignServiceImpl implements SignService {
     private final SignUpOAuth2UserService signUpOAuth2UserService;
     private final JwtTokenUtil jwtTokenUtil;
     private final FileEventsPublisher fileEventsPublisher;
+    private final LoggedInHistoryRecord loggedInHistoryRecord;
+    private final JwtRefreshTokenService jwtRefreshTokenService;
+    private final JdbcTemplate jdbcTemplate;
 
-    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher) {
+    public SignServiceImpl(UserRepository userRepository, OAuth2AuthorizedClientService oAuth2AuthorizedClientService, SignUpOAuth2UserService signUpOAuth2UserService, JwtTokenUtil jwtTokenUtil, FileEventsPublisher fileEventsPublisher, LoggedInHistoryRecord loggedInHistoryRecord, JwtRefreshTokenService jwtRefreshTokenService, JdbcTemplate jdbcTemplate) {
         this.userRepository = userRepository;
         this.oAuth2AuthorizedClientService = oAuth2AuthorizedClientService;
         this.signUpOAuth2UserService = signUpOAuth2UserService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.fileEventsPublisher = fileEventsPublisher;
+        this.loggedInHistoryRecord = loggedInHistoryRecord;
+        this.jwtRefreshTokenService = jwtRefreshTokenService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Transactional
     @Override
-    public User signUpOAuth2User(OauthProvider oauthProvider, String oauthId, String email) {
+    public User signUpOAuth2User(HttpServletRequest request, OauthProvider oauthProvider, String oauthId, String email) {
         OAuth2AuthorizedClient client = oAuth2AuthorizedClientService.loadAuthorizedClient(oauthProvider.getId(), oauthId);
         OAuth2AccessToken accessToken = client.getAccessToken();
 
@@ -64,12 +82,20 @@ public class SignServiceImpl implements SignService {
         ProviderUser providerUser = getProviderUser(oAuth2User, client.getClientRegistration());
         matchRequestEmailAndUserEmail(email, providerUser.getEmail());
 
-        return saveUser(providerUser);
+        User user = saveUser(providerUser);
+        oAuth2AuthorizedClientService.removeAuthorizedClient(client.getClientRegistration().getRegistrationId(), client.getPrincipalName());
+        loggedInHistoryRecord.saveLoggedAt(user.getId(), request);
+
+        return user;
     }
 
     @Override
-    public String generateAccessTokenByRefreshToken(String refreshToken) {
-        DecodedJWT decodedJWT = jwtTokenUtil.validRefreshToken(refreshToken);
+    public String generateAccessTokenByRefreshToken(HttpServletRequest request, String refreshToken) {
+        DecodedJWT decodedJWT = jwtRefreshTokenService.validRefreshToken(refreshToken, request);
+        return getNewRefreshToken(decodedJWT);
+    }
+
+    private String getNewRefreshToken(DecodedJWT decodedJWT) {
         String userId = decodedJWT.getClaim("code").asString();
         GenerateTokenUser generateTokenUser = new GenerateTokenUser(userId);
         return jwtTokenUtil.generateAccessToken(generateTokenUser);
@@ -90,6 +116,22 @@ public class SignServiceImpl implements SignService {
     @Override
     public void signOut(String userId) {
         // TODO redis로 관리하는 리프레쉬 토큰 제거
+        jwtRefreshTokenService.removeRefreshToken(userId);
+    }
+
+    @Scheduled(cron = "23 3 3 * * *", zone = TimeComponent.DEFAULT_TIMEZONE)
+    @SchedulerLock(name = "removeExpiredOAuth2AccessToken", lockAtLeastFor = "PT1M", lockAtMostFor = "PT2M")
+    @Transactional
+    public void removeExpiredOAuth2AccessToken() {
+        String tableName = "oauth2_authorized_client";
+        String filter = "access_token_expires_at < ?";
+        String sql = "DELETE FROM " + tableName + " WHERE " + filter;
+
+        SqlParameterValue[] parameters = new SqlParameterValue[] {
+                new SqlParameterValue(Types.TIMESTAMP, TimeComponent.nowUtc()) };
+        ArgumentPreparedStatementSetter pss = new ArgumentPreparedStatementSetter(parameters);
+        jdbcTemplate.update(sql, pss);
+        log.info("> 만료된 OAuth2 Access Token 제거");
     }
 
     private void deleteUserProfileImage(String profileImage) {

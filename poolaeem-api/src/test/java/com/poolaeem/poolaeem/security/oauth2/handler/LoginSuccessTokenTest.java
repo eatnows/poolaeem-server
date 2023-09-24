@@ -2,9 +2,11 @@ package com.poolaeem.poolaeem.security.oauth2.handler;
 
 import com.poolaeem.poolaeem.common.jwt.JwtTokenUtil;
 import com.poolaeem.poolaeem.security.oauth2.model.GenerateTokenUser;
+import com.poolaeem.poolaeem.user.application.JwtRefreshTokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 
@@ -17,16 +19,19 @@ class LoginSuccessTokenTest {
 
     private JwtTokenUtil jwtTokenUtil;
     private LoginSuccessToken loginSuccessToken;
+    private JwtRefreshTokenService jwtRefreshTokenService;
 
     public LoginSuccessTokenTest() {
         jwtTokenUtil = Mockito.mock(JwtTokenUtil.class);
-        this.loginSuccessToken = new LoginSuccessToken(jwtTokenUtil);
+        jwtRefreshTokenService = Mockito.mock(JwtRefreshTokenService.class);
+        this.loginSuccessToken = new LoginSuccessToken(jwtTokenUtil, jwtRefreshTokenService);
     }
 
     @Test
     @DisplayName("httpServletResponse 에 accessToken, refreshToken 추가")
     void addAccessTokenAndRefreshToken() {
         MockHttpServletResponse httpServletResponse = new MockHttpServletResponse();
+        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
         String accessToken = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItaWQiLCJlbWFpbCI6InRlc3RAcG9vbGFlZW0uY29tIiwibmFtZSI6Iu2SgOuCtOyehCIsImlhdCI6MTY4NzYxMzkyMywiZXhwIjozNjg3NjE1NzIzfQ.ZPSiOO__4_yunYkfdOSrzng-bk1dJ45oga-py4-9YkMY7FdEzNWvPALFuvVl8Vl1Ps4U1VwujSMisaQg7zDWTiMj3hWDaAFPIX-sppWoqAF0HZsO99KGzQOLIaHlPveh8MpYYbacfkRyimmOzhsSVT61rj-gT2RVJQQJnS3jZZuQE408EXYxiFXgUFnUM9JyiKkWHN6AsWhug5h7xpk3yHuUUBqlXaStt-Bqsl5vZCtdfNdSeV47KGwh-vsg3g7gFIX6O9ZCC-uTDwagK1e72uoArtqriXoR1MjQ84GZoWadZNksQEiUDOT5Ctx0B_jk1rXeuxpLlpqSHmdxzlZMsg";
         String refreshToken = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.kt98uhYRuZsA7-N2g44qhp3fXTVRnvAivauB_DoJRVu91_G5GQZjzfocYbfpS7Jd05QpcNitRxQuKZgo0B9yqwo2thKpHevkatghwhESzsYqA2hfTXaR9jdDXuTXAMlFciLyErxrnNTfMtPhaeFq_dZg9YPCaT-36rsqEXg-yf2cGGl9iz0oCXB3pHZgqmADip5huRiHISvTOdt-Z2IOAfJ5B-cUaz89JNneSGoQl1G-es9NP2b_GWg1k5FZjMBXxE_ZHpOL8lo4le85CbcZCMbOoGHmKoNqh81eXRv3itgqqRAWBtbDf9oqpUUIS5Ygk1y5RZF4cNpapmfAS89MVA";
 
@@ -37,7 +42,8 @@ class LoginSuccessTokenTest {
                 .willReturn(accessToken);
         given(jwtTokenUtil.generateRefreshToken(any()))
                 .willReturn(refreshToken);
-        loginSuccessToken.addTokenInResponse(httpServletResponse,
+        loginSuccessToken.addTokenInResponse(httpServletRequest,
+                httpServletResponse,
                 new GenerateTokenUser(
                         "user-id"
                 ));

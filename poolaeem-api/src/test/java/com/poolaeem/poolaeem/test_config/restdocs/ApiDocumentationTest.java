@@ -21,6 +21,8 @@ import com.poolaeem.poolaeem.solve.application.GradeResultService;
 import com.poolaeem.poolaeem.solve.application.GradingService;
 import com.poolaeem.poolaeem.solve.presentation.GradeResultController;
 import com.poolaeem.poolaeem.solve.presentation.GradingController;
+import com.poolaeem.poolaeem.user.application.JwtRefreshTokenService;
+import com.poolaeem.poolaeem.user.application.LoggedInHistoryRecord;
 import com.poolaeem.poolaeem.user.application.ProfileInfoService;
 import com.poolaeem.poolaeem.user.application.SignService;
 import com.poolaeem.poolaeem.user.domain.entity.OauthProvider;
@@ -142,4 +144,8 @@ public abstract class ApiDocumentationTest {
     protected WordCompletionService wordCompletionService;
     @MockBean
     protected WordCompletionServiceStrategy wordCompletionServiceStrategy;
+    @MockBean
+    protected LoggedInHistoryRecord loggedInHistoryRecord;
+    @MockBean
+    protected JwtRefreshTokenService jwtRefreshTokenService;
 }

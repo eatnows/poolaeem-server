@@ -8,6 +8,7 @@ import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 import com.poolaeem.poolaeem.solve.infra.repository.AnswerResultRepository;
 import com.poolaeem.poolaeem.solve.infra.repository.ProblemResultRepository;
 import com.poolaeem.poolaeem.solve.presentation.dto.GradingRequest;
+import org.apache.catalina.util.RequestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
