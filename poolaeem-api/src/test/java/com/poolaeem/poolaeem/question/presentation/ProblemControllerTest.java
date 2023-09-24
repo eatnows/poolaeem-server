@@ -127,6 +127,14 @@ class ProblemControllerTest extends ApiDocumentationTest {
     void testUpdateProblem() throws Exception {
         String problemId = "problem-id";
 
+        given(problemService.readProblem(any(), any()))
+                .willReturn(new ProblemVo(problemId, null, "Word",
+                        ProblemType.CHECKBOX, 30,
+                        List.of(
+                                new ProblemOptionVo("option-1", "컴퓨터", true),
+                                new ProblemOptionVo("option-2", "스마트폰", false)
+                        )));
+
         ResultActions result = this.mockMvc.perform(
                 put(UPDATE_PROBLEM, problemId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -158,6 +166,16 @@ class ProblemControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("options[].optionId").type(JsonFieldType.STRING).optional().description("선택지 id"),
                                 fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
                                 fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("선택지 정답 여부")
+                        ),
+                        responseFields(
+                                beneathPath("data"),
+                                fieldWithPath("problemId").type(JsonFieldType.STRING).description("문항 id"),
+                                fieldWithPath("question").type(JsonFieldType.STRING).description("문제"),
+                                fieldWithPath("type").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.PROBLEM_TYPE)),
+                                fieldWithPath("timeout").type(JsonFieldType.NUMBER).description("풀이 제한 시간 (초)"),
+                                fieldWithPath("options[].optionId").type(JsonFieldType.STRING).description("선택지 id"),
+                                fieldWithPath("options[].value").type(JsonFieldType.STRING).description("선택지 값"),
+                                fieldWithPath("options[].isCorrect").type(JsonFieldType.BOOLEAN).description("정답 여부")
                         )
                 ));
     }

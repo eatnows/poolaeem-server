@@ -1930,6 +1930,68 @@ Host: poolaeem.com
 </div>
 <div class="sect2">
 <h3 id="_response_9"><a class="link" href="#_response_9">&#8201;&#8212;&#8201;Response</a></h3>
+<div class="sect4">
+<h5 id="_response_data_fields_5"><a class="link" href="#_response_data_fields_5">Response Data Fields</a></h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">필드명</th>
+<th class="tableblock halign-left valign-top">타입</th>
+<th class="tableblock halign-left valign-top">양식</th>
+<th class="tableblock halign-left valign-top">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>problemId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">문항 id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>question</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">문제</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../common/problem_type.html" class="popup">문항 종류 목록</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">풀이 제한 시간 (초)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].optionId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">선택지 id</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">선택지 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>options[].isCorrect</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정답 여부</p></td>
+</tr>
+</tbody>
+</table>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1937,12 +1999,27 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 40
+Content-Length: 347
 
 {
   "code" : 0,
-  "message" : "완료"
+  "data" : {
+    "problemId" : "problem-id",
+    "question" : "Word",
+    "type" : "CHECKBOX",
+    "timeout" : 30,
+    "options" : [ {
+      "optionId" : "option-1",
+      "value" : "컴퓨터",
+      "isCorrect" : true
+    }, {
+      "optionId" : "option-2",
+      "value" : "스마트폰",
+      "isCorrect" : false
+    } ]
+  }
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -2138,7 +2215,7 @@ Host: poolaeem.com</code></pre>
 <div class="sect2">
 <h3 id="_response_11"><a class="link" href="#_response_11">&#8201;&#8212;&#8201;Response</a></h3>
 <div class="sect4">
-<h5 id="_response_data_fields_5"><a class="link" href="#_response_data_fields_5">Response Data Fields</a></h5>
+<h5 id="_response_data_fields_6"><a class="link" href="#_response_data_fields_6">Response Data Fields</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -2315,7 +2392,7 @@ Host: poolaeem.com</code></pre>
 <div class="sect2">
 <h3 id="_response_12"><a class="link" href="#_response_12">&#8201;&#8212;&#8201;Response</a></h3>
 <div class="sect4">
-<h5 id="_response_data_fields_6"><a class="link" href="#_response_data_fields_6">Response Data Fields</a></h5>
+<h5 id="_response_data_fields_7"><a class="link" href="#_response_data_fields_7">Response Data Fields</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 25%;">
@@ -2483,7 +2560,7 @@ Content-Length: 77
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-08-16 15:31:19 +0900
+Last updated 2023-09-02 15:26:23 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

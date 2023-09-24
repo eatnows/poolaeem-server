@@ -79,10 +79,3 @@ management:
     jmx:
       exposure:
         exclude: "*"
-
-
-#grafana:
-#  otlp:
-#    on-prem:
-#      endpoint: http://localhost:4317
-#      protocol: grpc

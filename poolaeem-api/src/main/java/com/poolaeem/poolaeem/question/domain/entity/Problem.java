@@ -5,6 +5,7 @@ import com.poolaeem.poolaeem.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class Problem extends BaseEntity {
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
+    @Where(clause = "is_deleted = false")
+    @OrderBy("order asc")
     private List<ProblemOption> options = new ArrayList<>();
 
     public Problem(String id, String question, List<ProblemOption> options) {

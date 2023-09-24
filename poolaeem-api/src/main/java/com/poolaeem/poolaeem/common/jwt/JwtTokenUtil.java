@@ -122,4 +122,8 @@ public class JwtTokenUtil {
             throw new InvalidTokenException("잘못된 리프레시 토큰입니다.");
         }
     }
+
+    public DecodedJWT decode(String token) {
+        return JWT.decode(token);
+    }
 }

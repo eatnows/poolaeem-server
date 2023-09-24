@@ -8,6 +8,7 @@ import com.poolaeem.poolaeem.solve.domain.vo.answer.SelectAnswer;
 import com.poolaeem.poolaeem.solve.infra.repository.AnswerResultRepository;
 import com.poolaeem.poolaeem.solve.infra.repository.ProblemResultRepository;
 import com.poolaeem.poolaeem.solve.presentation.dto.GradingRequest;
+import org.apache.catalina.util.RequestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("통합: 채점 결과 수집 테스트")
 @Sql(scripts = {
+        "classpath:/sql/common/schema.sql",
         "classpath:/sql/question/workbook.sql",
         "classpath:/sql/question/problem.sql",
         "classpath:/sql/question/option.sql",
