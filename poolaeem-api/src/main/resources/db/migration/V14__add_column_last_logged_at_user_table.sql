@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD COLUMN `last_logged_at` datetime(3) DEFAULT NULL AFTER `is_deleted`;

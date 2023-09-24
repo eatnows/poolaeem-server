@@ -49,6 +49,9 @@ public class User {
     @Column(name = "is_deleted", nullable = false, length = 1)
     private Boolean isDeleted;
 
+    @Column(name = "last_logged_at")
+    private ZonedDateTime lastLoggedAt;
+
     @Column(name = "updated_by", nullable = false, length = 32)
     @LastModifiedBy
     private String updatedBy;
