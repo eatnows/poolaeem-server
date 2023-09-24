@@ -30,7 +30,7 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     public void addRefreshToken(String userId, String refreshToken, HttpServletRequest request) {
         removeLoginSession(userId);
 
-        DecodedJWT decodedJWT = jwtTokenUtil.validRefreshToken(refreshToken);
+        DecodedJWT decodedJWT = jwtTokenUtil.decode(refreshToken);
         Date issuedAt = decodedJWT.getIssuedAt();
         Date expiresAt = decodedJWT.getExpiresAt();
 

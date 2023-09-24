@@ -3,10 +3,12 @@ package com.poolaeem.poolaeem.user.domain.entity;
 import com.poolaeem.poolaeem.common.component.time.TimeComponent;
 import com.poolaeem.poolaeem.common.component.uuid.UUIDGenerator;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 
+@Getter
 @Entity
 @Table(name = "logged_in_user_jwt")
 @NoArgsConstructor
@@ -18,7 +20,7 @@ public class LoggedInUserJwt {
     @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "token")
+    @Column(name = "token", length = 700)
     private String token;
 
     @Column(name = "client_ip")
