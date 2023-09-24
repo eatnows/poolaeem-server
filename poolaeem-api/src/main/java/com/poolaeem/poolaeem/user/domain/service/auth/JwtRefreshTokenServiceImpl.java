@@ -10,6 +10,9 @@ import com.poolaeem.poolaeem.user.domain.dto.RequestClient;
 import com.poolaeem.poolaeem.user.domain.entity.LoggedInUserJwt;
 import com.poolaeem.poolaeem.user.infra.repository.LoggedInUserJwtRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     private final LoggedInUserJwtRepository loggedInUserJwtRepository;
@@ -57,6 +61,14 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
         checkExpiresToken(loggedInUser);
 
         return decodedJWT;
+    }
+
+    @Scheduled(cron = "13 3 3 * * *", zone = TimeComponent.DEFAULT_TIMEZONE)
+    @SchedulerLock(name = "removeExpiredRefreshToken", lockAtLeastFor = "PT30S", lockAtMostFor = "PT2M")
+    @Transactional
+    public void removeExpiredRefreshToken() {
+        loggedInUserJwtRepository.deleteAllByExpiresAtBefore(TimeComponent.nowUtc());
+        log.info("> 만료된 리프레시 토큰들 제거");
     }
 
     private static void checkExpiresToken(LoggedInUserJwt loggedInUser) {
