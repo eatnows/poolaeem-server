@@ -52,6 +52,7 @@ class SignControllerTest extends BaseIntegrationTest {
 
     private final String AGREE_SIGN_UP_TERMS = "/api/signup/terms";
     private final String GENERATE_ACCESS_TOKEN_BY_REFRESH_TOKEN = "/api/access-token/refresh";
+    private final String SIGN_OUT = "/api/sign-out";
     private final String BEARER_REFRESH_TOKEN = "Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IlJlZnJlc2giLCJjb2RlIjoidXNlci1pZCIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3NjEzOTIzLCJleHAiOjM2ODg5MDk5MjN9.abGtDWHblKjihChHShvBKcKo1uu0CkLPInmDduFNPeYMUduZICgvaYzBlvvTK8brekrSC3ahlH4ROnCTxVwFN-IqxUxdIxNS-FXAQcoZBWRnWRHeLK56ZcwKo1RmCbzD4d1hEP907fb_zjAPrgrk6GgWO-L-Yq0z0K1Ntgdgz5M7I4gWRayeI13TBdaR6DqcAfrNCqK3Gg_0cxtgwN7cGvVBVPoG1jufXPt1uxynwfMHzTXY7UtvKRjDO3g0vyTBF52abK85eBMmvKIaGMEKOKWuN75ZYFS8xIFluGOouZsoLII_jTVIV1xMcWHe0a3WNxV5sh-EugLrVsJVfIJofQ";
 
     @MockBean
@@ -279,5 +280,23 @@ class SignControllerTest extends BaseIntegrationTest {
         long count = loggedInUserJwtRepository.findAll().stream().filter(data -> data.getUserId().equals(user.getId())).count();
 
         assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("로그아웃 시 리프레시 토큰 제거")
+    void testRemoveRefreshTokenForSignOut() throws Exception {
+        long beforeCount = loggedInUserJwtRepository.findAll().stream().filter(jwt -> "user-1".equals(jwt.getUserId())).count();
+        assertThat(beforeCount).isOne();
+
+        mockMvc.perform(
+                        post(SIGN_OUT)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", BEARER_ACCESS_TOKEN)
+                                .accept(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(0)));
+
+        long afterCount = loggedInUserJwtRepository.findAll().stream().filter(jwt -> "user-1".equals(jwt.getUserId())).count();
+        assertThat(afterCount).isZero();
     }
 }

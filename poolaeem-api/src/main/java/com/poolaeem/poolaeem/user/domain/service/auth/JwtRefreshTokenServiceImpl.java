@@ -63,6 +63,12 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
         return decodedJWT;
     }
 
+    @Transactional
+    @Override
+    public void removeRefreshToken(String userId) {
+        loggedInUserJwtRepository.deleteByUserId(userId);
+    }
+
     @Scheduled(cron = "13 3 3 * * *", zone = TimeComponent.DEFAULT_TIMEZONE)
     @SchedulerLock(name = "removeExpiredRefreshToken", lockAtLeastFor = "PT30S", lockAtMostFor = "PT2M")
     @Transactional

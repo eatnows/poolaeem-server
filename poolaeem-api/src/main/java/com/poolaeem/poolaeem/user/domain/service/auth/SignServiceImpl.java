@@ -116,6 +116,7 @@ public class SignServiceImpl implements SignService {
     @Override
     public void signOut(String userId) {
         // TODO redis로 관리하는 리프레쉬 토큰 제거
+        jwtRefreshTokenService.removeRefreshToken(userId);
     }
 
     @Scheduled(cron = "23 3 3 * * *", zone = TimeComponent.DEFAULT_TIMEZONE)

@@ -13,4 +13,6 @@ public interface LoggedInUserJwtRepository extends JpaRepository<LoggedInUserJwt
     Optional<LoggedInUserJwt> findByTokenAndClientIpAndUserAgent(String refreshToken, String clientIp, String userAgent);
 
     void deleteAllByExpiresAtBefore(ZonedDateTime nowUtc);
+
+    void deleteByUserId(String userId);
 }
