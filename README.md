@@ -8,6 +8,11 @@
   단어퀴즈 내고 풀고, 풀내임
 </div>
 
+## 목차
+- **[서비스 소개](#서비스-소개)**
+- **[개발 정보](#개발-정보)**
+
+
 ## 서비스 소개
 
 |<img height="300" alt="poolaeem_list" src="https://github.com/eatnows/poolaeem-server/assets/59526368/085a5cde-9f5c-4ad5-9b29-778d3043e10e"> |  <img height="300" alt="poolaeem_problem" src="https://github.com/eatnows/poolaeem-server/assets/59526368/2a9f043c-a3e6-4918-b1c1-8b8e24dcd74c"> | <img height="300" alt="poolaeem_solve" src="https://github.com/eatnows/poolaeem-server/assets/59526368/6ccd70e8-199e-46f3-a7b1-ee26435de12f"> | <img height="300" alt="poolaeem_result" src="https://github.com/eatnows/poolaeem-server/assets/59526368/d2a87409-a722-46fa-8341-39e0ca433940"> |
@@ -30,20 +35,20 @@
 <br>
 
 ## 만든이
-### 팀901
+### 팀 구공일
 UX/UI, FrontEnd, BackEnd 각각 포지션 별 한 명씩 맡고있는 팀으로 다양한 웹, 앱 서비스를 선보일 예정입니다.
 <br> <br>
 
 ## 개발 정보
 <p align="center">
-<img width="600" alt="poolaeem_architecture" src="https://github.com/eatnows/poolaeem-server/assets/59526368/6007c7b3-fd55-4d52-983c-3cf6eb64253c">
+<img width="600" alt="poolaeem_architecture" src="https://github.com/eatnows/poolaeem-server/assets/59526368/06c7c9a5-fffe-4ad9-acbb-031cf26901fc">
 </p>
 
 ### 기술 스택
 UX/UI: `Figma` <br>
 FrontEnd: `TypeScript`, `React`, `Next.js`, `React-query`, `Emotion` <br>
 BackEnd: `Java 17`, `SpringBoot 3.1`, `SpringSecurity`, `JPA`, `MySQL 8.0.32`, `Testcontainers`, `flyway` <br>
-Infra / DevOps: `AWS`, `Terraform`, `Grafana Cloud(Grafana, Prometheus, Loki)` <br>
+Infra / DevOps: `AWS`, `Terraform`, `GitHub Actions`, `Grafana Cloud(Grafana, Prometheus, Loki)` <br>
 etc: `Jira`, `Confluence`
 <br> 
 <br>
@@ -51,7 +56,7 @@ etc: `Jira`, `Confluence`
 #### 인증
 자체 로그인 없이 OAuth2.0으로 로그인 후 JWT를 이용하여 인증을 진행합니다.
 #### 배포
-빠른 구축과 적은 리소스로 서버를 구성하여 현재는 Github Action와 AWS CodeDeploy를 사용하여 자동화 배포가 진행됩니다.
+Github Actions와 AWS CodeDeploy를 이용하여 blue/green 무중단 배포가 진행됩니다.
 #### 모니터링
 Grafana Cloud를 이용하여 Promethus로 메트릭 수집, Loki로 로그를 수집하여 모니터링에 사용하고 있습니다.
 
