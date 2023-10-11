@@ -38,7 +38,7 @@ jobs:
           LOKI_URL: ${{ secrets.LOKI_URL }}
           LOKI_USER: ${{ secrets.LOKI_USER }}
           LOKI_PASSWORD: ${{ secrets.LOKI_PASSWORD }}
-        run: ECR_SERVER_URI=$ECR_SERVER_URI ./gradlew -Pprofile=prod clean jib -x test
+        run: ECR_SERVER_URI=$ECR_SERVER_URI ./gradlew -Pprofile=dev clean jib -x test
 
       - name: Create Deployment on AWS CodeDeploy
         env:
