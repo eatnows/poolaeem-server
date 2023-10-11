@@ -98,7 +98,7 @@ ext {
 jib {
     from {
         if (!active.equals("prod")) {
-            image = "arm64/eclipse-temurin:17-jammy"
+            image = "arm64v8/eclipse-temurin:17-jammy"
             platforms {
                 platform {
                     architecture = "arm64"
