@@ -41,7 +41,7 @@ UX/UI, FrontEnd, BackEnd 각각 포지션 별 한 명씩 맡고있는 팀으로 
 
 ## 개발 정보
 <p align="center">
-<img width="600" alt="poolaeem_architecture" src="https://github.com/eatnows/poolaeem-server/assets/59526368/06c7c9a5-fffe-4ad9-acbb-031cf26901fc">
+<img width="600" alt="poolaeem_architecture" src="https://github.com/eatnows/poolaeem-server/assets/59526368/43204abf-c118-4dcd-a178-7e52a849c2ae">
 </p>
 
 ### 기술 스택
