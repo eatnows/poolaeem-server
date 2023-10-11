@@ -97,14 +97,16 @@ ext {
 
 jib {
     from {
-        image = "eclipse-temurin:17-alpine"
         if (!active.equals("prod")) {
+            image = "arm64/eclipse-temurin:17-jammy"
             platforms {
                 platform {
                     architecture = "arm64"
                     os = "linux"
                 }
             }
+        } else {
+            image = "eclipse-temurin:17-alpine"
         }
     }
 
