@@ -29,7 +29,7 @@ public class WorkbookResponse {
             WorkbookTheme theme
     ) {
         public WorkbookInfoRead(WorkbookVo workbook) {
-            this(workbook.getName(), workbook.getDescription(), workbook.getProblemCount(), workbook.getSolvedCount(), workbook.getTheme());
+            this(workbook.name(), workbook.description(), workbook.problemCount(), workbook.solvedCount(), workbook.theme());
         }
     }
 
@@ -44,7 +44,7 @@ public class WorkbookResponse {
             int solvedCount
     ) {
         public SolveIntroductionRead(WorkbookDto.SolveIntroductionRead info) {
-            this(info.getName(), info.getDescription(), info.getTheme(), info.getCreator(), info.getCreatedAt(), info.getProblemCount(), info.getSolvedCount());
+            this(info.name(), info.description(), info.theme(), info.creator(), info.createdAt(), info.problemCount(), info.solvedCount());
         }
     }
 
@@ -65,7 +65,7 @@ public class WorkbookResponse {
             WorkbookTheme theme
     ){
         public WorkbookUpdate(WorkbookVo workbook) {
-            this(workbook.getName(), workbook.getDescription(), workbook.getProblemCount(), workbook.getSolvedCount(), workbook.getTheme());
+            this(workbook.name(), workbook.description(), workbook.problemCount(), workbook.solvedCount(), workbook.theme());
         }
     }
 }

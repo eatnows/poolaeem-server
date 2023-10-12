@@ -24,6 +24,6 @@ public class UserIdAuditorAware implements AuditorAware<String> {
 
         return Optional.ofNullable(((CustomUserDetail) authentication.getPrincipal()))
                 .map(CustomUserDetail::getUser)
-                .map(UserVo::getId);
+                .map(UserVo::id);
     }
 }

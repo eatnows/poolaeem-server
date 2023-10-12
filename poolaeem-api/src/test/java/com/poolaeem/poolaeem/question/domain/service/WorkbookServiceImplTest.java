@@ -209,8 +209,8 @@ class WorkbookServiceImplTest {
 
         WorkbookVo workbook = workbookService.readWorkbookInfo(workbookId, reqUserId);
 
-        assertThat(workbook.getId()).isEqualTo(workbookId);
-        assertThat(workbook.getUserId()).isEqualTo(reqUserId);
+        assertThat(workbook.id()).isEqualTo(workbookId);
+        assertThat(workbook.userId()).isEqualTo(reqUserId);
     }
 
     @Test
@@ -236,7 +236,7 @@ class WorkbookServiceImplTest {
 
     @Test
     @DisplayName("문제집 풀이 소개를 조회할 수 있다.")
-    void testReadWorkbookSolveIntroduction() throws Exception {
+    void testReadWorkbookSolveIntroduction() {
         String workbookId = "workbook-id";
 
         given(workbookUserClient.readWorkbookCreator(anyString()))
@@ -258,8 +258,8 @@ class WorkbookServiceImplTest {
 
         WorkbookDto.SolveIntroductionRead info = workbookService.readSolveIntroduction(workbookId);
 
-        assertThat(info.getWorkbookId()).isEqualTo(workbookId);
-        assertThat(info.getCreator().getName()).isEqualTo("만든이");
+        assertThat(info.workbookId()).isEqualTo(workbookId);
+        assertThat(info.creator().name()).isEqualTo("만든이");
     }
 
     @Test
@@ -334,8 +334,8 @@ class WorkbookServiceImplTest {
         Slice<WorkbookDto.WorkbookListRead> result = workbookService.readMyWorkbooks(userId, pageable, lastId);
 
         assertThat(result.hasNext()).isEqualTo(mockResult.hasNext());
-        assertThat(result.getContent().get(0).getWorkbookId()).isEqualTo(mockResult.getContent().get(0).getId());
-        assertThat(result.getContent().get(1).getWorkbookId()).isEqualTo(mockResult.getContent().get(1).getId());
+        assertThat(result.getContent().get(0).workbookId()).isEqualTo(mockResult.getContent().get(0).id());
+        assertThat(result.getContent().get(1).workbookId()).isEqualTo(mockResult.getContent().get(1).id());
         assertThat(result.getContent().get(0)).isNotInstanceOf(mockResult.getContent().get(0).getClass());
     }
 

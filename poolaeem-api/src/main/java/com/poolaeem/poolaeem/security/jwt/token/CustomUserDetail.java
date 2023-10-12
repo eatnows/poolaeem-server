@@ -29,27 +29,27 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.email();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return !user.getIsDeleted();
+        return !user.isDeleted();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !user.getIsDeleted();
+        return !user.isDeleted();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !user.getIsDeleted();
+        return !user.isDeleted();
     }
 
     @Override
     public boolean isEnabled() {
-        return !user.getIsDeleted();
+        return !user.isDeleted();
     }
 
     public UserVo getUser() {

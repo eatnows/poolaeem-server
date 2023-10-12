@@ -36,14 +36,14 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional
     @Override
     public String createWorkbook(WorkbookDto.WorkbookCreateParam param) {
-        validWorkbookLengthValidation(param.getName(), param.getDescription());
+        validWorkbookLengthValidation(param.name(), param.description());
 
-        int order = 1 + getLastOrderOfWorkbook(param.getUserId());
+        int order = 1 + getLastOrderOfWorkbook(param.userId());
         Workbook workbook = new Workbook(
-                param.getUserId(),
-                param.getName(),
-                param.getDescription(),
-                param.getTheme(),
+                param.userId(),
+                param.name(),
+                param.description(),
+                param.theme(),
                 order);
         Workbook saved = workbookRepository.save(workbook);
         return saved.getId();
@@ -52,21 +52,21 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Transactional
     @Override
     public void updateWorkbook(WorkbookDto.WorkbookUpdateParam param) {
-        validWorkbookLengthValidation(param.getName(), param.getDescription());
-        validWorkbookTheme(param.getTheme());
+        validWorkbookLengthValidation(param.name(), param.description());
+        validWorkbookTheme(param.theme());
 
-        Workbook workbook = getWorkbookEntity(param.getWorkbookId());
+        Workbook workbook = getWorkbookEntity(param.workbookId());
 
-        validManage(workbook.getUserId(), param.getUserId());
+        validManage(workbook.getUserId(), param.userId());
 
-        workbook.updateInfo(param.getName(), param.getDescription(), param.getTheme());
+        workbook.updateInfo(param.name(), param.description(), param.theme());
     }
 
     @Transactional(readOnly = true)
     @Override
     public WorkbookVo readWorkbookInfo(String workbookId, String reqUserId) {
         WorkbookVo workbook = getWorkbookVo(workbookId);
-        validManage(workbook.getUserId(), reqUserId);
+        validManage(workbook.userId(), reqUserId);
 
         return workbook;
     }
@@ -87,17 +87,17 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Override
     public WorkbookDto.SolveIntroductionRead readSolveIntroduction(String workbookId) {
         WorkbookVo workbook = getWorkbookVo(workbookId);
-        WorkbookCreator creator = workbookUserClient.readWorkbookCreator(workbook.getUserId());
+        WorkbookCreator creator = workbookUserClient.readWorkbookCreator(workbook.userId());
 
         return new WorkbookDto.SolveIntroductionRead (
-                workbook.getId(),
-                workbook.getName(),
-                workbook.getDescription(),
-                workbook.getTheme(),
+                workbook.id(),
+                workbook.name(),
+                workbook.description(),
+                workbook.theme(),
                 creator,
-                workbook.getCreatedAt(),
-                workbook.getProblemCount(),
-                workbook.getSolvedCount()
+                workbook.createdAt(),
+                workbook.problemCount(),
+                workbook.solvedCount()
         );
     }
 
@@ -112,7 +112,7 @@ public class WorkbookServiceImpl implements WorkbookService {
     public void validWorkbookManage(String workbookId, String reqUserId) {
         WorkbookVo workbookVo = getWorkbookVo(workbookId);
 
-        String creator = workbookVo.getUserId();
+        String creator = workbookVo.userId();
         validManage(creator, reqUserId);
     }
 
@@ -130,14 +130,14 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Override
     public Slice<WorkbookDto.WorkbookListRead> readMyWorkbooks(String userId, Pageable pageable, String lastId) {
         Slice<WorkbookVo> result = workbookRepository.findAllUserIdAndDbStateFalseAndIdLessThan(userId, pageable, lastId);
-        List<WorkbookDto.WorkbookListRead> workbooks = result.getContent().stream().map(vo -> new WorkbookDto.WorkbookListRead(
-                vo.getId(),
-                vo.getName(),
-                vo.getDescription(),
-                vo.getTheme(),
-                vo.getCreatedAt(),
-                vo.getProblemCount(),
-                vo.getSolvedCount()
+        List<WorkbookDto.WorkbookListRead> workbooks = result.getContent().stream().map(workbookVo -> new WorkbookDto.WorkbookListRead(
+                workbookVo.id(),
+                workbookVo.name(),
+                workbookVo.description(),
+                workbookVo.theme(),
+                workbookVo.createdAt(),
+                workbookVo.problemCount(),
+                workbookVo.solvedCount()
         )).toList();
         return new SliceImpl<>(workbooks, pageable, result.hasNext());
     }

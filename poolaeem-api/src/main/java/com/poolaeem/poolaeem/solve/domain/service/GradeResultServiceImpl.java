@@ -22,9 +22,9 @@ public class GradeResultServiceImpl implements GradeResultService {
     @Transactional(readOnly = true)
     @Override
     public Slice<WorkbookResultVo> readSolvedHistoryOfWorkbook(GradeResultDto.SolvedUsersReadParam param) {
-        validWorkbookManage(param.getReqUserId(), param.getWorkbookId());
+        validWorkbookManage(param.reqUserId(), param.workbookId());
 
-        return workbookResultRepository.findAllDtoByWorkbookIdAndUserId(param.getWorkbookId(), param.getLastId(), param.getPageable());
+        return workbookResultRepository.findAllDtoByWorkbookIdAndUserId(param.workbookId(), param.lastId(), param.pageable());
     }
 
     private void validWorkbookManage(String reqUserId, String workbookId) {

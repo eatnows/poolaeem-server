@@ -62,7 +62,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
@@ -77,7 +77,7 @@ class ProblemServiceImplTest {
                 )
         );
         given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
-                .willReturn(Optional.of(new Workbook(userVo.getId(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
+                .willReturn(Optional.of(new Workbook(userVo.id(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
         given(problemRepository.save(any()))
                 .willReturn(new Problem(null, "Word", ProblemType.CHECKBOX, 9, 1));
 
@@ -95,7 +95,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
-                userVo.getId(),
+                userVo.id(),
                 TextGenerator.generate(length),
                 ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
@@ -122,7 +122,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 ProblemType.CHECKBOX,
                 getOptions(size)
@@ -140,7 +140,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
@@ -159,7 +159,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", isCorrect),
@@ -177,7 +177,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemCreateParam param = new ProblemDto.ProblemCreateParam(
                 workbookId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 ProblemType.CHECKBOX,
                 List.of(new ProblemOptionDto("단어", true),
@@ -185,7 +185,7 @@ class ProblemServiceImplTest {
                 )
         );
         given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
-                .willReturn(Optional.of(new Workbook(userVo.getId(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
+                .willReturn(Optional.of(new Workbook(userVo.id(), "문제집1", "설명", WorkbookTheme.PINK, 1)));
         given(problemRepository.save(any()))
                 .willReturn(new Problem(null, "Word", ProblemType.CHECKBOX, 2, 1));
 
@@ -253,7 +253,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
-                userVo.getId(),
+                userVo.id(),
                 TextGenerator.generate(length),
                 List.of(new ProblemOptionDto("option-1", "단어", true),
                         new ProblemOptionDto("option-2", "세계", false),
@@ -279,7 +279,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 getOptions(size)
         );
@@ -296,7 +296,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 List.of(new ProblemOptionDto("option-1", "단어", true),
                         new ProblemOptionDto(TextGenerator.generate(length), false))
@@ -314,7 +314,7 @@ class ProblemServiceImplTest {
         UserVo userVo = new UserVo("user-id", null, null, UserRole.ROLE_USER, null, null, null, null, false);
         ProblemDto.ProblemUpdateParam param = new ProblemDto.ProblemUpdateParam(
                 problemId,
-                userVo.getId(),
+                userVo.id(),
                 "Word",
                 List.of(new ProblemOptionDto("option-1", "단어", isCorrect),
                         new ProblemOptionDto("단어2", isCorrect))
@@ -326,7 +326,7 @@ class ProblemServiceImplTest {
 
     @Test
     @DisplayName("문항을 삭제할 수 있다. (문항을 삭제하면 문제집 문항수를 감소시키는 이벤트가 발생한다)")
-    void testDeleteProblem() throws Exception {
+    void testDeleteProblem() {
         String userId = "user-id";
         String problemId = "problem-id";
 

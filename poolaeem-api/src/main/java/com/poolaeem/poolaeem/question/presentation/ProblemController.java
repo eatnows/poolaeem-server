@@ -30,7 +30,7 @@ public class ProblemController {
                                            @PathVariable String workbookId,
                                            @Valid @RequestBody ProblemRequest.ProblemCreate dto) {
         ProblemDto.ProblemCreateParam param =
-                new ProblemDto.ProblemCreateParam(workbookId, user.getId(), dto.question(), dto.type(), dto.options());
+                new ProblemDto.ProblemCreateParam(workbookId, user.id(), dto.question(), dto.type(), dto.options());
         problemService.createProblem(param);
 
         return ApiResponseDto.OK();
@@ -40,7 +40,7 @@ public class ProblemController {
     @GetMapping("/api/problems/{problemId}")
     public ApiResponseDto<ProblemResponse.ProblemRead> readProblemInfo(@LoggedInUser UserVo user,
                                                                        @PathVariable String problemId) {
-        ProblemVo problem = problemService.readProblem(user.getId(), problemId);
+        ProblemVo problem = problemService.readProblem(user.id(), problemId);
 
         ProblemResponse.ProblemRead response = new ProblemResponse.ProblemRead(problem);
         return ApiResponseDto.OK(response);
@@ -52,9 +52,9 @@ public class ProblemController {
                                            @PathVariable String problemId,
                                            @Valid @RequestBody ProblemRequest.ProblemUpdate dto) {
         ProblemDto.ProblemUpdateParam param =
-                new ProblemDto.ProblemUpdateParam(problemId, user.getId(), dto.question(), dto.options());
+                new ProblemDto.ProblemUpdateParam(problemId, user.id(), dto.question(), dto.options());
         problemService.updateProblem(param);
-        ProblemVo problem = problemService.readProblem(user.getId(), problemId);
+        ProblemVo problem = problemService.readProblem(user.id(), problemId);
 
         ProblemResponse.ProblemRead response = new ProblemResponse.ProblemRead(problem);
         return ApiResponseDto.OK(response);
@@ -64,7 +64,7 @@ public class ProblemController {
     @DeleteMapping("/api/problems/{problemId}")
     public ApiResponseDto<?> deleteProblem(@LoggedInUser UserVo user,
                                            @PathVariable String problemId) {
-        problemService.deleteProblem(user.getId(), problemId);
+        problemService.deleteProblem(user.id(), problemId);
         return ApiResponseDto.OK();
     }
 
@@ -74,7 +74,7 @@ public class ProblemController {
                                                                            @PathVariable String workbookId,
                                                                            @RequestParam(defaultValue = "0") @Min(0) int order,
                                                                            @RequestParam(defaultValue = "20") @Max(100) int size) {
-        Slice<ProblemVo> problems = problemService.readProblemList(user.getId(), workbookId, order, PageRequest.of(0, size));
+        Slice<ProblemVo> problems = problemService.readProblemList(user.id(), workbookId, order, PageRequest.of(0, size));
 
         ProblemResponse.ProblemListRead response = new ProblemResponse.ProblemListRead(problems);
         return ApiResponseDto.OK(response);

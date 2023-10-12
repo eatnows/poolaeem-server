@@ -13,7 +13,7 @@ public class ProfileInfoResponse {
             String profileImageUrl
     ) {
         public ProfileInfoDto(ProfileDto.ProfileInfo profileInfo) {
-            this(profileInfo.getUserId(), profileInfo.getEmail(), profileInfo.getName(), profileInfo.getProfileImageUrl());
+            this(profileInfo.userId(), profileInfo.email(), profileInfo.name(), profileInfo.profileImageUrl());
         }
     }
 }

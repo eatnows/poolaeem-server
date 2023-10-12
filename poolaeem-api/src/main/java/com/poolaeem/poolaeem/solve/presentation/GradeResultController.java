@@ -29,7 +29,7 @@ public class GradeResultController {
                                                                                            @PathVariable String workbookId,
                                                                                            @RequestParam(required = false) String lastId,
                                                                                            @RequestParam(defaultValue = "30") @Max(100) int size) {
-        Slice<WorkbookResultVo> results = gradeResultService.readSolvedHistoryOfWorkbook(new GradeResultDto.SolvedUsersReadParam(user.getId(), workbookId, lastId, size));
+        Slice<WorkbookResultVo> results = gradeResultService.readSolvedHistoryOfWorkbook(new GradeResultDto.SolvedUsersReadParam(user.id(), workbookId, lastId, size));
 
         GradeResultResponse.SolvedUsersRead response = new GradeResultResponse.SolvedUsersRead(results);
         return ApiResponseDto.OK(response);
