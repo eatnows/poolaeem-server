@@ -11,6 +11,6 @@ public class LoggedInUser {
     public static String getUserId() {
         UserVo user = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 
-        return user.getId();
+        return user.id();
     }
 }

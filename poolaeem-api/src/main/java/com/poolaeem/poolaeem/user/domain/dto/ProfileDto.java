@@ -7,21 +7,14 @@ public class ProfileDto {
     private ProfileDto() {
     }
 
-    @Getter
-    public static class ProfileInfo {
-
-        private String userId;
-        private String email;
-        private String name;
-        private String profileImageUrl;
-        public ProfileInfo(String userId, String email, String name, String profileImageUrl) {
-            this.userId = userId;
-            this.email = email;
-            this.name = name;
-            this.profileImageUrl = profileImageUrl;
-        }
-
+    public record ProfileInfo(
+        String userId,
+        String email,
+        String name,
+        String profileImageUrl
+    ) {
     }
+
     @Getter
     public static class WorkbookCreatorRead {
         private String userId;
@@ -30,7 +23,7 @@ public class ProfileDto {
         private boolean isDeleted;
 
         public WorkbookCreatorRead(UserVo user) {
-            if (user == null || user.getIsDeleted()) {
+            if (user == null || user.isDeleted()) {
                 isDeleted = true;
             }
         }
@@ -39,8 +32,8 @@ public class ProfileDto {
             if (user == null) {
                 isDeleted = true;
             } else {
-                userId = user.getId();
-                name = user.getName();
+                userId = user.id();
+                name = user.name();
                 this.profileImageUrl = profileImageUrl;
             }
         }

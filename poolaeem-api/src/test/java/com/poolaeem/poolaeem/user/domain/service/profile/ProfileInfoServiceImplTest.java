@@ -49,9 +49,9 @@ class ProfileInfoServiceImplTest {
 
         ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(userId);
 
-        assertThat(profileInfo.getUserId()).isEqualTo(userId);
-        assertThat(profileInfo.getEmail()).isEqualTo(mockUser.getEmail());
-        assertThat(profileInfo.getName()).isEqualTo(mockUser.getName());
+        assertThat(profileInfo.userId()).isEqualTo(userId);
+        assertThat(profileInfo.email()).isEqualTo(mockUser.email());
+        assertThat(profileInfo.name()).isEqualTo(mockUser.name());
 //        assertThat(profileInfo.getProfileImageUrl()).isEqualTo(userId);
     }
 

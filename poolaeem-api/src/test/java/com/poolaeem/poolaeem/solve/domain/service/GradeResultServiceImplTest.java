@@ -43,15 +43,15 @@ class GradeResultServiceImplTest {
                 new WorkbookResultVo("result-2", "파이리", 10, 7, ZonedDateTime.of(LocalDateTime.of(2023, 7, 24, 15, 15), ZoneId.of("Asia/Seoul"))),
                 new WorkbookResultVo("result-3", "이상해씨", 10, 10, ZonedDateTime.of(LocalDateTime.of(2023, 7, 24, 15, 16), ZoneId.of("Asia/Seoul")))
         );
-        given(workbookResultRepository.findAllDtoByWorkbookIdAndUserId(param.getWorkbookId(), param.getLastId(), param.getPageable()))
-                .willReturn(new SliceImpl<>(mockList, param.getPageable(), true));
+        given(workbookResultRepository.findAllDtoByWorkbookIdAndUserId(param.workbookId(), param.lastId(), param.pageable()))
+                .willReturn(new SliceImpl<>(mockList, param.pageable(), true));
 
 
         Slice<WorkbookResultVo> results = gradeResultService.readSolvedHistoryOfWorkbook(param);
 
         assertThat(results.getContent()).hasSize(mockList.size());
-        assertThat(results.getContent().get(0).getResultId()).isEqualTo(mockList.get(0).getResultId());
-        assertThat(results.getContent().get(1).getResultId()).isEqualTo(mockList.get(1).getResultId());
-        assertThat(results.getContent().get(2).getResultId()).isEqualTo(mockList.get(2).getResultId());
+        assertThat(results.getContent().get(0).resultId()).isEqualTo(mockList.get(0).resultId());
+        assertThat(results.getContent().get(1).resultId()).isEqualTo(mockList.get(1).resultId());
+        assertThat(results.getContent().get(2).resultId()).isEqualTo(mockList.get(2).resultId());
     }
 }

@@ -45,11 +45,11 @@ public class ProblemServiceImpl implements ProblemService {
     @Transactional
     @Override
     public void createProblem(ProblemDto.ProblemCreateParam param) {
-        validProblemQuestion(param.getQuestion());
-        validProblemOption(param.getOptions());
+        validProblemQuestion(param.question());
+        validProblemOption(param.options());
 
         Problem problem = saveProblem(param);
-        saveOptions(problem, param.getOptions());
+        saveOptions(problem, param.options());
 
         increaseProblemCount(param);
     }
@@ -70,15 +70,15 @@ public class ProblemServiceImpl implements ProblemService {
     @Transactional
     @Override
     public void updateProblem(ProblemDto.ProblemUpdateParam param) {
-        validProblemQuestion(param.getQuestion());
-        validProblemOption(param.getOptions());
+        validProblemQuestion(param.question());
+        validProblemOption(param.options());
 
-        Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(param.getProblemId(), param.getReqUserId())
+        Problem problem = problemRepository.findByIdAndIsDeletedFalseAndUserId(param.problemId(), param.reqUserId())
                 .orElseThrow(() -> new EntityNotFoundException(ProblemValidation.Message.PROBLEM_NOT_FOUND));
 
-        problem.updateQuestion(param.getQuestion());
-        problem.updateOptionCount(param.getOptions().size());
-        updateProblemOptions(problem, param.getOptions());
+        problem.updateQuestion(param.question());
+        problem.updateOptionCount(param.options().size());
+        updateProblemOptions(problem, param.options());
     }
 
     @Transactional
@@ -98,7 +98,7 @@ public class ProblemServiceImpl implements ProblemService {
     public Slice<ProblemVo> readProblemList(String userId, String workbookId, int order, Pageable pageable) {
         WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
-        validWorkbookManage(workbook.getUserId(), userId);
+        validWorkbookManage(workbook.userId(), userId);
 
         return problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbookId, order, pageable);
     }
@@ -108,7 +108,7 @@ public class ProblemServiceImpl implements ProblemService {
     public Slice<ProblemVo> readSolveProblems(String workbookId, int order, Pageable pageable) {
         WorkbookVo workbook = workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
                 .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
-        Slice<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbook.getId(), order, pageable);
+        Slice<ProblemVo> problems = problemRepository.findAllDtoByWorkbookIdAndIsDeletedFalse(workbook.id(), order, pageable);
 
         addOptionsInProblem(problems.getContent());
 
@@ -187,9 +187,9 @@ public class ProblemServiceImpl implements ProblemService {
 
         for (int i = 0; i < reqOptions.size(); i++) {
             ProblemOptionDto option = reqOptions.get(i);
-            if (option.getOptionId() == null) continue;
+            if (option.optionId() == null) continue;
 
-            ProblemOption problemOption = dbOptionMap.get(option.getOptionId());
+            ProblemOption problemOption = dbOptionMap.get(option.optionId());
             problemOption.updateOrder(i + 1);
         }
     }
@@ -198,8 +198,8 @@ public class ProblemServiceImpl implements ProblemService {
         List<ProblemOption> newList = new ArrayList<>();
         for (int i = 0; i < reqOptions.size(); i++) {
             ProblemOptionDto option = reqOptions.get(i);
-            if (option.getOptionId() != null) continue;
-            newList.add(new ProblemOption(problem, option.getValue(), option.getIsCorrect(), i + 1));
+            if (option.optionId() != null) continue;
+            newList.add(new ProblemOption(problem, option.value(), option.isCorrect(), i + 1));
         }
 
         problemOptionRepository.saveAll(newList);
@@ -207,8 +207,8 @@ public class ProblemServiceImpl implements ProblemService {
 
     private void softDeleteOptions(List<ProblemOption> dbOptions, List<ProblemOptionDto> reqOptions) {
         Map<String, ProblemOptionDto> reqOptionMap = reqOptions.stream()
-                .filter(option -> option.getOptionId() != null)
-                .collect(Collectors.toMap(ProblemOptionDto::getOptionId, Function.identity()));
+                .filter(option -> option.optionId() != null)
+                .collect(Collectors.toMap(ProblemOptionDto::optionId, Function.identity()));
 
         List<ProblemOption> deleteList = new ArrayList<>();
         for (ProblemOption dbOption : dbOptions) {
@@ -221,7 +221,7 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     private void increaseProblemCount(ProblemDto.ProblemCreateParam param) {
-        workbookEventsPublisher.publish(new EventsPublisherWorkbookEvent.ProblemAddEvent(param.getWorkbookId()));
+        workbookEventsPublisher.publish(new EventsPublisherWorkbookEvent.ProblemAddEvent(param.workbookId()));
     }
 
     private void validProblemOption(List<ProblemOptionDto> options) {
@@ -233,12 +233,12 @@ public class ProblemServiceImpl implements ProblemService {
         boolean existCorrect = false;
         boolean existWrong = false;
         for (ProblemOptionDto option : options) {
-            if (option.getValue().length() > ProblemValidation.OPTION_VALUE_MAX_LENGTH ||
-                    option.getValue().length() < ProblemValidation.OPTION_VALUE_MIN_LENGTH) {
+            if (option.value().length() > ProblemValidation.OPTION_VALUE_MAX_LENGTH ||
+                    option.value().length() < ProblemValidation.OPTION_VALUE_MIN_LENGTH) {
                 throw new BadRequestDataException(ProblemValidation.Message.OPTION_VALUE_LENGTH);
             }
 
-            if (option.getIsCorrect()) {
+            if (option.isCorrect()) {
                 existCorrect = true;
             } else {
                 existWrong = true;
@@ -261,16 +261,16 @@ public class ProblemServiceImpl implements ProblemService {
         List<ProblemOption> options = new ArrayList<>();
         int order = 1;
         for (ProblemOptionDto o : optionDtos) {
-            options.add(new ProblemOption(problem, o.getValue(), o.getIsCorrect(), order++));
+            options.add(new ProblemOption(problem, o.value(), o.isCorrect(), order++));
         }
 
         problemOptionRepository.saveAll(options);
     }
 
     private Problem saveProblem(ProblemDto.ProblemCreateParam param) {
-        Workbook workbook = getWorkbook(param.getWorkbookId(), param.getReqUserId());
+        Workbook workbook = getWorkbook(param.workbookId(), param.reqUserId());
         int order = lastProblemOrder(workbook) + 1;
-        Problem problem = new Problem(workbook, param.getQuestion(), param.getType(), param.getOptions().size(), order);
+        Problem problem = new Problem(workbook, param.question(), param.type(), param.options().size(), order);
         return problemRepository.save(problem);
     }
 

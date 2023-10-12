@@ -23,7 +23,7 @@ public class ProfileInfoController {
     @LoggedInUserOnly
     @GetMapping("/api/profile/info")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> readProfileInfo(@LoggedInUser UserVo user) {
-        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
+        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.id());
 
         return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
     }
@@ -32,8 +32,8 @@ public class ProfileInfoController {
     @PatchMapping("/api/profile/name")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> updateUserName(@LoggedInUser UserVo user,
                                                                              @Valid @RequestBody ProfileInfoRequest.UserNameUpdateDto dto) {
-        profileInfoService.updateUserName(user.getId(), dto.getUserName());
-        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
+        profileInfoService.updateUserName(user.id(), dto.getUserName());
+        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.id());
 
         return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
     }
@@ -42,8 +42,8 @@ public class ProfileInfoController {
     @PostMapping("/api/profile/image")
     public ApiResponseDto<ProfileInfoResponse.ProfileInfoDto> updateProfileImage(@LoggedInUser UserVo user,
                                                                                  @Valid ProfileInfoRequest.ProfileImageUpdateDto dto) {
-        profileInfoService.updateProfileImage(user.getId(), dto.getFile());
-        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.getId());
+        profileInfoService.updateProfileImage(user.id(), dto.getFile());
+        ProfileDto.ProfileInfo profileInfo = profileInfoService.readProfileInfo(user.id());
         return ApiResponseDto.OK(new ProfileInfoResponse.ProfileInfoDto(profileInfo));
     }
 }

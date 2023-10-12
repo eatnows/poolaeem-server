@@ -31,7 +31,7 @@ public class SignController {
     public void signUp(HttpServletRequest request,
                        HttpServletResponse response,
                        @Valid @RequestBody SignRequest.SignUpTermsDto dto) {
-        User user = signService.signUpOAuth2User(request, dto.getOauthProvider(), dto.getOauthId(), dto.getEmail());
+        User user = signService.signUpOAuth2User(request, dto.oauthProvider(), dto.oauthId(), dto.email());
         loginSuccessToken.addTokenInResponse(request, response, new GenerateTokenUser(user.getId()));
     }
 
@@ -54,14 +54,14 @@ public class SignController {
     @DeleteMapping("/api/users/{userId}")
     public ApiResponseDto<?> deleteUser(@LoggedInUser UserVo user,
                                         @PathVariable String userId) {
-        signService.deleteUser(user.getId(), userId);
+        signService.deleteUser(user.id(), userId);
         return ApiResponseDto.OK();
     }
 
     @LoggedInUserOnly
     @PostMapping("/api/sign-out")
     public ApiResponseDto<?> signOut(@LoggedInUser UserVo user) {
-        signService.signOut(user.getId());
+        signService.signOut(user.id());
         return ApiResponseDto.OK();
     }
 }
