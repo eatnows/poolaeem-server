@@ -29,7 +29,7 @@ public class WorkbookController {
     public ApiResponseDto<WorkbookResponse.WorkbookCreate> createWorkbook(@LoggedInUser UserVo user,
                                                                           @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
         WorkbookDto.WorkbookCreateParam param =
-                new WorkbookDto.WorkbookCreateParam(user.getId(), dto.getName(), dto.getDescription(), dto.getTheme());
+                new WorkbookDto.WorkbookCreateParam(user.getId(), dto.name(), dto.description(), dto.theme());
         String workbookId = workbookService.createWorkbook(param);
 
         WorkbookResponse.WorkbookCreate response = new WorkbookResponse.WorkbookCreate(workbookId);
@@ -41,7 +41,7 @@ public class WorkbookController {
     public ApiResponseDto<WorkbookResponse.WorkbookUpdate> updateWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable(name = "workbookId") String workbookId,
                                             @Valid @RequestBody WorkbookRequest.WorkbookUpdateDto dto) {
-        WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription(), dto.getTheme());
+        WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.name(), dto.description(), dto.theme());
         workbookService.updateWorkbook(param);
 
         WorkbookVo workbookInfo = workbookService.readWorkbookInfo(workbookId, user.getId());

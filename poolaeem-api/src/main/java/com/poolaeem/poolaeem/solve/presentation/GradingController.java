@@ -27,8 +27,8 @@ public class GradingController {
                                                                        @Valid @RequestBody GradingRequest.WorkbookGrade dto) {
         String userId = Optional.ofNullable(user).map(UserVo::getId).orElse(null);
 
-        List<Boolean> results = gradingService.gradeWorkbook(new SolveDto.WorkbookGradingParam(userId, workbookId, dto.getName(), dto.getProblems()));
-        GradingResponse.GradingResult response = new GradingResponse.GradingResult(dto.getName(), results);
+        List<Boolean> results = gradingService.gradeWorkbook(new SolveDto.WorkbookGradingParam(userId, workbookId, dto.name(), dto.problems()));
+        GradingResponse.GradingResult response = new GradingResponse.GradingResult(dto.name(), results);
         return ApiResponseDto.OK(response);
     }
 }

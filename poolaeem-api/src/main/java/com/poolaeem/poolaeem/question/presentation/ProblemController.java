@@ -30,7 +30,7 @@ public class ProblemController {
                                            @PathVariable String workbookId,
                                            @Valid @RequestBody ProblemRequest.ProblemCreate dto) {
         ProblemDto.ProblemCreateParam param =
-                new ProblemDto.ProblemCreateParam(workbookId, user.getId(), dto.getQuestion(), dto.getType(), dto.getOptions());
+                new ProblemDto.ProblemCreateParam(workbookId, user.getId(), dto.question(), dto.type(), dto.options());
         problemService.createProblem(param);
 
         return ApiResponseDto.OK();
@@ -52,7 +52,7 @@ public class ProblemController {
                                            @PathVariable String problemId,
                                            @Valid @RequestBody ProblemRequest.ProblemUpdate dto) {
         ProblemDto.ProblemUpdateParam param =
-                new ProblemDto.ProblemUpdateParam(problemId, user.getId(), dto.getQuestion(), dto.getOptions());
+                new ProblemDto.ProblemUpdateParam(problemId, user.getId(), dto.question(), dto.options());
         problemService.updateProblem(param);
         ProblemVo problem = problemService.readProblem(user.getId(), problemId);
 

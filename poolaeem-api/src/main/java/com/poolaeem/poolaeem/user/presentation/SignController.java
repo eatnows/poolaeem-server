@@ -31,7 +31,7 @@ public class SignController {
     public void signUp(HttpServletRequest request,
                        HttpServletResponse response,
                        @Valid @RequestBody SignRequest.SignUpTermsDto dto) {
-        User user = signService.signUpOAuth2User(request, dto.getOauthProvider(), dto.getOauthId(), dto.getEmail());
+        User user = signService.signUpOAuth2User(request, dto.oauthProvider(), dto.oauthId(), dto.email());
         loginSuccessToken.addTokenInResponse(request, response, new GenerateTokenUser(user.getId()));
     }
 
