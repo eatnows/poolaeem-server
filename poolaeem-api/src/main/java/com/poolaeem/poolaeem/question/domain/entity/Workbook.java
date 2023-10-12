@@ -75,9 +75,10 @@ public class Workbook extends BaseEntity {
         this.isDeleted = false;
     }
 
-    public void updateInfo(String name, String description) {
+    public void updateInfo(String name, String description, WorkbookTheme theme) {
         this.name = name;
         this.description = description;
+        this.theme = theme;
     }
 
     public void addProblem(Problem problem) {

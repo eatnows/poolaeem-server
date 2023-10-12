@@ -7,6 +7,7 @@ import com.poolaeem.poolaeem.question.application.ProblemService;
 import com.poolaeem.poolaeem.question.application.WorkbookService;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookCreator;
 import com.poolaeem.poolaeem.question.domain.entity.vo.WorkbookVo;
 import com.poolaeem.poolaeem.question.domain.validation.WorkbookValidation;
@@ -52,12 +53,13 @@ public class WorkbookServiceImpl implements WorkbookService {
     @Override
     public void updateWorkbook(WorkbookDto.WorkbookUpdateParam param) {
         validWorkbookLengthValidation(param.getName(), param.getDescription());
+        validWorkbookTheme(param.getTheme());
 
         Workbook workbook = getWorkbookEntity(param.getWorkbookId());
 
         validManage(workbook.getUserId(), param.getUserId());
 
-        workbook.updateInfo(param.getName(), param.getDescription());
+        workbook.updateInfo(param.getName(), param.getDescription(), param.getTheme());
     }
 
     @Transactional(readOnly = true)
@@ -67,11 +69,6 @@ public class WorkbookServiceImpl implements WorkbookService {
         validManage(workbook.getUserId(), reqUserId);
 
         return workbook;
-    }
-
-    private WorkbookVo getWorkbookVo(String workbookId) {
-        return workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
-                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
     }
 
     @Transactional
@@ -143,6 +140,17 @@ public class WorkbookServiceImpl implements WorkbookService {
                 vo.getSolvedCount()
         )).toList();
         return new SliceImpl<>(workbooks, pageable, result.hasNext());
+    }
+
+    private WorkbookVo getWorkbookVo(String workbookId) {
+        return workbookRepository.findDtoByIdAndIsDeletedFalse(workbookId)
+                .orElseThrow(() -> new EntityNotFoundException(WorkbookValidation.Message.WORKBOOK_NOT_FOUND));
+    }
+
+    private void validWorkbookTheme(WorkbookTheme theme) {
+        if (theme == null) {
+            throw new BadRequestDataException(WorkbookValidation.Message.WORKBOOK_THEME);
+        }
     }
 
     private Workbook getWorkbookEntity(String workbookId) {

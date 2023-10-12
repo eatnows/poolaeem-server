@@ -105,7 +105,8 @@ class WorkbookServiceImplTest {
         String userId = "user-id";
         String newName = "문제집이름";
         String newDescription = "문제집 설명";
-        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription);
+        WorkbookTheme newTheme = WorkbookTheme.BLUE;
+        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription, newTheme);
 
         Workbook workbook = getWorkbookEntitiy(userId);
         given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
@@ -127,7 +128,8 @@ class WorkbookServiceImplTest {
         String userId = "user-id";
         String newName = "문제집이름";
         String newDescription = "문제집 설명";
-        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription);
+        WorkbookTheme newTheme = WorkbookTheme.PINK;
+        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription, newTheme);
 
         Workbook workbook = getWorkbookEntitiy("other-userId");
         given(workbookRepository.findByIdAndIsDeletedFalse(workbookId))
@@ -145,7 +147,8 @@ class WorkbookServiceImplTest {
         String userId = "user-id";
         String newName = TextGenerator.generate(length);
         String newDescription = "문제집 설명";
-        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription);
+        WorkbookTheme newTheme = WorkbookTheme.PINK;
+        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription, newTheme);
 
         assertThatThrownBy(() -> workbookService.updateWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class);
@@ -159,20 +162,21 @@ class WorkbookServiceImplTest {
         String userId = "user-id";
         String newName = "문제집이름";
         String newDescription = TextGenerator.generate(length);
-        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription);
+        WorkbookTheme newTheme = WorkbookTheme.BLUE;
+        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription, newTheme);
 
         assertThatThrownBy(() -> workbookService.updateWorkbook(param))
                 .isInstanceOf(BadRequestDataException.class);
     }
 
     @NotNull
-    private WorkbookDto.WorkbookUpdateParam getWorkbookUpdateParam(String workbookId, String userId, String newName, String newDescription) {
+    private WorkbookDto.WorkbookUpdateParam getWorkbookUpdateParam(String workbookId, String userId, String newName, String newDescription, WorkbookTheme newWorkbookTheme) {
         return new WorkbookDto.WorkbookUpdateParam(
                 workbookId,
                 userId,
                 newName,
-                newDescription
-        );
+                newDescription,
+                newWorkbookTheme);
     }
 
     @NotNull
@@ -333,5 +337,19 @@ class WorkbookServiceImplTest {
         assertThat(result.getContent().get(0).getWorkbookId()).isEqualTo(mockResult.getContent().get(0).getId());
         assertThat(result.getContent().get(1).getWorkbookId()).isEqualTo(mockResult.getContent().get(1).getId());
         assertThat(result.getContent().get(0)).isNotInstanceOf(mockResult.getContent().get(0).getClass());
+    }
+
+    @Test
+    @DisplayName("문제집 테마가 존재하지 않으면 문제집을 수정할 수 없다")
+    void testUpdateWorkbookForNotExistsTheme() {
+        String workbookId = "workbook-id";
+        String userId = "user-id";
+        String newName = "문제집이름";
+        String newDescription = "문제집 설명";
+        WorkbookTheme newTheme = null;
+        WorkbookDto.WorkbookUpdateParam param = getWorkbookUpdateParam(workbookId, userId, newName, newDescription, newTheme);
+
+        assertThatThrownBy(() -> workbookService.updateWorkbook(param))
+                .isInstanceOf(BadRequestDataException.class);
     }
 }

@@ -880,6 +880,13 @@ Content-Length: 67
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">변경하고싶은 문제집 설명</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>theme</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../common/workbook_theme.html" class="popup">문제집 테마 목록</a></p></td>
+</tr>
 </tbody>
 </table>
 <div class="listingblock">
@@ -888,12 +895,13 @@ Content-Length: 67
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwb29sYWVlbSIsInN1YiI6IkF1dGhlbnRpY2F0aW9uIiwiY29kZSI6InVzZXItMSIsImVtYWlsIjoidGVzdEBwb29sYWVlbS5jb20iLCJuYW1lIjoi7ZKA64K07J6EIiwiaWF0IjoxNjg3OTUyMTE4LCJleHAiOjM2ODc5NTM5MTh9.QHwZ4Jppb5Bgp-oain43voHX5J4bkzt-7zTWKQOjFI77_H4k0HXYe79RjJopmvrOHX3YEFECfDJuTOgoMUqBQGFRmqSdEmUF-vFXOcjezvxw4NQzFTFkq430sNxrhK_RMsSbKTMnByZuN7Opj_RNGmGlDygX1dyqqqwxFZPn3fivl5TUM9VNhGACbCEGzxIYi7ACGNR2Kj61Qf343Dxyw37bXQ0D3a63Izxq8ThAzOtIyICnnF_ZYvn-3Y1nx9cpcxMdqwIGVFYBYSOOaCKnLJ7BUxEvy8l9tqwmGd2jCJWAAeSKNfcGmo4jpPrj5jJFvBoV2ynygZHHvkIXP0v_LQ
 Accept: application/json
-Content-Length: 75
+Content-Length: 97
 Host: poolaeem.com
 
 {
   "name" : "new 문제집",
-  "description" : "new 문제집 설명글"
+  "description" : "new 문제집 설명글",
+  "theme" : "YELLOW"
 }</code></pre>
 </div>
 </div>
@@ -908,11 +916,17 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json;charset=UTF-8
-Content-Length: 40
+Content-Length: 181
 
 {
   "code" : 0,
-  "message" : "완료"
+  "data" : {
+    "name" : "new 문제집",
+    "description" : "new 문제집 설명글",
+    "problemCount" : 4,
+    "solvedCount" : 2,
+    "theme" : "YELLOW"
+  }
 }</code></pre>
 </div>
 </div>

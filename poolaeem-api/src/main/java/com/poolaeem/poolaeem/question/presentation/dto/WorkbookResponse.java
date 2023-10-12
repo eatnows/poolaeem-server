@@ -75,4 +75,16 @@ public class WorkbookResponse {
             hasNext = result.hasNext();
         }
     }
+
+    public record WorkbookUpdate (
+            String name,
+            String description,
+            int problemCount,
+            int solvedCount,
+            WorkbookTheme theme
+    ){
+        public WorkbookUpdate(WorkbookVo workbook) {
+            this(workbook.getName(), workbook.getDescription(), workbook.getProblemCount(), workbook.getSolvedCount(), workbook.getTheme());
+        }
+    }
 }

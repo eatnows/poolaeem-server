@@ -34,12 +34,14 @@ public class WorkbookDto {
         private String userId;
         private String name;
         private String description;
+        private WorkbookTheme theme;
 
-        public WorkbookUpdateParam(String workbookId, String userId, String name, String description) {
+        public WorkbookUpdateParam(String workbookId, String userId, String name, String description, WorkbookTheme theme) {
             this.workbookId = workbookId;
             this.userId = userId;
             this.name = name;
             this.description = description;
+            this.theme = theme;
         }
     }
 

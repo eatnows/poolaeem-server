@@ -31,10 +31,13 @@ public class WorkbookRequest {
         private String name;
         @NotNull(message = WorkbookValidation.Message.DESCRIPTION_LENGTH)
         private String description;
+        @NotNull(message = WorkbookValidation.Message.WORKBOOK_THEME)
+        private WorkbookTheme theme;
 
-        public WorkbookUpdateDto(String name, String description) {
+        public WorkbookUpdateDto(String name, String description, WorkbookTheme theme) {
             this.name = name;
             this.description = description;
+            this.theme = theme;
         }
     }
 }

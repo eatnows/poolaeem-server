@@ -38,12 +38,15 @@ public class WorkbookController {
 
     @LoggedInUserOnly
     @PutMapping("/api/workbooks/{workbookId}")
-    public ApiResponseDto<?> updateWorkbook(@LoggedInUser UserVo user,
+    public ApiResponseDto<WorkbookResponse.WorkbookUpdate> updateWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable(name = "workbookId") String workbookId,
                                             @Valid @RequestBody WorkbookRequest.WorkbookUpdateDto dto) {
-        WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription());
+        WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription(), dto.getTheme());
         workbookService.updateWorkbook(param);
-        return ApiResponseDto.OK();
+
+        WorkbookVo workbookInfo = workbookService.readWorkbookInfo(workbookId, user.getId());
+        WorkbookResponse.WorkbookUpdate response = new WorkbookResponse.WorkbookUpdate(workbookInfo);
+        return ApiResponseDto.OK(response);
     }
 
     @LoggedInUserOnly
