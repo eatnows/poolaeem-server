@@ -29,6 +29,8 @@ dependencies {
     implementation 'com.fasterxml.uuid:java-uuid-generator:4.2.0'
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'com.github.loki4j:loki-logback-appender:1.4.1'
+
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
 }
 
 jacoco {
@@ -95,8 +97,19 @@ ext {
 
 jib {
     from {
-        image = "eclipse-temurin:17-alpine"
+        if (!active.equals("prod")) {
+            image = "arm64v8/eclipse-temurin:17-jammy"
+            platforms {
+                platform {
+                    architecture = "arm64"
+                    os = "linux"
+                }
+            }
+        } else {
+            image = "eclipse-temurin:17-alpine"
+        }
     }
+
     to {
         image = ecr_uri
         tags = [active+"-${project.name}-latest", active+"-${project.name}-${project.version}-"+System.currentTimeMillis()]

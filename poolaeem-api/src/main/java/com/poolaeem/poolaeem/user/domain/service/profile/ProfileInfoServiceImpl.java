@@ -38,7 +38,7 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
 
         String profileImageUrl = getProfileImageUrl(user);
 
-        return new ProfileDto.ProfileInfo(user.getId(), user.getEmail(), user.getName(), profileImageUrl);
+        return new ProfileDto.ProfileInfo(user.id(), user.email(), user.name(), profileImageUrl);
     }
 
     @Transactional
@@ -69,7 +69,7 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
     @Override
     public ProfileDto.WorkbookCreatorRead readWorkbookCreator(String userId) {
         UserVo user = getUserVo(userId, null);
-        if (user == null || user.getIsDeleted()) {
+        if (user == null || user.isDeleted()) {
             return new ProfileDto.WorkbookCreatorRead(user);
         }
 
@@ -116,8 +116,8 @@ public class ProfileInfoServiceImpl implements ProfileInfoService {
 
     private String getProfileImageUrl(UserVo user) {
         String profileImageUrl = null;
-        if (existProfileImage(user.getProfileImage())) {
-            profileImageUrl = fileService.getImageUrl(user.getProfileImage());
+        if (existProfileImage(user.profileImage())) {
+            profileImageUrl = fileService.getImageUrl(user.profileImage());
         }
 
         return profileImageUrl;

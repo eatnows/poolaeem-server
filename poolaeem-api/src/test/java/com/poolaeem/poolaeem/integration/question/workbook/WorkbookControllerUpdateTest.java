@@ -6,6 +6,7 @@ import com.poolaeem.poolaeem.common.response.ApiResponseCode;
 import com.poolaeem.poolaeem.component.TextGenerator;
 import com.poolaeem.poolaeem.integration.base.BaseIntegrationTest;
 import com.poolaeem.poolaeem.question.domain.entity.Workbook;
+import com.poolaeem.poolaeem.question.domain.entity.WorkbookTheme;
 import com.poolaeem.poolaeem.question.infra.repository.WorkbookRepository;
 import com.poolaeem.poolaeem.question.presentation.dto.WorkbookRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -37,18 +37,19 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
         String workbookId = "workbook-1";
         String newName = "고등영어 개정판";
         String newDescription = "새롭게 개정된 고등영어로 업데이트하였습니다.";
+        WorkbookTheme newTheme = WorkbookTheme.BLUE;
 
         Workbook before = workbookRepository.findByIdAndIsDeletedFalse(workbookId).get();
         assertThat(before.getName()).isNotEqualTo(newName);
         assertThat(before.getDescription()).isNotEqualTo(newDescription);
+        assertThat(before.getTheme()).isNotEqualTo(newTheme);
 
         this.mockMvc.perform(
                         put(UPDATE_WORKBOOK, workbookId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", BEARER_ACCESS_TOKEN)
                                 .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookUpdateDto(
-                                        newName, newDescription
-                                )))
+                                        newName, newDescription, newTheme)))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)));
@@ -56,6 +57,7 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
         Workbook after = workbookRepository.findByIdAndIsDeletedFalse(workbookId).get();
         assertThat(after.getName()).isEqualTo(newName);
         assertThat(after.getDescription()).isEqualTo(newDescription);
+        assertThat(after.getTheme()).isEqualTo(newTheme);
     }
 
     @ParameterizedTest
@@ -65,14 +67,14 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
         String workbookId = "workbook-1";
         String newName = TextGenerator.generate(length);
         String newDescription = "새롭게 개정된 고등영어로 업데이트하였습니다.";
+        WorkbookTheme newTheme = WorkbookTheme.PINK;
 
         this.mockMvc.perform(
                         put(UPDATE_WORKBOOK, workbookId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", BEARER_ACCESS_TOKEN)
                                 .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookUpdateDto(
-                                        newName, newDescription
-                                )))
+                                        newName, newDescription, newTheme)))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isBadRequest())
                 .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class))
@@ -86,14 +88,14 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
         String workbookId = "workbook-1";
         String newName = "고등영어 개정판";
         String newDescription = TextGenerator.generate(length);
+        WorkbookTheme newTheme = WorkbookTheme.PINK;
 
         this.mockMvc.perform(
                         put(UPDATE_WORKBOOK, workbookId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", BEARER_ACCESS_TOKEN)
                                 .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookUpdateDto(
-                                        newName, newDescription
-                                )))
+                                        newName, newDescription, newTheme)))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isBadRequest())
                 .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(BadRequestDataException.class))
@@ -106,6 +108,7 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
         String workbookId = "workbook-2";
         String newName = "고등영어 개정판";
         String newDescription = "새롭게 개정된 고등영어로 업데이트하였습니다.";
+        WorkbookTheme newTheme = WorkbookTheme.PINK;
 
         Workbook before = workbookRepository.findByIdAndIsDeletedFalse(workbookId).get();
         assertThat(before.getName()).isNotEqualTo(newName);
@@ -116,8 +119,7 @@ class WorkbookControllerUpdateTest extends BaseIntegrationTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", BEARER_ACCESS_TOKEN)
                                 .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookUpdateDto(
-                                        newName, newDescription
-                                )))
+                                        newName, newDescription, newTheme)))
                                 .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isForbidden())
                 .andExpect(exception -> assertThat(exception.getResolvedException()).isInstanceOf(ForbiddenRequestException.class))

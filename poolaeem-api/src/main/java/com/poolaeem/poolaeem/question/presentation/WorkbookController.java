@@ -29,7 +29,7 @@ public class WorkbookController {
     public ApiResponseDto<WorkbookResponse.WorkbookCreate> createWorkbook(@LoggedInUser UserVo user,
                                                                           @Valid @RequestBody WorkbookRequest.WorkbookCreateDto dto) {
         WorkbookDto.WorkbookCreateParam param =
-                new WorkbookDto.WorkbookCreateParam(user.getId(), dto.getName(), dto.getDescription(), dto.getTheme());
+                new WorkbookDto.WorkbookCreateParam(user.id(), dto.name(), dto.description(), dto.theme());
         String workbookId = workbookService.createWorkbook(param);
 
         WorkbookResponse.WorkbookCreate response = new WorkbookResponse.WorkbookCreate(workbookId);
@@ -38,19 +38,22 @@ public class WorkbookController {
 
     @LoggedInUserOnly
     @PutMapping("/api/workbooks/{workbookId}")
-    public ApiResponseDto<?> updateWorkbook(@LoggedInUser UserVo user,
+    public ApiResponseDto<WorkbookResponse.WorkbookUpdate> updateWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable(name = "workbookId") String workbookId,
                                             @Valid @RequestBody WorkbookRequest.WorkbookUpdateDto dto) {
-        WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.getId(), dto.getName(), dto.getDescription());
+        WorkbookDto.WorkbookUpdateParam param = new WorkbookDto.WorkbookUpdateParam(workbookId, user.id(), dto.name(), dto.description(), dto.theme());
         workbookService.updateWorkbook(param);
-        return ApiResponseDto.OK();
+
+        WorkbookVo workbookInfo = workbookService.readWorkbookInfo(workbookId, user.id());
+        WorkbookResponse.WorkbookUpdate response = new WorkbookResponse.WorkbookUpdate(workbookInfo);
+        return ApiResponseDto.OK(response);
     }
 
     @LoggedInUserOnly
     @GetMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<WorkbookResponse.WorkbookInfoRead> readWorkbookInfo(@LoggedInUser UserVo user,
                                               @PathVariable String workbookId) {
-        WorkbookVo workbook = workbookService.readWorkbookInfo(workbookId, user.getId());
+        WorkbookVo workbook = workbookService.readWorkbookInfo(workbookId, user.id());
 
         WorkbookResponse.WorkbookInfoRead response = new WorkbookResponse.WorkbookInfoRead(workbook);
         return ApiResponseDto.OK(response);
@@ -67,7 +70,7 @@ public class WorkbookController {
     @DeleteMapping("/api/workbooks/{workbookId}")
     public ApiResponseDto<?> deleteWorkbook(@LoggedInUser UserVo user,
                                             @PathVariable String workbookId) {
-        workbookService.deleteWorkbook(user.getId(), workbookId);
+        workbookService.deleteWorkbook(user.id(), workbookId);
         return ApiResponseDto.OK();
     }
 
@@ -77,7 +80,7 @@ public class WorkbookController {
                                                                              @RequestParam(defaultValue = "10") @Max(100) int size,
                                                                              @RequestParam(required = false) String lastId) {
         Slice<WorkbookDto.WorkbookListRead> results =
-                workbookService.readMyWorkbooks(user.getId(), PageRequest.of(0, size), lastId);
+                workbookService.readMyWorkbooks(user.id(), PageRequest.of(0, size), lastId);
 
         WorkbookResponse.WorkbookListRead response = new WorkbookResponse.WorkbookListRead(results);
         return ApiResponseDto.OK(response);

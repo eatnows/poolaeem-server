@@ -1,6 +1,5 @@
 package com.poolaeem.poolaeem.question.presentation;
 
-import com.poolaeem.poolaeem.common.exception.auth.UnAuthorizationException;
 import com.poolaeem.poolaeem.common.exception.common.EntityNotFoundException;
 import com.poolaeem.poolaeem.common.exception.request.ForbiddenRequestException;
 import com.poolaeem.poolaeem.question.domain.dto.WorkbookDto;
@@ -98,14 +97,25 @@ class WorkbookControllerTest extends ApiDocumentationTest {
         String workbookId = "workbook-id";
         String newName = "new 문제집";
         String newDescription = "new 문제집 설명글";
+        WorkbookTheme newTheme = WorkbookTheme.YELLOW;
+
+        given(workbookService.readWorkbookInfo(anyString(), anyString()))
+                .willReturn(new WorkbookVo(
+                        workbookId,
+                        "user-id",
+                        "new 문제집",
+                        "new 문제집 설명글",
+                        4,
+                        2,
+                        WorkbookTheme.YELLOW,
+                        ZonedDateTime.now()));
 
         ResultActions result = this.mockMvc.perform(
                 put(UPDATE_WORKBOOK, workbookId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", BEARER_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(new WorkbookRequest.WorkbookUpdateDto(
-                                newName, newDescription
-                        )))
+                                newName, newDescription, newTheme)))
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -121,7 +131,16 @@ class WorkbookControllerTest extends ApiDocumentationTest {
                         ),
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("변경하고싶은 문제집 이름"),
-                                fieldWithPath("description").type(JsonFieldType.STRING).description("변경하고싶은 문제집 설명")
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("변경하고싶은 문제집 설명"),
+                                fieldWithPath("theme").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.WORKBOOK_THEME))
+                        ),
+                        responseFields(
+                                beneathPath("data"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("문제집 이름"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("문제집 설명"),
+                                fieldWithPath("problemCount").type(JsonFieldType.NUMBER).description("문항 개수"),
+                                fieldWithPath("solvedCount").type(JsonFieldType.NUMBER).description("풀이 횟수"),
+                                fieldWithPath("theme").type(JsonFieldType.STRING).description(DocumentLinkGenerator.generateLinkCode(DocumentLinkGenerator.DocUrl.WORKBOOK_THEME))
                         )
                 ));
     }

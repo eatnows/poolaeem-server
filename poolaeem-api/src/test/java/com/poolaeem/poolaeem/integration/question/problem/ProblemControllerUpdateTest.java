@@ -54,8 +54,8 @@ class ProblemControllerUpdateTest extends BaseIntegrationTest {
 
         Problem beforeProblem = problemRepository.findByIdAndIsDeletedFalse(problemId).get();
         List<ProblemOption> beforeOptions = optionRepository.findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(problemId);
-        assertThat(beforeProblem.getQuestion()).isNotEqualTo(param.getQuestion());
-        assertThat(beforeOptions.size()).isNotEqualTo(param.getOptions().size());
+        assertThat(beforeProblem.getQuestion()).isNotEqualTo(param.question());
+        assertThat(beforeOptions.size()).isNotEqualTo(param.options().size());
 
         ResultActions result = this.mockMvc.perform(
                 put(UPDATE_PROBLEM, problemId)
@@ -67,8 +67,8 @@ class ProblemControllerUpdateTest extends BaseIntegrationTest {
 
         Problem afterProblem = problemRepository.findByIdAndIsDeletedFalse(problemId).get();
         List<ProblemOption> afterOptions = optionRepository.findAllByProblemIdAndIsDeletedFalseOrderByOrderAsc(problemId);
-        assertThat(afterProblem.getQuestion()).isEqualTo(param.getQuestion());
-        assertThat(afterOptions).hasSameSizeAs(param.getOptions());
+        assertThat(afterProblem.getQuestion()).isEqualTo(param.question());
+        assertThat(afterOptions).hasSameSizeAs(param.options());
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(0)))
