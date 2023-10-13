@@ -43,11 +43,11 @@ public class GradingServiceImpl implements GradingService {
     @Transactional
     @Override
     public List<Boolean> gradeWorkbook(SolveDto.WorkbookGradingParam param) {
-        validUserName(param.getName());
-        validProblemEmpty(param.getProblems());
-        String workbookId = param.getWorkbookId();
+        validUserName(param.name());
+        validProblemEmpty(param.problems());
+        String workbookId = param.workbookId();
 
-        List<QuestionResultVo> results = gradeProblems(workbookId, param.getProblems());
+        List<QuestionResultVo> results = gradeProblems(workbookId, param.problems());
 
         saveResult(param, results);
         increaseSolveCountInWorkbook(workbookId);
@@ -60,7 +60,7 @@ public class GradingServiceImpl implements GradingService {
         List<AnswerResult> answerResults = results.stream().map(QuestionResultVo::getAnswerResults).flatMap(Collection::stream).toList();
 
         saveWorkbookResult(param, problemResults);
-        asyncSaveAllResult(param.getUserId(), problemResults, answerResults);
+        asyncSaveAllResult(param.userId(), problemResults, answerResults);
     }
 
     private void asyncSaveAllResult(String userId, List<ProblemResult> problemResults, List<AnswerResult> answerResults) {
@@ -91,7 +91,7 @@ public class GradingServiceImpl implements GradingService {
 
     private void saveWorkbookResult(SolveDto.WorkbookGradingParam param, List<ProblemResult> results) {
         int correctCount = (int) results.stream().filter(ProblemResult::getIsCorrect).count();
-        WorkbookResult workbookResult = new WorkbookResult(param.getWorkbookId(), param.getUserId(), param.getName(), results.size(), correctCount);
+        WorkbookResult workbookResult = new WorkbookResult(param.workbookId(), param.userId(), param.name(), results.size(), correctCount);
         workbookResultRepository.save(workbookResult);
     }
 
@@ -100,9 +100,9 @@ public class GradingServiceImpl implements GradingService {
 
         List<QuestionResultVo> results = new ArrayList<>();
         for (UserAnswer userAnswer : userAnswers) {
-            ProblemGrading problem = correctAnswerMap.get(userAnswer.getProblemId());
+            ProblemGrading problem = correctAnswerMap.get(userAnswer.problemId());
 
-            QuestionResultVo result = problem.grade(userAnswer.getAnswer());
+            QuestionResultVo result = problem.grade(userAnswer.answer());
             results.add(result);
         }
 

@@ -4,14 +4,24 @@ server:
     enabled: true
     mime-types: text/html,text/plain,text/css,application/javascript,application/json
     min-response-size: 100
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${.KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    key-alias: bns-ssl
+  http2:
+    enabled: true
 
 spring:
+  config:
+    import: aws-parameterstore:/poolaeem/dev
   application:
     name: poolaeem-api
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${.DB_URL}
+    username: ${.DB_USERNAME}
+    password: ${.DB_PASSWORD}
 
   jpa:
     show-sql: true
@@ -31,9 +41,9 @@ spring:
       client:
         registration:
           google:
-            client-id: ${OAUTH_GOOGLE_ID}
-            client-secret: ${OAUTH_GOOGLE_SECRET}
-            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            client-id: ${.OAUTH_GOOGLE_ID}
+            client-secret: ${.OAUTH_GOOGLE_SECRET}
+            redirect-uri: ${.GOOGLE_REDIRECT_URI}
             scope:
             - profile
             - email
@@ -41,30 +51,30 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-    url: ${DB_URL}
-    user: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${.DB_URL}
+    user: ${.DB_USERNAME}
+    password: ${.DB_PASSWORD}
     clean-disabled: true
 
 jwt:
   rsa:
-    private: ${JWT_PRIVATE_KEY}
-    public: ${JWT_PUBLIC_KEY}
+    private: ${.JWT_PRIVATE_KEY}
+    public: ${.JWT_PUBLIC_KEY}
 
 poolaeem:
   aws:
     s3:
-      bucket-name: ${S3_BUCKET_NAME}
-      access-key: ${S3_ACCESS_KEY}
-      secret-key: ${S3_SECRET_KEY}
+      bucket-name: ${.S3_BUCKET_NAME}
+      access-key: ${.S3_ACCESS_KEY}
+      secret-key: ${.S3_SECRET_KEY}
   image:
-    domain: ${POOLAEEM_IMAGE_DOMAIN}
+    domain: ${.POOLAEEM_IMAGE_DOMAIN}
   encrypt:
-    secretKey: ${AES_ENCRYPT_SECRET_KEY}
+    secretKey: ${.AES_ENCRYPT_SECRET_KEY}
 
 management:
   server:
-    port: ${ACTUATOR_PORT}
+    port: ${.ACTUATOR_PORT}
   endpoint:
     health:
       enabled: true
@@ -72,7 +82,7 @@ management:
       enabled: true
   endpoints:
     web:
-      base-path: ${ACTUATOR_BASE_PATH}
+      base-path: ${.ACTUATOR_BASE_PATH}
       exposure:
         include: health,prometheus
     enabled-by-default: false

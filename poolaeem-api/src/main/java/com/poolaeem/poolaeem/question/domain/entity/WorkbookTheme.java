@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum WorkbookTheme {
-    PINK
+    PINK, GRAY, BLUE, YELLOW, GREEN
 }
